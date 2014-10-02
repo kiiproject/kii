@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+import user
+from django.conf import settings
 
 class BaseMixin(models.Model):
     """Add some common behaviour to all mixins"""
@@ -30,3 +32,11 @@ class NameMixin(BaseMixin):
 
         super(NameMixin, self).clean()
 
+
+class OwnerMixin(BaseMixin):
+    """A mixin for model instance that have an owner"""
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss")
+
+    class Meta:
+        abstract = True

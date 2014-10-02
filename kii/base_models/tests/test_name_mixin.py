@@ -1,17 +1,17 @@
-from ... import app
-import models
+from app.tests import base
+from tests import test_base_models
 import django
 
 
-class TestNameMixin(app.tests.base.BaseTestCase):
+class TestNameMixin(base.BaseTestCase):
 
     
     def test_name_field(self):
-        m = models.NameModel(name="Hello world!")
+        m = test_base_models.models.NameModel(name="Hello world!")
         m.save()
         
     def test_name_is_required(self):
-        m = models.NameModel()
+        m = test_base_models.models.NameModel()
 
         with self.assertRaises(django.core.exceptions.ValidationError):
             m.save()

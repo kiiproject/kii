@@ -1,9 +1,9 @@
-from ..base_models import models as bm
+import base_models
 from django.db import models
 
-class Stream(bm.NameMixin):
+class Stream(base_models.models.NameMixin):
     pass
     
-class StreamItem(bm.NameMixin):
+class StreamItem(base_models.models.NameMixin):
 
     stream = models.ForeignKey(Stream, related_name="items")
