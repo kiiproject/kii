@@ -1,9 +1,9 @@
-import app.tests.base
+import base
 import stream
 import django
 
 
-class TestStreamItem(app.tests.base.BaseTestCase):
+class TestStreamItem(base.StreamTestCase):
     
     def test_stream_item_requires_a_stream(self):
         i = stream.models.StreamItem(name='1')

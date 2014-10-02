@@ -18,6 +18,7 @@ KII_APPS = (
     'user',
     'app',
     'stream',
+    'classify',
 )
 
 KII_APPS_FULL = ()
