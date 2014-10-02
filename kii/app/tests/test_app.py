@@ -4,6 +4,7 @@ from tests import test_app
 from django.conf import settings
 from django.apps import apps
 
+
 class TestApp(base.BaseTestCase):
 
     def test_can_get_app_models(self):
@@ -18,6 +19,7 @@ class TestApp(base.BaseTestCase):
         self.assertEqual(i, len(expected_models))    
 
     def test_kii_apps_are_registered(self):
+
         registry = app.registries.app_registry
         for a in settings.KII_APPS:
             self.assertEqual(True, apps.is_installed(a))
