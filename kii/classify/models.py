@@ -6,17 +6,21 @@ from django.db.models.signals import pre_save
 from django.utils.translation import ugettext_lazy as _
 import django.core.exceptions
 import stream as stream_app
-
+from mptt.models import MPTTModel, TreeForeignKey
 
 class Workspace(
+    MPTTModel,
     base_models.models.NameMixin):
     """
     A model for storing StreamItem instances"""
 
     stream = models.ForeignKey(stream_app.models.Stream, related_name="workspaces")
     items = models.ManyToManyField(stream_app.models.StreamItem, through='WorkspaceStreamItem')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
-
+    class MPTTMeta:
+        order_insertion_by = ['name']
+        
 class WorkspaceStreamItem(models.Model):
     """Many to many relationship between StreamItem and Workspace"""
     item = models.ForeignKey(stream_app.models.StreamItem)

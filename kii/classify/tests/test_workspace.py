@@ -39,4 +39,11 @@ class TestWorkspace(stream.tests.base.StreamTestCase):
                 workspace=w1, item=si)
             wsi.save()
 
-
+    def test_can_store_workspace_hierarchically(self):
+        s = self.streams[0]
+        w0 = classify.models.Workspace(name="level0", stream=s)
+        w0.save()
+        w1 = classify.models.Workspace(name="level1", stream=s, parent=w0)
+        w1.save()
+        w2 = classify.models.Workspace(name="level2", stream=s, parent=w1)
+        w2.save()

@@ -65,6 +65,7 @@ settings.configure(
         'django.contrib.admin',
         'django_nose',
         'guardian',
+        'mptt',
     )+KII_APPS_FULL + TEST_APPS,
     KII_APPS=KII_APPS,
     SITE_ID = 1,    
