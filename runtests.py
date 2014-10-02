@@ -13,10 +13,11 @@ sys.stderr.write('Using Django version {0} from {1}\n'.format(
 )
 
 KII_APPS = (
-    'app',
-    'stream',
-    'base_models',
-    'base_models.tests',
+    'kii',
+    'kii.app',
+    'kii.stream',
+    'kii.base_models',
+    'kii.base_models.tests',
 )
 # Detect location and available modules
 module_root = os.path.dirname(os.path.realpath(__file__))
@@ -69,6 +70,7 @@ settings.configure(
 from django.test.utils import get_runner
 TestRunner = get_runner(settings)
 
+django.setup()
 call_command('syncdb', verbosity=1, interactive=False)
 
 # ---- app start
