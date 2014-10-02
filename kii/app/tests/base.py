@@ -1,5 +1,5 @@
-import unittest
+import django
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCase(django.test.TestCase):
     """A base Testcase other kii apps test cases inherit from"""
     pass

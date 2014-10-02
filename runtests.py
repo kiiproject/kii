@@ -14,6 +14,7 @@ sys.stderr.write('Using Django version {0} from {1}\n'.format(
 
 KII_APPS = (
     'kii',
+    'kii.user',
     'kii.app',
     'kii.stream',
     'kii.base_models',
