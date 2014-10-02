@@ -14,6 +14,7 @@ sys.stderr.write('Using Django version {0} from {1}\n'.format(
 
 KII_APPS = (
     'base_models',
+    'permissions',
     'user',
     'app',
     'stream',
@@ -48,7 +49,6 @@ settings.configure(
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ),
-    AUTHENTICATION_BACKENDS = ['chrysalid.core.auth_backends.ChrysalidUserBackend',],
     INSTALLED_APPS = (
         'django.contrib.auth',
         'django.contrib.sites',
@@ -56,6 +56,7 @@ settings.configure(
         'django.contrib.sessions',
         'django.contrib.admin',
         'django_nose',
+        'guardian',
     )+KII_APPS + TEST_APPS,
     KII_APPS=KII_APPS,
     SITE_ID = 1,    
@@ -70,6 +71,13 @@ settings.configure(
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     ),
     TEST_RUNNER='django_nose.NoseTestSuiteRunner',
+
+    # Guardian
+    ANONYMOUS_USER_ID=-1,
+    AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend', # this is default
+        'guardian.backends.ObjectPermissionBackend',
+    )
 )
 
 from django.test.utils import get_runner

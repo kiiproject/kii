@@ -2,8 +2,6 @@ import app
 import django
 
 
-
-
 class UserTestCase(app.tests.base.BaseTestCase):
 
     def setUp(self):
@@ -12,8 +10,8 @@ class UserTestCase(app.tests.base.BaseTestCase):
         
         self.users = {
             0: self.user_model(username="test0"),
+            1: self.user_model(username="test1"),
+            2: self.user_model(username="test2"),
         }
-        for u in self.user_model.objects.all():
-            print(u.username)
         for key, user in self.users.items():
             user.save()

@@ -4,7 +4,6 @@ import django
 
 
 class TestOwnerMixin(base.UserTestCase):
-
     
     def test_owner_field(self):
         m = test_base_models.models.OwnerModel(owner=self.users[0])
