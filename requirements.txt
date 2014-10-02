@@ -1,0 +1,2 @@
+persisting-theory
+django==1.7
