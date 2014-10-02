@@ -1,4 +1,4 @@
-import app
+import app.tests.base
 import stream
 import django
 

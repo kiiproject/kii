@@ -19,10 +19,17 @@ KII_APPS = (
     'app',
     'stream',
 )
+
+KII_APPS_FULL = ()
+
+for app in KII_APPS:
+    KII_APPS_FULL += (".".join([app, "apps.App"]),)
+
+
 TEST_APPS = (
     'tests.test_base_models',
     'tests.test_user',
-    'tests.test_app',
+    'tests.test_app.apps.TestApp',
 )
 
 # Detect location and available modules
@@ -57,7 +64,7 @@ settings.configure(
         'django.contrib.admin',
         'django_nose',
         'guardian',
-    )+KII_APPS + TEST_APPS,
+    )+KII_APPS_FULL + TEST_APPS,
     KII_APPS=KII_APPS,
     SITE_ID = 1,    
     STATIC_URL = "/static/",

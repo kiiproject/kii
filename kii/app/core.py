@@ -1,11 +1,6 @@
 import registries
+from django.apps import AppConfig
 
-class App:
+class App(AppConfig):
+    pass
 
-    #: A registry of app models
-    #: 
-    models = {}
-
-    def __init__(self, *args, **kwargs):
-
-        self.models = registries.ModelRegistry()

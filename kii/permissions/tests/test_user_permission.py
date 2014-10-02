@@ -35,6 +35,10 @@ class TestUserPermission(base.StreamTestCase):
         self.assertEqual(stream.editable(u2), True)
         self.assertEqual(stream.deletable(u2), True)
 
+    def test_owner_gets_all_permissions(self):
+        stream = self.streams[0]
+        self.assertEqual(stream.deletable(stream.owner), True)
+        
     def test_permission_is_deleted_when_stream_is_deleted(self):
         u2 = self.users[2]
         stream = self.streams[0]

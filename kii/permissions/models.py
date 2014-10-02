@@ -17,6 +17,10 @@ class PermissionMixin(base_models.models.BaseMixin):
         )
 
     def permission(self, permission, user):
+        # owner has ALL permissions
+        if user is self.owner:
+            return True
+
         return user.has_perm(permission, self)
 
     def viewable(self, user):

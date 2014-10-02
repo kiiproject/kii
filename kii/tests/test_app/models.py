@@ -1,9 +1,9 @@
 import apps
+from django.db import models
 
-@apps.test_app_1.models.register
-class TestModel1:
+
+class TestModel1(models.Model):
     pass
 
-@apps.test_app_1.models.register
-class TestModel2:
+class TestModel2(models.Model):
     pass

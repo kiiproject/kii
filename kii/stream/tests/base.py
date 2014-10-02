@@ -1,4 +1,4 @@
-import user
+import user.tests.base
 import stream
 
 
