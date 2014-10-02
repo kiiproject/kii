@@ -1,4 +1,4 @@
-import apps
+from . import apps
 from django.db import models
 
 

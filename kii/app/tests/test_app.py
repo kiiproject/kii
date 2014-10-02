@@ -1,4 +1,4 @@
-import base
+from . import base
 import app
 from tests import test_app
 from django.conf import settings
@@ -20,6 +20,5 @@ class TestApp(base.BaseTestCase):
 
     def test_kii_apps_are_registered(self):
 
-        registry = app.registries.app_registry
         for a in settings.KII_APPS:
             self.assertEqual(True, apps.is_installed(a))

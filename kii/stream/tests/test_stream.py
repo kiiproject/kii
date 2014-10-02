@@ -1,4 +1,4 @@
-import base
+from . import base
 import stream.models
 
 
@@ -10,4 +10,3 @@ class TestStream(base.StreamTestCase):
 
         s = stream.models.Stream.objects.get(owner=u)
 
-    

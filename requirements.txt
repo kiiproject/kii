@@ -1,4 +1,3 @@
-persisting-theory
 django==1.7
 django-guardian
 django-mptt
