@@ -18,3 +18,12 @@ class TestOwnerMixin(base.UserTestCase):
         m = test_base_models.models.OwnerModel(owner=self.users[0])
         m.save()
         self.assertEqual(m, self.users[0].ownermodels.first())
+
+    def test_owned_item_is_deleted_with_user(self):
+        m = test_base_models.models.OwnerModel(owner=self.users[0])
+        m.save()
+
+        self.users[0].delete()
+
+        with self.assertRaises(test_base_models.models.OwnerModel.DoesNotExist):
+            test_base_models.models.OwnerModel.objects.get(pk=m.pk)
