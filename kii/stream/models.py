@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from .. import base_models, permissions
+from .. import base_models, permission
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Stream(
-    permissions.models.PermissionMixin,
+    permission.models.PermissionMixin,
     base_models.models.NameMixin, 
     base_models.models.OwnerMixin):
     """
