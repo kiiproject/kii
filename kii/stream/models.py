@@ -15,8 +15,7 @@ class Stream(
     Think of it as a timeline, a wall, a list of element, such as blog entries for exemple,
     but more generic"""
 
-    # The default name for newly created streams
-    default_name = _("stream.default_name")
+    pass
 
     
 class StreamItem(base_models.models.NameMixin):
@@ -27,7 +26,8 @@ class StreamItem(base_models.models.NameMixin):
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:
-        stream = Stream(name=Stream.default_name, owner=instance)
+        # create a new stream, named after the owner
+        stream = Stream(name=instance.username, owner=instance)
         stream.save()
 
 post_save.connect(create_user_stream, sender=settings.AUTH_USER_MODEL)

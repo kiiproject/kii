@@ -10,4 +10,10 @@ class TestStream(base.StreamTestCase):
 
         s = stream.models.Stream.objects.get(owner=u)
 
+    def test_default_user_stream_is_named_with_owner_username(self):
 
+        u = self.user_model(username="this_is_my_username")
+        u.save()
+
+        s = stream.models.Stream.objects.get(name="this_is_my_username")
+        self.assertEqual(s.owner, u)
