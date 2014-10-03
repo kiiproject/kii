@@ -14,6 +14,7 @@ sys.stderr.write('Using Django version {0} from {1}\n'.format(
 
 KII_APPS = (
     'kii.base_models',
+    'kii.theme',
     'kii.hook',
     'kii.permission',
     'kii.user',
@@ -32,6 +33,7 @@ TEST_APPS = (
     'kii.tests.test_base_models',
     'kii.tests.test_user',
     'kii.tests.test_app.apps.TestApp',
+    'kii.tests.test_theme',
 )
 
 # Detect location and available modules
@@ -71,12 +73,17 @@ settings.configure(
         'guardian',
         'mptt',
     )+KII_APPS_FULL + TEST_APPS,
+
+    # kii settings
+    KII_THEME="default",
     KII_APPS=KII_APPS,
     SITE_ID = 1,    
     STATIC_URL = "/static/",
     TEMPLATE_LOADERS = (
+        'kii.theme.loaders.ThemeLoader',
         'django.template.loaders.filesystem.Loader',
         'django.template.loaders.app_directories.Loader',
+
     ),
     TESTING=True,      
     STATICFILES_FINDERS = (
