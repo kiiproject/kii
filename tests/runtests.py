@@ -34,6 +34,7 @@ TEST_APPS = (
     'kii.tests.test_user',
     'kii.tests.test_app.apps.TestApp',
     'kii.tests.test_theme',
+    'kii.tests.test_permission',
 )
 
 # Detect location and available modules

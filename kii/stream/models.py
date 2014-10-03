@@ -8,8 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Stream(
     permission.models.PermissionMixin,
-    base_models.models.NameMixin, 
-    base_models.models.OwnerMixin):
+    base_models.models.NameMixin):
     """
     A place were StreamItem instances will be published.
 

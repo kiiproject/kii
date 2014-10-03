@@ -10,3 +10,4 @@ class TestStream(base.StreamTestCase):
 
         s = stream.models.Stream.objects.get(owner=u)
 
+

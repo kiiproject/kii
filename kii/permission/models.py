@@ -3,9 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 from guardian.shortcuts import assign
 from django.conf import settings
 from kii import base_models
+from django.db import models
 
-
-class PermissionMixin(base_models.models.BaseMixin):
+class PermissionMixin(base_models.models.OwnerMixin):
     """Add some utility methods to retrieve permissions"""
 
     class Meta:
@@ -39,7 +39,20 @@ class PermissionMixin(base_models.models.BaseMixin):
     def assign_perm(self, permission, user):
         return assign(permission, user, self)
 
+class PrivateViewMixin(PermissionMixin):
+    """Model inheriting from this mixin will have a public/private setting for viewing (not writing)"""
+    
+    view_private = models.BooleanField(_('base_models.privateviewmixin.view_private'), default=True)
 
+    class Meta:
+        abstract = True
+
+    def viewable(self, user):
+        """return True if given user can view the model instance"""
+        if not self.view_private:
+            return True
+        # return value from PermissionMixin
+        return super(PrivateViewMixin, self).viewable(user)
 
 # automatic deletion of permission when a user is deleted
 # from http://django-guardian.readthedocs.org/en/latest/userguide/caveats.html

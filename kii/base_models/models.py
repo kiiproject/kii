@@ -42,6 +42,3 @@ class OwnerMixin(BaseMixin):
         abstract = True
 
 
-class PrivateViewMixin(object):
-    """Model inheriting from this mixin will have a public/private setting for viewing (not writing)"""
-    pass
