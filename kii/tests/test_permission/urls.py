@@ -8,6 +8,11 @@ privateread_patterns = patterns('',
             model=models.PrivateReadModel, 
             template_name="templates/test.html"), 
         name='detail'),
+    url(r'^$', 
+        views.PrivateReadList.as_view(
+            model=models.PrivateReadModel, 
+            template_name="templates/test.html"), 
+        name='list'),
 )
 
 urlpatterns = patterns('',
