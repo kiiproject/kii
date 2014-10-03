@@ -7,13 +7,22 @@ from django.conf import settings
 class BaseMixin(models.Model):
     """Add some common behaviour to all mixins"""
 
+    class Meta:
+        abstract = True
+
     def save(self, **kwargs):
         # force model validation
         self.clean()
         return super(BaseMixin, self).save(**kwargs)
 
-    class Meta:
-        abstract = True
+    @property
+    def url_namespace(self):
+        """Return the URL namespace of the class, such as `app_label:model_label:`"""
+        app_name = self._meta.app_label
+        model_name = self.__class__.__name__.lower()
+
+        return "{0}:{1}:".format(app_name, model_name)
+
 
 
 class NameMixin(BaseMixin):
