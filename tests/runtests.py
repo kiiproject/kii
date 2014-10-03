@@ -15,7 +15,7 @@ sys.stderr.write('Using Django version {0} from {1}\n'.format(
 KII_APPS = (
     'kii.base_models',
     'kii.hook',
-    'kii.permissions',
+    'kii.permission',
     'kii.user',
     'kii.app',
     'kii.stream',
