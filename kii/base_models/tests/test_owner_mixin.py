@@ -27,3 +27,9 @@ class TestOwnerMixin(base.UserTestCase):
 
         with self.assertRaises(test_base_models.models.OwnerModel.DoesNotExist):
             test_base_models.models.OwnerModel.objects.get(pk=m.pk)
+
+    def test_can_check_if_user_is_owner_of_object(self):
+        m = test_base_models.models.OwnerModel(owner=self.users[0])
+        m.save()
+
+        self.assertEqual(m.owned_by(self.users[0]), True)

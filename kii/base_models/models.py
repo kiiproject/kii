@@ -38,6 +38,10 @@ class OwnerMixin(BaseMixin):
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss")
 
+    def owned_by(self, user):
+        """return True if instance is owned by given user"""
+        return user.pk == self.owner.pk
+        
     class Meta:
         abstract = True
 
