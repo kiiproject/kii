@@ -1,6 +1,7 @@
 from kii.base_models import views
 from django.http import Http404
 
+
 class PrivateReadDetail(views.Detail):
     """Raise 404 when unauthorized user try to detail a private model instance"""
 
@@ -25,7 +26,6 @@ class PermissionMixinList(views.List):
         
 
 class PrivateReadList(PermissionMixinList):
-
     pass
 
             

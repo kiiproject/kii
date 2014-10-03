@@ -1,8 +1,7 @@
 from kii.user.tests import base
 from kii.tests import test_permission
-import django
-from django.core.urlresolvers import reverse
 from django_dynamic_fixture import G
+
 
 class TestViews(base.UserTestCase):
     
