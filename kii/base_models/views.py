@@ -1,4 +1,4 @@
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 
 class ModelTemplateMixin(object):
@@ -20,3 +20,7 @@ class Detail(ModelTemplateMixin, DetailView):
 
     def get_context_object_name(self, obj):
         return "object"
+
+class List(ModelTemplateMixin, ListView):
+    name = "list"
+    

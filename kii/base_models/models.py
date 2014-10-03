@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from kii import user
 from django.conf import settings
+from django.core.urlresolvers import reverse
+
 
 class BaseMixin(models.Model):
     """Add some common behaviour to all mixins"""
@@ -23,6 +25,21 @@ class BaseMixin(models.Model):
 
         return "{0}:{1}:".format(app_name, model_name)
 
+    def reverse(self, suffix):
+        """Return a reversed URL for given suffix (for example: detail, list, edit...)
+        you can override per-suffix URLs by defining .reverse_<suffix> methods
+        """
+
+        if hasattr(self, 'reverse_{0}'.format(suffix)):
+            return getattr(self, 'reverse_{0}'.format(suffix))()  
+                      
+        return reverse(self.url_namespace + suffix)
+        
+    def reverse_detail(self):
+        return reverse(self.url_namespace + "detail", kwargs={"pk":self.pk})
+
+    def get_absolute_url(self):
+        return self.reverse_detail()
 
 
 class NameMixin(BaseMixin):

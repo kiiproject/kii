@@ -6,6 +6,9 @@ namemodel_patterns = patterns('',
     url(r'^(?P<pk>\d+)/$', 
         views.Detail.as_view(model=models.NameModel), 
         name='detail'),
+    url(r'$', 
+        views.List.as_view(model=models.NameModel, template_name="templates/test.html"), 
+        name='list'),
 )
 
 urlpatterns = patterns('',
