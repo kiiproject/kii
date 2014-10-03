@@ -4,6 +4,16 @@ from guardian.shortcuts import assign
 from django.conf import settings
 from kii import base_models
 from django.db import models
+from guardian.shortcuts import get_objects_for_user
+
+class PermissionMixinQuerySet(base_models.models.OwnerMixinQuerySet):
+
+    def readable_by(self, user):
+        """Return objects readable by user (i.e. if the user has read, write or delete perm on them)"""
+        
+        readable = get_objects_for_user(
+            perms=["read", 'write', 'delete'], klass=self, user=user, any_perm=True)
+        return readable
 
 class PermissionMixin(base_models.models.OwnerMixin):
     """Add some utility methods to retrieve permissions"""
@@ -16,6 +26,8 @@ class PermissionMixin(base_models.models.OwnerMixin):
             ('delete', _('permissions.delete')),
         )
 
+    objects = PermissionMixinQuerySet.as_manager()
+
     def permission(self, permission, user):
         # owner has ALL permissions
         if user.pk == self.owner.pk:
@@ -23,25 +35,37 @@ class PermissionMixin(base_models.models.OwnerMixin):
 
         return user.has_perm(permission, self)
 
-    def readable(self, user):
+    def readable_by(self, user):
         """Return True if given user has `read`, `edit` or `delete` permission on instance"""
-        return self.writable(user) or self.permission("read", user)
+        return self.writable_by(user) or self.permission("read", user)
 
-    def writable(self, user):
+    def writable_by(self, user):
         """Return True if given user has `write` or `delete` permission on instance"""
-        return self.deletable(user) or self.permission("write", user)
+        return self.deletable_by(user) or self.permission("write", user)
 
-    def deletable(self, user):
+    def deletable_by(self, user):
         """Return True if given user has `delete` permission on instance"""
         return self.permission("delete", user)
 
     def assign_perm(self, permission, user):
         return assign(permission, user, self)
 
+
+class PrivateReadMixinQuerySet(PermissionMixinQuerySet):
+
+    def readable_by(self, user):
+
+        has_read_permissions = super(PrivateReadMixinQuerySet, self).readable_by(user)
+        readable = self.filter(read_private=False)
+        return readable | has_read_permissions
+
+
 class PrivateReadMixin(PermissionMixin):
     """Model inheriting from this mixin will have a public/private setting for viewing (not writing)"""
     
     read_private = models.BooleanField(_('base_models.privatereadmixin.read_private'), default=True)
+
+    objects = PrivateReadMixinQuerySet.as_manager()
 
     class Meta(PermissionMixin.Meta):
         abstract = True
@@ -50,7 +74,7 @@ class PrivateReadMixin(PermissionMixin):
         if not self.read_private:
             return True
         # return value from PermissionMixin
-        return super(PrivateReadMixin, self).readable(user)
+        return super(PrivateReadMixin, self).readable_by(user)
 
 # automatic deletion of permission when a user is deleted
 # from http://django-guardian.readthedocs.org/en/latest/userguide/caveats.html

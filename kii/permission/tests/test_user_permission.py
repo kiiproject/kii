@@ -11,9 +11,9 @@ class TestUserPermission(base.StreamTestCase):
         stream = self.streams[0]
         stream.assign_perm("read", u2)
 
-        self.assertEqual(stream.readable(u2), True)
-        self.assertEqual(stream.writable(u2), False)
-        self.assertEqual(stream.deletable(u2), False)
+        self.assertEqual(stream.readable_by(u2), True)
+        self.assertEqual(stream.writable_by(u2), False)
+        self.assertEqual(stream.deletable_by(u2), False)
             
     def test_edit_permission(self):
         u2 = self.users[2]
@@ -21,9 +21,9 @@ class TestUserPermission(base.StreamTestCase):
         stream.assign_perm("write", u2)
 
         # should return True for read and write
-        self.assertEqual(stream.readable(u2), True)
-        self.assertEqual(stream.writable(u2), True)
-        self.assertEqual(stream.deletable(u2), False)
+        self.assertEqual(stream.readable_by(u2), True)
+        self.assertEqual(stream.writable_by(u2), True)
+        self.assertEqual(stream.deletable_by(u2), False)
             
     def test_delete_permission(self):
         u2 = self.users[2]
@@ -31,13 +31,13 @@ class TestUserPermission(base.StreamTestCase):
         stream.assign_perm("delete", u2)
 
         # should return True for read, write and delete
-        self.assertEqual(stream.readable(u2), True)
-        self.assertEqual(stream.writable(u2), True)
-        self.assertEqual(stream.deletable(u2), True)
+        self.assertEqual(stream.readable_by(u2), True)
+        self.assertEqual(stream.writable_by(u2), True)
+        self.assertEqual(stream.deletable_by(u2), True)
 
     def test_owner_gets_all_permissions(self):
         stream = self.streams[0]
-        self.assertEqual(stream.deletable(stream.owner), True)
+        self.assertEqual(stream.deletable_by(stream.owner), True)
         
     def test_permission_is_deleted_when_stream_is_deleted(self):
         u2 = self.users[2]

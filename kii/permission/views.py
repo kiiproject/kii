@@ -1,7 +1,5 @@
 from kii.base_models import views
 from django.http import Http404
-from django.contrib.auth import get_user
-from guardian.shortcuts import get_objects_for_user
 
 class PrivateReadDetail(views.Detail):
     """Raise 404 when unauthorized user try to detail a private model instance"""

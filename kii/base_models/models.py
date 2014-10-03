@@ -4,11 +4,18 @@ from django.utils.translation import ugettext_lazy as _
 from kii import user
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db.models.query import QuerySet
+
+class BaseMixinQuerySet(QuerySet):
+    pass
 
 
 class BaseMixin(models.Model):
     """Add some common behaviour to all mixins"""
 
+    objects = BaseMixinQuerySet.as_manager()
+
+    queryset = BaseMixinQuerySet
     class Meta:
         abstract = True
 
@@ -59,10 +66,16 @@ class NameMixin(BaseMixin):
         super(NameMixin, self).clean()
 
 
+class OwnerMixinQuerySet(BaseMixinQuerySet):
+    def owned_by(self, user):
+        return self.filter(owner=user.pk)
+
 class OwnerMixin(BaseMixin):
     """A mixin for model instance that have an owner"""
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss")
+    objects = OwnerMixinQuerySet.as_manager()
+    
 
     def owned_by(self, user):
         """return True if instance is owned by given user"""
