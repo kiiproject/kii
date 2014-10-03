@@ -35,6 +35,7 @@ TEST_APPS = (
     'kii.tests.test_app.apps.TestApp',
     'kii.tests.test_theme',
     'kii.tests.test_permission',
+    'kii.tests.templates',
 )
 
 # Detect location and available modules
@@ -98,7 +99,9 @@ settings.configure(
     AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend', # this is default
         'guardian.backends.ObjectPermissionBackend',
-    )
+    ),
+    ROOT_URLCONF="kii.tests.urls"
+
 )
 
 from django.test.utils import get_runner

@@ -1,4 +1,4 @@
 from kii import permission
 
-class PrivateViewModel(permission.models.PrivateViewMixin):
+class PrivateReadModel(permission.models.PrivateReadMixin):
     pass

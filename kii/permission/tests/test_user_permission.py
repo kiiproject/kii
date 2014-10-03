@@ -9,20 +9,20 @@ class TestUserPermission(base.StreamTestCase):
     def test_view_permission(self):
         u2 = self.users[2]
         stream = self.streams[0]
-        stream.assign_perm("view", u2)
+        stream.assign_perm("read", u2)
 
-        self.assertEqual(stream.viewable(u2), True)
-        self.assertEqual(stream.editable(u2), False)
+        self.assertEqual(stream.readable(u2), True)
+        self.assertEqual(stream.writable(u2), False)
         self.assertEqual(stream.deletable(u2), False)
             
     def test_edit_permission(self):
         u2 = self.users[2]
         stream = self.streams[0]
-        stream.assign_perm("edit", u2)
+        stream.assign_perm("write", u2)
 
-        # should return True for view and edit
-        self.assertEqual(stream.viewable(u2), True)
-        self.assertEqual(stream.editable(u2), True)
+        # should return True for read and write
+        self.assertEqual(stream.readable(u2), True)
+        self.assertEqual(stream.writable(u2), True)
         self.assertEqual(stream.deletable(u2), False)
             
     def test_delete_permission(self):
@@ -30,9 +30,9 @@ class TestUserPermission(base.StreamTestCase):
         stream = self.streams[0]
         stream.assign_perm("delete", u2)
 
-        # should return True for view, edit and delete
-        self.assertEqual(stream.viewable(u2), True)
-        self.assertEqual(stream.editable(u2), True)
+        # should return True for read, write and delete
+        self.assertEqual(stream.readable(u2), True)
+        self.assertEqual(stream.writable(u2), True)
         self.assertEqual(stream.deletable(u2), True)
 
     def test_owner_gets_all_permissions(self):

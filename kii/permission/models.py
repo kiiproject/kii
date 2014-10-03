@@ -11,26 +11,25 @@ class PermissionMixin(base_models.models.OwnerMixin):
     class Meta:
         abstract = True
         permissions = (
-            ('view', _('permissions.view')),
-            ('edit', _('permissions.edit')),
+            ('read', _('permissions.view')),
+            ('write', _('permissions.edit')),
             ('delete', _('permissions.delete')),
         )
 
     def permission(self, permission, user):
         # owner has ALL permissions
-        if user is self.owner:
+        if user.pk == self.owner.pk:
             return True
 
         return user.has_perm(permission, self)
 
-    def viewable(self, user):
-        """Return True if given user has `view`, `edit` or `delete` permission on instance"""
+    def readable(self, user):
+        """Return True if given user has `read`, `edit` or `delete` permission on instance"""
+        return self.writable(user) or self.permission("read", user)
 
-        return self.editable(user) or self.permission("view", user)
-
-    def editable(self, user):
-        """Return True if given user has `edit` or `delete` permission on instance"""
-        return self.deletable(user) or self.permission("edit", user)
+    def writable(self, user):
+        """Return True if given user has `write` or `delete` permission on instance"""
+        return self.deletable(user) or self.permission("write", user)
 
     def deletable(self, user):
         """Return True if given user has `delete` permission on instance"""
@@ -39,20 +38,19 @@ class PermissionMixin(base_models.models.OwnerMixin):
     def assign_perm(self, permission, user):
         return assign(permission, user, self)
 
-class PrivateViewMixin(PermissionMixin):
+class PrivateReadMixin(PermissionMixin):
     """Model inheriting from this mixin will have a public/private setting for viewing (not writing)"""
     
-    view_private = models.BooleanField(_('base_models.privateviewmixin.view_private'), default=True)
+    read_private = models.BooleanField(_('base_models.privatereadmixin.read_private'), default=True)
 
-    class Meta:
+    class Meta(PermissionMixin.Meta):
         abstract = True
 
-    def viewable(self, user):
-        """return True if given user can view the model instance"""
-        if not self.view_private:
+    def readable(self, user):
+        if not self.read_private:
             return True
         # return value from PermissionMixin
-        return super(PrivateViewMixin, self).viewable(user)
+        return super(PrivateReadMixin, self).readable(user)
 
 # automatic deletion of permission when a user is deleted
 # from http://django-guardian.readthedocs.org/en/latest/userguide/caveats.html
