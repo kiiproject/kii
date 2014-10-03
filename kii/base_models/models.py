@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-import user
+from kii import user
 from django.conf import settings
 
 class BaseMixin(models.Model):

@@ -1,5 +1,5 @@
-from stream.tests import base
-from tests import test_base_models
+from kii.stream.tests import base
+from kii.tests import test_base_models
 import django
 from guardian.shortcuts import assign
 from guardian.models import UserObjectPermission

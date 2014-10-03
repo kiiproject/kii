@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-import base_models, permissions
+from .. import base_models, permissions
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save

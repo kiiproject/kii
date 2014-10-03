@@ -1,5 +1,5 @@
 from . import base
-from tests import test_user
+from ...tests import test_user
 
 class TestUserData(base.UserTestCase):
     

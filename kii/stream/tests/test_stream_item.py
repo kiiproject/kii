@@ -1,5 +1,5 @@
 from . import base
-import stream
+from kii import stream
 import django
 
 

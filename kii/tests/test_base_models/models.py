@@ -1,4 +1,4 @@
-import base_models
+from kii import base_models
 
 class NameModel(base_models.models.NameMixin):
     pass

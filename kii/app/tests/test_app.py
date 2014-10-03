@@ -1,6 +1,6 @@
 from . import base
-import app
-from tests import test_app
+from kii import app
+from kii.tests import test_app
 from django.conf import settings
 from django.apps import apps
 

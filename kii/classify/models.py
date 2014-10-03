@@ -1,11 +1,9 @@
 from __future__ import unicode_literals
-import base_models, permissions
+from kii import base_models, stream as stream_app
 from django.db import models
-from django.conf import settings
 from django.db.models.signals import pre_save
 from django.utils.translation import ugettext_lazy as _
 import django.core.exceptions
-import stream as stream_app
 from mptt.models import MPTTModel, TreeForeignKey
 
 class Workspace(

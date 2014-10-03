@@ -1,5 +1,5 @@
 from . import base
-import stream.models
+from kii import stream
 
 
 class TestStream(base.StreamTestCase):

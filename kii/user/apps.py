@@ -1,5 +1,5 @@
 
-from app import core
+from kii.app import core
 
 class App(core.App):
-    name = "user"
+    name = "kii.user"

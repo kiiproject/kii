@@ -1,6 +1,5 @@
-import stream.tests.base
-import stream.models
-import classify.models
+import kii.stream.tests.base
+from kii import stream, classify
 import django.db
 import django.core.exceptions
 

@@ -1,5 +1,5 @@
-from app.tests import base
-from tests import test_base_models
+from kii.app.tests import base
+from kii.tests import test_base_models
 import django
 
 

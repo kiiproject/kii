@@ -1,5 +1,5 @@
-from app import core
+from kii.app import core
 
 class TestApp(core.App):
-    name = "tests.test_app"
+    name = "kii.tests.test_app"
 

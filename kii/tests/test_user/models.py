@@ -1,5 +1,4 @@
-import base_models, user
-from django.conf import settings
+from kii import base_models, user
 from django.db import models
 
 class Recipe(base_models.models.NameMixin):

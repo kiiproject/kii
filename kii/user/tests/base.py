@@ -1,8 +1,8 @@
-import app.tests.base
+from ...app.tests import base
 import django
 
 
-class UserTestCase(app.tests.base.BaseTestCase):
+class UserTestCase(base.BaseTestCase):
 
     def setUp(self):
         self.user_model = django.contrib.auth.get_user_model()
