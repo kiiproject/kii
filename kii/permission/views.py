@@ -18,28 +18,14 @@ class PermissionMixinList(views.List):
 
     def get_queryset(self):
 
-        # first get object with explicit read permission
-        readable = get_objects_for_user(perms="read", klass=self.model, user=self.request.user)
-
         # retrieve standard queryset
-        qs = super(PermissionMixinList, self).get_queryset()
+        queryset = super(PermissionMixinList, self).get_queryset()
 
-        # owned elements
-        owned = qs.filter(owner=self.request.user.pk)
-
-        return readable | owned
+        return queryset.readable_by(self.request.user.pk)
         
 
 class PrivateReadList(PermissionMixinList):
 
-    def get_queryset(self):
-        
-        qs = super(PrivateReadList, self).get_queryset()
-
-        # public elements
-        public = self.model.objects.filter(read_private=False)
-        return qs | public 
-
-
+    pass
 
             

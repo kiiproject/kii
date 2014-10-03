@@ -6,6 +6,7 @@ from kii import base_models
 from django.db import models
 from guardian.shortcuts import get_objects_for_user
 
+
 class PermissionMixinQuerySet(base_models.models.OwnerMixinQuerySet):
 
     def readable_by(self, user):
@@ -13,7 +14,12 @@ class PermissionMixinQuerySet(base_models.models.OwnerMixinQuerySet):
         
         readable = get_objects_for_user(
             perms=["read", 'write', 'delete'], klass=self, user=user, any_perm=True)
-        return readable
+
+        # owned items are always readable
+        owned = self.owned_by(user)
+
+        return readable | owned
+
 
 class PermissionMixin(base_models.models.OwnerMixin):
     """Add some utility methods to retrieve permissions"""
