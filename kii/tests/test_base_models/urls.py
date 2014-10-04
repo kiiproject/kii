@@ -10,6 +10,11 @@ namemodel_patterns = patterns('',
         views.List.as_view(model=models.NameModel, template_name="templates/test.html"), 
         name='list'),
 )
+ownermodel_patterns = patterns('',
+    url(r'^create$', 
+        views.OwnerMixinCreate.as_view(model=models.OwnerModel, template_name="templates/test.html"), 
+        name='create'),
+)
 
 urlpatterns = patterns('',
     url(
@@ -18,5 +23,12 @@ urlpatterns = patterns('',
             namemodel_patterns, 
             namespace='namemodel', 
             app_name='namemodel')
+        ),
+    url(
+        r'^ownermodel/', 
+        include(
+            ownermodel_patterns, 
+            namespace='ownermodel', 
+            app_name='ownermodel')
         ),
 )

@@ -29,6 +29,7 @@ for app in KII_APPS:
     KII_APPS_FULL += (".".join([app, "apps.App"]),)
 
 
+
 TEST_APPS = (
     'kii.tests.test_base_models',
     'kii.tests.test_user',

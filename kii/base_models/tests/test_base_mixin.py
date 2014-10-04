@@ -16,3 +16,7 @@ class TestBaseMixin(base.BaseTestCase):
         m.save()
         self.assertEqual(m.reverse('detail'), "/test_base_models/namemodel/{0}/".format(m.pk))
         self.assertEqual(m.reverse('list'), "/test_base_models/namemodel/")
+
+    def test_model_class_reverse(self):
+        m = test_base_models.models.NameModel
+        self.assertEqual(m.class_reverse('list'), "/test_base_models/namemodel/")

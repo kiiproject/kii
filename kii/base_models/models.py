@@ -26,7 +26,8 @@ class BaseMixin(models.Model):
 
     @property
     def url_namespace(self):
-        """Return the URL namespace of the class, such as `app_label:model_label:`"""
+        """Return the URL namespace of the class, such as `app_label:model_label:`"""       
+
         app_name = self._meta.app_label
         model_name = self.__class__.__name__.lower()
 
@@ -48,6 +49,10 @@ class BaseMixin(models.Model):
     def get_absolute_url(self):
         return self.reverse_detail()
 
+    @classmethod
+    def class_reverse(cls, suffix):
+        """Call reverse with an actual instance of the class. Used for reversing if you don't have a class instance"""
+        return cls.reverse(cls(), suffix)
 
 class NameMixin(BaseMixin):
 
