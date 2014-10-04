@@ -76,7 +76,7 @@ class PrivateReadMixin(PermissionMixin):
     class Meta(PermissionMixin.Meta):
         abstract = True
 
-    def readable(self, user):
+    def readable_by(self, user):
         if not self.read_private:
             return True
         # return value from PermissionMixin
