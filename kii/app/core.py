@@ -1,8 +1,8 @@
 from django.apps import AppConfig, apps as django_app_registry
+from django.conf.urls import include, url
 
 
-
-class AppQueryset(object):
+class AppManager(object):
     """Provide a cleaner API to django.apps.apps"""
 
     registry = django_app_registry
@@ -33,7 +33,20 @@ class AppQueryset(object):
     def kii_apps(self):
         return self.filter(kii_app=True)
 
-apps = AppQueryset()
+    def get_apps_urls(self):
+        """Gather all URLs for kii apps and return them as a list, so they can easily be included
+        in a root URLConf, for example"""
+
+        urls = []
+
+        for app in self.kii_apps():
+            if app.urls is not None:
+                included_url = url(app.get_url_prefix(), include(app.urls, namespace=app.label, app_name=app.label))
+                urls.append(included_url)
+
+        return urls
+
+apps = AppManager()
 
 
 class App(AppConfig):
@@ -41,6 +54,17 @@ class App(AppConfig):
 
     kii_app = True
 
+    # replace this with a urlconf module that would be automatically gathered 
+    # by AppManager.get_apps_urls(), such as "your_app.urls"
+    urls = None
+
     @property
     def installed(self):
         return apps.registry.is_installed(self.name)
+
+    def get_url_prefix(self):
+        """return a prefix for incldugind the app URLconf, such as r'^myapp/'
+        It must be a raw string, starting with `^` and ending with a trailing slash
+        By default, uses the app label as a prefix"""
+        return r'^{0}/'.format(self.label)
+

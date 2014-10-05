@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
+from kii import app
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
@@ -18,4 +19,5 @@ urlpatterns = patterns('',
             namespace='test_permission', 
             app_name='test_permission')
         ),
+    url(r'^kii/', include(app.core.apps.get_apps_urls(), namespace="kii")),
 )
