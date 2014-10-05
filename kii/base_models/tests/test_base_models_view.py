@@ -10,7 +10,7 @@ class TestViews(base.BaseTestCase):
         m = test_base_models.models.NameModel(name="hello")
         m.save()
 
-        url = reverse("test_base_models:namemodel:detail", kwargs={'pk': m.pk})
+        url = reverse("kii:test_base_models:namemodel:detail", kwargs={'pk': m.pk})
         response = self.client.get(url)
         self.assertTemplateUsed(response, "test_base_models/namemodel/detail.html")
         

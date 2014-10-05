@@ -31,7 +31,7 @@ class BaseMixin(models.Model):
         app_name = self._meta.app_label
         model_name = self.__class__.__name__.lower()
 
-        return "{0}:{1}:".format(app_name, model_name)
+        return "kii:{0}:{1}:".format(app_name, model_name)
 
     def reverse(self, suffix):
         """Return a reversed URL for given suffix (for example: detail, list, edit...)
