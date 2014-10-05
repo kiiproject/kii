@@ -41,7 +41,7 @@ class AppManager(object):
 
         for app in self.kii_apps():
             if app.urls is not None:
-                included_url = url(app.get_url_prefix(), include(app.urls, namespace=app.label, app_name=app.label))
+                included_url = url(app.get_url_prefix(), include(app.urlconf, namespace=app.label, app_name=app.label))
                 urls.append(included_url)
 
         return urls
@@ -56,6 +56,8 @@ class App(AppConfig):
 
     # replace this with a urlconf module that would be automatically gathered 
     # by AppManager.get_apps_urls(), such as "your_app.urls"
+    # if the string start with a dot, such as ".urls", a full path will be built by joining
+    # app.name and app.urls
     urls = None
 
     @property
@@ -68,3 +70,12 @@ class App(AppConfig):
         By default, uses the app label as a prefix"""
         return r'^{0}/'.format(self.label)
 
+    @property
+    def urlconf(self):
+        """Return the full path to the app URLconf"""
+
+        # it's a realative URLconf, append it to app.name
+        if self.urls.startswith('.'):
+            return self.name + self.urls
+
+        return self.urls
