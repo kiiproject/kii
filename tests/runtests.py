@@ -33,11 +33,16 @@ for app in KII_APPS:
 TEST_APPS = (
     'kii.tests.test_base_models',
     'kii.tests.test_user',
-    'kii.tests.test_app.apps.TestApp',
+    'kii.tests.test_app',
     'kii.tests.test_theme',
     'kii.tests.test_permission',
     'kii.tests.templates',
 )
+
+TEST_APPS_FULL = ()
+
+for app in TEST_APPS:
+    TEST_APPS_FULL += (".".join([app, "apps.App"]),)
 
 # Detect location and available modules
 module_root = os.path.dirname(os.path.realpath(__file__))
@@ -75,8 +80,8 @@ settings.configure(
         'django_nose',
         'guardian',
         'mptt',
-    )+KII_APPS_FULL + TEST_APPS,
-
+    )+KII_APPS_FULL + TEST_APPS_FULL,
+    TEST_APPS=TEST_APPS,
     # kii settings
     KII_THEME="default",
     KII_APPS=KII_APPS,
