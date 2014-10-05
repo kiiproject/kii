@@ -12,7 +12,10 @@ namemodel_patterns = patterns('',
 )
 ownermodel_patterns = patterns('',
     url(r'^create$', 
-        views.OwnerMixinCreate.as_view(model=models.OwnerModel, template_name="templates/test.html"), 
+        views.OwnerMixinCreate.as_view(
+            model=models.OwnerModel, 
+            template_name="base_models/modelform.html",
+            fields=['useless_field']), 
         name='create'),
 )
 

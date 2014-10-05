@@ -48,9 +48,6 @@ class TestOwnerMixin(base.UserTestCase):
         url = test_base_models.models.OwnerModel.class_reverse('create')
         self.login(self.users[0])
         response = self.client.post(url, {'useless_field': 'myinstance'})
-        print(response.status_code, response.content)
-
-        i = test_base_models.models.OwnerModel.objects.filter(owner=self.users[0])
-        print(i)
-
+        
+        i = test_base_models.models.OwnerModel.objects.get(useless_field="myinstance")        
         self.assertEqual(i.owner, self.users[0])
