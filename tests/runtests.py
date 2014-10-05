@@ -120,7 +120,8 @@ call_command('syncdb', verbosity=1, interactive=False)
 verbosity = 2 if '-v' in sys.argv else 1
 
 runner = TestRunner(verbosity=verbosity, interactive=True, failfast=False)
-failures = runner.run_tests(KII_APPS)
+apps_to_test = sys.argv[1:] or KII_APPS
+failures = runner.run_tests(apps_to_test)
 
 if failures:
     sys.exit(bool(failures))
