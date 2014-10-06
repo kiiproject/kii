@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from kii import base_models, stream as stream_app
+from kii import base_models, stream as stream_app, permission
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.translation import ugettext_lazy as _
@@ -8,6 +8,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 class Workspace(
     MPTTModel,
+    permission.models.PermissionMixin,
     base_models.models.NameMixin):
     """
     A model for storing StreamItem instances"""

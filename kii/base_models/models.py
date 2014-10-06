@@ -1,10 +1,12 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
 from kii import user
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
+
 
 class BaseMixinQuerySet(QuerySet):
     pass
@@ -90,3 +92,73 @@ class OwnerMixin(BaseMixin):
         abstract = True
 
 
+
+class BaseInheritModel(models.Model):
+        """Base class for inheriting model (see below)"""
+
+
+        class Meta:
+            abstract = True
+
+
+
+
+
+def get_inherit_model(local_field, target, target_class, target_related_name, target_field=None):
+    """Return a model that will allow field synchronisation between an instance field and a target field
+    The returned model will have boolean field `inherit_<local_field>`. 
+
+    .. local_field: the field on subclass that should be synchronized (string)
+    .. target: the foreignkey field on subclass from which the value will be retrieved when needed (string)
+    .. target_class: the ForeignKey class, for signal activation
+    .. target_related_name: the related name on which you can query instances from target, used in post_save signal
+    .. target_field: the field name on target from which the value will be retrieved. Default to the same as local_field
+
+    When this field is set to True on a model instance, the value of local_field will be automatically 
+    fetched from target.target_field. Inherit from must be a string pointing
+    to a ForeignKey field on instance, with a field named target_field, 
+    from which the value will be inherited
+
+    Calling this method will also register inherit_from model class, for automatic post_save signal
+    creation
+    """
+    target_field = target_field or local_field
+    inherit_model_config = (local_field, target, target_field)        
+
+
+    InheritModel = type(
+        str('InheritModel_{0}_{1}_{2}'.format(local_field, target, target_field)), 
+        (BaseInheritModel,), 
+        {
+            str('inherit_{0}'.format(local_field)): models.BooleanField(default=True),
+            str('_inherit_config_{0}'.format(local_field)): inherit_model_config,
+            str('Meta'): BaseInheritModel.Meta,
+            str('__module__'): __name__
+        })
+
+    def inheriting_pre_save_signal(sender, instance, **kwargs):
+        if not issubclass(sender, InheritModel) or not hasattr(instance, target):
+            return
+
+        # set local_field value to target field value if needed
+        if getattr(instance, "inherit_{0}".format(local_field)) is True:
+            t = getattr(instance, target)
+            t_value = getattr(t, target_field)
+            setattr(instance, local_field, t_value)
+
+    def target_post_save_signal(sender, instance, **kwargs):
+
+        if not issubclass(sender, target_class):
+            return
+
+        filters = {"inherit_{0}".format(local_field): True}
+        instances = getattr(instance, target_related_name).filter(**filters)
+
+        # update inheriting instance when target value change
+        for i in instances:
+            i.save()
+
+    signals = {"pre_save": inheriting_pre_save_signal, 'post_save':target_post_save_signal}
+    
+    return InheritModel, signals
+    
