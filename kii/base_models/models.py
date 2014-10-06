@@ -119,8 +119,9 @@ def get_inherit_model(local_field, target, target_class, target_related_name, ta
     to a ForeignKey field on instance, with a field named target_field, 
     from which the value will be inherited
 
-    Calling this method will also register inherit_from model class, for automatic post_save signal
-    creation
+    This method will also return a dict of signals you have to register manually in order to enable field synchronization
+
+    Warning: field synchronization won't work if you use the returned model in a abstract base class
     """
     target_field = target_field or local_field
     inherit_model_config = (local_field, target, target_field)        
