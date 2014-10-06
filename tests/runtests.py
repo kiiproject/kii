@@ -108,8 +108,10 @@ settings.configure(
         'django.contrib.auth.backends.ModelBackend', # this is default
         'guardian.backends.ObjectPermissionBackend',
     ),
-    ROOT_URLCONF="kii.tests.urls"
+    ROOT_URLCONF="kii.tests.urls",
 
+    # group where all users will be registered. Used for permissions
+    ALL_USERS_GROUP="all_users",
 )
 
 from django.test.utils import get_runner
