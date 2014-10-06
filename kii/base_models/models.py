@@ -56,6 +56,9 @@ class BaseMixin(models.Model):
         """Call reverse with an actual instance of the class. Used for reversing if you don't have a class instance"""
         return cls.reverse(cls(), suffix)
 
+    def __repr__(self):
+        return "<{0}: {1}>".format(self.__class__.__name__, self.pk)
+
 class NameMixin(BaseMixin):
 
     """An abstract base class for models with a name"""

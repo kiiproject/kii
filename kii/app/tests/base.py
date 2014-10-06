@@ -8,3 +8,8 @@ class BaseTestCase(django.test.LiveServerTestCase):
         self.factory = RequestFactory()
 
         super(BaseTestCase, self).setUp()
+
+    def assertQuerysetEqualIterable(self, qs, it, **kwargs):
+
+        r = [repr(e) for e in it]
+        self.assertQuerysetEqual(qs, r, **kwargs)

@@ -14,6 +14,7 @@ InheritModel, signals = base_models.models.get_inherit_model(
     target="parent",
     target_class=NameModel,
     target_related_name="yolo")
+
 class InheritNameModel(InheritModel, base_models.models.NameMixin):
 
     parent = models.ForeignKey(NameModel, related_name="yolo")

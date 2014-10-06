@@ -17,8 +17,13 @@ def create_user_data(sender, instance, created, **kwargs):
 post_save.connect(create_user_data, sender=settings.AUTH_USER_MODEL)
 
 def add_user_to_default_group(sender, instance, created, **kwargs):
-    if created:
+    """Will add all users to default group, except AnonymousUser"""
+    if created and not instance.pk == settings.ANONYMOUS_USER_ID:
         group, group_created = Group.objects.get_or_create(name=settings.ALL_USERS_GROUP)
         group.user_set.add(instance)
 
+    
 post_save.connect(add_user_to_default_group, sender=settings.AUTH_USER_MODEL)
+
+def get_all_users_group():
+    return Group.objects.get(name=settings.ALL_USERS_GROUP)

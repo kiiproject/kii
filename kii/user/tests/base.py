@@ -1,6 +1,8 @@
 from ...app.tests import base
 import django
 from django.conf import settings
+from django.contrib.auth.models import Group
+from guardian.utils import get_anonymous_user
 
 class UserTestCase(base.BaseTestCase):
 
@@ -16,6 +18,9 @@ class UserTestCase(base.BaseTestCase):
         for key, user in self.users.items():
             user.set_password('test')
             user.save()
+
+        self.all_users_group = Group.objects.get(name=settings.ALL_USERS_GROUP)
+        self.anonymous_user = get_anonymous_user()
 
     def login(self, username, password="test"):
         return self.client.post(settings.LOGIN_URL, {"username": username, "password": password})

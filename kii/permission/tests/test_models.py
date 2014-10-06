@@ -1,7 +1,7 @@
 from kii.stream.tests import base
 from kii.tests.test_permission import models
+from kii import user
 import django
-from guardian.utils import get_anonymous_user
 from django_dynamic_fixture import G
 
 
@@ -24,6 +24,53 @@ class TestPermissionMixin(base.StreamTestCase):
         self.assertEqual(len(queryset), 1)
         self.assertIn(m1, queryset)
 
+    def test_can_assign_permission_to_group(self):
+        m0 = G(models.PermissionModel, owner=self.users[0])
+        m0.assign_perm("read", self.all_users_group)
+
+        self.assertEqual(m0.readable_by(self.users[1]), True)
+
+    def test_allowing_premissions_to_anonymous_allow_to_everybody(self):
+        m0 = G(models.PermissionModel, owner=self.users[0])
+        m0.assign_perm("read", self.anonymous_user)
+
+        for user in self.user_model.objects.all():
+            self.assertEqual(m0.readable_by(user), True)
+
+    def test_allowing_all_users_group_does_not_allow_anonymous(self):
+        m0 = G(models.PermissionModel, owner=self.users[0])
+        m0.assign_perm("read", user.models.get_all_users_group())
+
+        for u in self.user_model.objects.all().exclude(pk=self.anonymous_user.pk):
+            self.assertEqual(m0.readable_by(u), True)
+
+        self.assertEqual(m0.readable_by(self.anonymous_user), False)
+
+
+class TestInheritPermissionMixin(base.StreamTestCase):
+
+    def test_inheritpermissionmodel_can_inherit_permissions(self):
+        p = G(models.PermissionModel, owner=self.users[0])
+        m = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
+
+        self.assertEqual(m.readable_by(self.users[1]), False)
+        p.assign_perm("read", self.users[1])
+
+        self.assertEqual(m.readable_by(self.users[1]), True)
+
+    def test_inheritpermissionqueryset_include_correct_objects(self):
+        p = G(models.PermissionModel, owner=self.users[0])
+        m1 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
+        m2 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
+        m3 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
+        m4 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
+
+        p.assign_perm("read", self.anonymous_user)
+
+        readable = models.InheritPermissionModel.objects.all().readable_by(self.users[0])
+        self.assertQuerysetEqualIterable(readable, [m1, m2], ordered=False)
+
+
 class TestPrivateViewMixin(base.StreamTestCase):
     
     def test_privateviewmixin_view_private_default_to_true(self):
@@ -43,7 +90,7 @@ class TestPrivateViewMixin(base.StreamTestCase):
         m0 = G(models.PrivateReadModel, owner=self.users[0], read_private=True)
         m1 = G(models.PrivateReadModel, owner=self.users[0], read_private=False)
         
-        user = get_anonymous_user()
+        user = self.anonymous_user
         queryset = models.PrivateReadModel.objects.readable_by(user)
 
         self.assertEqual(len(queryset), 1)
