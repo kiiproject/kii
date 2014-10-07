@@ -2,14 +2,14 @@ import kii.stream.tests.base
 from kii import stream, classify
 import django.db
 import django.core.exceptions
-
+from django_dynamic_fixture import G
 
 class TestWorkspace(stream.tests.base.StreamTestCase):
     
     def test_workspace_requires_stream(self):
         w = classify.models.Workspace(name="yolo")
 
-        with self.assertRaises(django.db.IntegrityError):
+        with self.assertRaises(AttributeError):
             w.save()
 
     def test_can_add_stream_item_to_workspace(self):
@@ -22,6 +22,10 @@ class TestWorkspace(stream.tests.base.StreamTestCase):
         wsi = classify.models.WorkspaceStreamItem(
                 workspace=w, item=si)
         wsi.save()
+
+    def test_workspace_inherit_owner_from_stream(self):
+        w = G(classify.models.Workspace, stream=self.streams[0])
+        self.assertEqual(w.owner, w.stream.owner)
 
     def test_cannot_save_streamitem_in_workspace_from_other_stream(self):
         s0 = self.streams[0]

@@ -8,7 +8,6 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 class Workspace(
     MPTTModel,
-    permission.models.PermissionMixin,
     base_models.models.NameMixin):
     """
     A model for storing StreamItem instances"""
@@ -36,3 +35,9 @@ def workspace_storableitem_created(sender, instance, **kwargs):
                 "You cannot store a StreamItem in a Workspace of a different Stream")
 
 pre_save.connect(workspace_storableitem_created, sender=WorkspaceStreamItem)
+
+
+def set_workspace_owner(sender, instance, **kwargs):
+    instance.owner = instance.stream.owner
+
+pre_save.connect(set_workspace_owner, sender=Workspace)
