@@ -99,7 +99,6 @@ class OwnerMixin(BaseMixin):
 class BaseInheritModel(models.Model):
         """Base class for inheriting model (see below)"""
 
-
         class Meta:
             abstract = True
 
