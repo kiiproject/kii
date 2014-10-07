@@ -5,8 +5,6 @@ from django.db import models
 class PermissionModel(permission.models.PermissionMixin):
     pass
 
-class PrivateReadModel(permission.models.PrivateReadMixin):
-    pass
 
 
 
