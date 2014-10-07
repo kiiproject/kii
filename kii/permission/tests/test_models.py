@@ -107,7 +107,6 @@ class TestInheritPermissionMixin(base.StreamTestCase):
         i3 = G(models.InheritInheritPermissionModel, parent=m3, inherit_permissions=True)
         i4 = G(models.InheritInheritPermissionModel, parent=m4, inherit_permissions=False)
 
-
         p.assign_perm("read", self.anonymous_user)
         i4.assign_perm('read', self.users[1])
         readable = models.InheritInheritPermissionModel.objects.all().readable_by(self.users[1])

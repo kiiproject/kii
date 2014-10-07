@@ -83,7 +83,7 @@ class OwnerMixinQuerySet(BaseMixinQuerySet):
 class OwnerMixin(BaseMixin):
     """A mixin for model instance that have an owner"""
 
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss", editable=False)
     objects = OwnerMixinQuerySet.as_manager()
     
 
