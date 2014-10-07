@@ -78,19 +78,19 @@ class InheritPermissionMixinQueryset(PermissionMixinQuerySet):
         matching = super(InheritPermissionMixinQueryset, self).filter_permission(permissions, target)
 
 
-        # get parent field and class for filtering
-        parent_field = [field for field in self.model._meta.fields if field.name == "parent"][0]
-        parent_class = parent_field.rel.to
+        # get root field and class for filtering
+        root_field = [field for field in self.model._meta.fields if field.name == "root"][0]
+        root_class = root_field.rel.to
 
-         # grab parent IDS corresponding to given permission
-        parents = parent_class.objects.filter_permission(
+         # grab root IDS corresponding to given permission
+        roots = root_class.objects.filter_permission(
             permissions, target).filter(children__inherit_permissions=True).distinct().values('id')
 
-        parent_ids = [parent['id'] for parent in parents]
+        root_ids = [root['id'] for root in roots]
 
         # query inheriting models using these ids
         filters = {
-            "parent__pk__in": parent_ids, 
+            "root__pk__in": root_ids, 
             "inherit_permissions": True
         }
         inheriting = self.filter(**filters)
@@ -109,7 +109,7 @@ class InheritPermissionMixin(PermissionMixin):
 
     def permission(self, permission, target):
         if self.inherit_permissions:
-            return self.parent.permission(permission, target)
+            return self.root.permission(permission, target)
 
         return super(InheritPermissionMixin, self).permission(permission, target)
 
@@ -134,6 +134,6 @@ pre_delete.connect(remove_obj_perms)
 
 def set_inherit_permission_owner(sender, instance, **kwargs):
     if issubclass(sender, InheritPermissionMixin):
-        instance.owner = instance.parent.owner
+        instance.owner = instance.root.owner
 
 pre_save.connect(set_inherit_permission_owner)

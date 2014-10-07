@@ -6,38 +6,38 @@ from django.utils.translation import ugettext_lazy as _
 import django.core.exceptions
 from mptt.models import MPTTModel, TreeForeignKey
 
-class Workspace(
+class Tag(
     MPTTModel,
     base_models.models.NameMixin):
     """
     A model for storing StreamItem instances"""
 
-    stream = models.ForeignKey(stream_app.models.Stream, related_name="workspaces")
-    items = models.ManyToManyField(stream_app.models.StreamItem, through='WorkspaceStreamItem')
+    stream = models.ForeignKey(stream_app.models.Stream, related_name="tags")
+    items = models.ManyToManyField(stream_app.models.StreamItem, through='TagItem')
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
     class MPTTMeta:
         order_insertion_by = ['name']
         
-class WorkspaceStreamItem(models.Model):
-    """Many to many relationship between StreamItem and Workspace"""
+class TagItem(models.Model):
+    """Many to many relationship between StreamItem and Tag"""
     item = models.ForeignKey(stream_app.models.StreamItem)
-    workspace = models.ForeignKey(Workspace)
+    tag = models.ForeignKey(Tag)
 
 
 
-def workspace_storableitem_created(sender, instance, **kwargs):
+def tag_storableitem_created(sender, instance, **kwargs):
     
     if instance.pk is None:
         # the instance is going to be created
-        if instance.workspace.stream is not instance.item.stream:
+        if instance.tag.stream is not instance.item.stream:
             raise django.core.exceptions.ValidationError(
-                "You cannot store a StreamItem in a Workspace of a different Stream")
+                "You cannot store a StreamItem in a Tag of a different Stream")
 
-pre_save.connect(workspace_storableitem_created, sender=WorkspaceStreamItem)
+pre_save.connect(tag_storableitem_created, sender=TagItem)
 
 
-def set_workspace_owner(sender, instance, **kwargs):
+def set_tag_owner(sender, instance, **kwargs):
     instance.owner = instance.stream.owner
 
-pre_save.connect(set_workspace_owner, sender=Workspace)
+pre_save.connect(set_tag_owner, sender=Tag)
