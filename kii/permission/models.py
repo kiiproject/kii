@@ -79,18 +79,18 @@ class InheritPermissionMixinQueryset(PermissionMixinQuerySet):
 
 
         # get parent field and class for filtering
-        parent_field = [field for field in self.model._meta.fields if field.name == self.inherit_permissions_target][0]
+        parent_field = [field for field in self.model._meta.fields if field.name == "parent"][0]
         parent_class = parent_field.rel.to
 
-        # grab parent IDS corresponding to given permission
-        filters = {"{0}__inherit_permissions".format(self.inherit_permissions_related_name):True}
-        parents = parent_class.objects.filter_permission(permissions, target).filter(**filters).distinct().values('id')
+         # grab parent IDS corresponding to given permission
+        parents = parent_class.objects.filter_permission(
+            permissions, target).filter(children__inherit_permissions=True).distinct().values('id')
 
         parent_ids = [parent['id'] for parent in parents]
 
         # query inheriting models using these ids
         filters = {
-            "{0}__pk__in".format(self.inherit_permissions_target):parent_ids, 
+            "parent__pk__in": parent_ids, 
             "inherit_permissions": True
         }
         inheriting = self.filter(**filters)
@@ -102,66 +102,22 @@ class InheritPermissionMixinQueryset(PermissionMixinQuerySet):
 class InheritPermissionMixin(PermissionMixin):
 
     objects = InheritPermissionMixinQueryset.as_manager()
-    Meta = PermissionMixin.Meta
-
-    def permission(self, permission, target):
-        if self.inherit_permissions:
-            return getattr(self, self.inherit_permissions_from).permission(permission, target)
-
-        return super(InheritPermissionMixin, self).permission(permission, target)
-
-def get_inherit_permission_model(model_name, target="parent", related_name="children"):
-    """Return a model class that can will inherit permissions from parent field"""
-
-
-    class QS(InheritPermissionMixinQueryset):
-        inherit_permissions_target = target
-        inherit_permissions_related_name = related_name
-
-    Model = type(
-        str('InheritPermissionMixin_{0}'.format(model_name)), 
-        (InheritPermissionMixin,), 
-        {
-            str('inherit_permissions'): models.BooleanField(default=True),
-            str('inherit_permissions_from'): target,
-            str('Meta'): PermissionMixin.Meta,
-            str('__module__'): __name__,
-        })
-
-
-    return Model, QS.as_manager()
-
-
-class PrivateReadMixinQuerySet(PermissionMixinQuerySet):
-
-    def readable_by(self, user):
-
-        has_read_permissions = super(PrivateReadMixinQuerySet, self).readable_by(user)
-        readable = self.filter(read_private=False)
-        return readable | has_read_permissions
-
-
-class PrivateReadMixin(PermissionMixin):
-    """Model inheriting from this mixin will have a public/private setting for viewing (not writing)"""
-    
-    read_private = models.BooleanField(_('base_models.privatereadmixin.read_private'), default=True)
-
-    objects = PrivateReadMixinQuerySet.as_manager()
+    inherit_permissions = models.BooleanField(default=True)
 
     class Meta(PermissionMixin.Meta):
         abstract = True
 
-    def readable_by(self, user):
-        if not self.read_private:
-            return True
-        # return value from PermissionMixin
-        return super(PrivateReadMixin, self).readable_by(user)
+    def permission(self, permission, target):
+        if self.inherit_permissions:
+            return self.parent.permission(permission, target)
+
+        return super(InheritPermissionMixin, self).permission(permission, target)
 
 # automatic deletion of permission when a user is deleted
 # from http://django-guardian.readthedocs.org/en/latest/userguide/caveats.html
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, pre_save
 from guardian.models import UserObjectPermission
 from guardian.models import GroupObjectPermission
 
@@ -173,3 +129,11 @@ def remove_obj_perms(sender, instance, **kwargs):
     GroupObjectPermission.objects.filter(filters).delete()
 
 pre_delete.connect(remove_obj_perms)
+
+
+
+def set_inherit_permission_owner(sender, instance, **kwargs):
+    if issubclass(sender, InheritPermissionMixin):
+        instance.owner = instance.parent.owner
+
+pre_save.connect(set_inherit_permission_owner)

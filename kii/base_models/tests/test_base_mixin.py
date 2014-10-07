@@ -20,3 +20,4 @@ class TestBaseMixin(base.BaseTestCase):
     def test_model_class_reverse(self):
         m = test_base_models.models.NameModel
         self.assertEqual(m.class_reverse('list'), "/kii/test_base_models/namemodel/")
+

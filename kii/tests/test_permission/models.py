@@ -1,22 +1,20 @@
-from kii import permission
+from kii import permission, utils, base_models
 from django.db import models
-
 
 class PermissionModel(permission.models.PermissionMixin):
     pass
 
 
 
-
-inherit_permission_model, manager = permission.models.get_inherit_permission_model(model_name="Ipm", target="parent", related_name="children")
-
-class InheritPermissionModel(
-    inherit_permission_model,
-    permission.models.PermissionMixin):
+class InheritPermissionModel(permission.models.InheritPermissionMixin):
 
     parent = models.ForeignKey(PermissionModel, related_name="children")
-    objects = manager
 
 
-for k, v in InheritPermissionModel._meta.fields[-1].rel.__dict__.items():
-    print(k, v)
+class InheritInheritPermissionQuerySet(permission.models.InheritPermissionMixinQueryset):
+    pass
+
+class InheritInheritPermissionModel(permission.models.InheritPermissionMixin):
+    objects = InheritInheritPermissionQuerySet.as_manager()
+    parent = models.ForeignKey(InheritPermissionModel, related_name="children")
+    
