@@ -49,15 +49,15 @@ class TestPermissionMixin(base.StreamTestCase):
 
 class TestInheritPermissionMixin(base.StreamTestCase):
 
-    def test_inheritopermissionmodel_inherit_parent_owner(self):
+    def test_inheritopermissionmodel_inherit_root_owner(self):
         p = G(models.PermissionModel, owner=self.users[0])
-        m = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
+        m = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
 
         self.assertEqual(m.owner, self.users[0])
 
     def test_inheritpermissionmodel_can_inherit_permissions(self):
         p = G(models.PermissionModel, owner=self.users[0])
-        m = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
+        m = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
 
         self.assertEqual(m.readable_by(self.users[1]), False)
         p.assign_perm("read", self.users[1])
@@ -66,10 +66,10 @@ class TestInheritPermissionMixin(base.StreamTestCase):
 
     def test_inheritpermissionqueryset_include_correct_objects(self):
         p = G(models.PermissionModel, owner=self.users[0])
-        m1 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
-        m2 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
-        m3 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
-        m4 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
+        m1 = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
+        m2 = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
+        m3 = G(models.InheritPermissionModel, root=p, inherit_permissions=False)
+        m4 = G(models.InheritPermissionModel, root=p, inherit_permissions=False)
 
         p.assign_perm("read", self.anonymous_user)
 
@@ -78,18 +78,18 @@ class TestInheritPermissionMixin(base.StreamTestCase):
 
     def test_inheritpermissionqueryset_include_all_owned_objects(self):
         p = G(models.PermissionModel, owner=self.users[0])
-        m1 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
-        m2 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
-        m3 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
-        m4 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
+        m1 = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
+        m2 = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
+        m3 = G(models.InheritPermissionModel, root=p, inherit_permissions=False)
+        m4 = G(models.InheritPermissionModel, root=p, inherit_permissions=False)
 
         readable = models.InheritPermissionModel.objects.all().readable_by(self.users[0])
         self.assertQuerysetEqualIterable(readable, [m1, m2, m3, m4], ordered=False)
 
     def test_inheritinheritpermissionmodel_can_inherit_permissions(self):
         p = G(models.PermissionModel, owner=self.users[0])
-        m = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
-        i = G(models.InheritInheritPermissionModel, parent=m, inherit_permissions=True)
+        m = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
+        i = G(models.InheritInheritPermissionModel, root=m, inherit_permissions=True)
 
         self.assertEqual(i.readable_by(self.users[1]), False)
         p.assign_perm("read", self.users[1])
@@ -98,14 +98,14 @@ class TestInheritPermissionMixin(base.StreamTestCase):
 
     def test_inheritinheritpermissionqueryset_include_correct_objects(self):
         p = G(models.PermissionModel, owner=self.users[0])
-        m1 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
-        m2 = G(models.InheritPermissionModel, parent=p, inherit_permissions=True)
-        m3 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
-        m4 = G(models.InheritPermissionModel, parent=p, inherit_permissions=False)
-        i1 = G(models.InheritInheritPermissionModel, parent=m1, inherit_permissions=True)
-        i2 = G(models.InheritInheritPermissionModel, parent=m2, inherit_permissions=False)
-        i3 = G(models.InheritInheritPermissionModel, parent=m3, inherit_permissions=True)
-        i4 = G(models.InheritInheritPermissionModel, parent=m4, inherit_permissions=False)
+        m1 = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
+        m2 = G(models.InheritPermissionModel, root=p, inherit_permissions=True)
+        m3 = G(models.InheritPermissionModel, root=p, inherit_permissions=False)
+        m4 = G(models.InheritPermissionModel, root=p, inherit_permissions=False)
+        i1 = G(models.InheritInheritPermissionModel, root=m1, inherit_permissions=True)
+        i2 = G(models.InheritInheritPermissionModel, root=m2, inherit_permissions=False)
+        i3 = G(models.InheritInheritPermissionModel, root=m3, inherit_permissions=True)
+        i4 = G(models.InheritInheritPermissionModel, root=m4, inherit_permissions=False)
 
         p.assign_perm("read", self.anonymous_user)
         i4.assign_perm('read', self.users[1])

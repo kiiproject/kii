@@ -103,9 +103,6 @@ class BaseInheritModel(models.Model):
             abstract = True
 
 
-
-
-
 def get_inherit_model(local_field, target, target_class, target_related_name, target_field=None):
     """Return a model that will allow field synchronisation between an instance field and a target field
     The returned model will have boolean field `inherit_<local_field>`. 

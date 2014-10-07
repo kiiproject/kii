@@ -8,7 +8,7 @@ class PermissionModel(permission.models.PermissionMixin):
 
 class InheritPermissionModel(permission.models.InheritPermissionMixin):
 
-    parent = models.ForeignKey(PermissionModel, related_name="children")
+    root = models.ForeignKey(PermissionModel, related_name="children")
 
 
 class InheritInheritPermissionQuerySet(permission.models.InheritPermissionMixinQueryset):
@@ -16,5 +16,5 @@ class InheritInheritPermissionQuerySet(permission.models.InheritPermissionMixinQ
 
 class InheritInheritPermissionModel(permission.models.InheritPermissionMixin):
     objects = InheritInheritPermissionQuerySet.as_manager()
-    parent = models.ForeignKey(InheritPermissionModel, related_name="children")
+    root = models.ForeignKey(InheritPermissionModel, related_name="children")
     
