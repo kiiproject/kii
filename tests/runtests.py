@@ -11,24 +11,13 @@ sys.stderr.write('Using Django version {0} from {1}\n'.format(
     django.get_version(),
     os.path.dirname(os.path.abspath(django.__file__)))
 )
+# Detect location and available modules
+module_root = os.path.dirname(os.path.realpath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+KII_DIR = os.path.dirname(BASE_DIR)
+sys.path.append(KII_DIR)
 
-KII_APPS = (
-    'kii.base_models',
-    'kii.theme',
-    'kii.hook',
-    'kii.permission',
-    'kii.user',
-    'kii.app',
-    'kii.stream',
-    'kii.classify',
-)
-
-KII_APPS_FULL = ()
-
-for app in KII_APPS:
-    KII_APPS_FULL += (".".join([app, "apps.App"]),)
-
-
+import kii
 
 TEST_APPS = (
     'kii.tests.test_base_models',
@@ -46,11 +35,6 @@ TEST_APPS_FULL = ()
 for app in TEST_APPS:
     TEST_APPS_FULL += (".".join([app, "apps.App"]),)
 
-# Detect location and available modules
-module_root = os.path.dirname(os.path.realpath(__file__))
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-KII_DIR = os.path.dirname(BASE_DIR)
-sys.path.append(KII_DIR)
 
 # Inline settings file
 settings.configure(
@@ -82,11 +66,11 @@ settings.configure(
         'django_nose',
         'guardian',
         'mptt',
-    )+KII_APPS_FULL + TEST_APPS_FULL,
+    )+kii.APPS_CONFIGS + TEST_APPS_FULL,
     TEST_APPS=TEST_APPS,
     # kii settings
     KII_THEME="default",
-    KII_APPS=KII_APPS,
+    KII_APPS=kii.APPS,
     SITE_ID = 1,    
     STATIC_URL = "/static/",
     TEMPLATE_LOADERS = (
@@ -124,7 +108,7 @@ call_command('syncdb', verbosity=1, interactive=False)
 verbosity = 2 if '-v' in sys.argv else 1
 
 runner = TestRunner(verbosity=verbosity, interactive=True, failfast=False)
-apps_to_test = sys.argv[1:] or KII_APPS
+apps_to_test = sys.argv[1:] or kii.APPS
 failures = runner.run_tests(apps_to_test)
 
 if failures:
