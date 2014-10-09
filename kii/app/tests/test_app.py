@@ -15,9 +15,9 @@ class TestApp(base.BaseTestCase):
         self.assertEqual(isinstance(app, test_apps.App), True)
 
     def test_can_get_all_apps(self):
-        all_apps = apps.all()
-        print(len(all_apps), all_apps[0])
-        self.assertEqual(all_apps, django_app_registry.get_app_configs())        
+        all_apps = list(apps.all())
+        django_apps = list(django_app_registry.get_app_configs())
+        self.assertEqual(django_apps, all_apps)  
 
     def test_can_get_kii_app(self):
         kii_apps = apps.kii_apps()  
