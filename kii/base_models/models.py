@@ -76,6 +76,15 @@ class NameMixin(BaseMixin):
         super(NameMixin, self).clean()
 
 
+class BaseDateTimeMixin(BaseMixin):
+    """Add two fields that are automatically set"""
+    creation_date = models.DateTimeField(auto_now_add=True, editable=False)
+    last_modification_date = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        abstract = True
+
+
 class OwnerMixinQuerySet(BaseMixinQuerySet):
     def owned_by(self, user):
         return self.filter(owner=user.pk)
