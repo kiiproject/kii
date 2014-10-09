@@ -6,6 +6,7 @@ from kii import user
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
+from django.utils import timezone
 
 
 class BaseMixinQuerySet(QuerySet):
@@ -84,6 +85,26 @@ class BaseDateTimeMixin(BaseMixin):
     class Meta:
         abstract = True
 
+
+class StatusMixin(BaseMixin):
+    """Add a status and a publication_date field"""
+    STATUS_CHOICES = (
+        ('dra', _('base_models.status_mixin.draft')),
+        ('pub', _('base_models.status_mixin.published')),
+    )
+
+    status = models.CharField(choices=STATUS_CHOICES, default="dra", max_length=5)
+    publication_date = models.DateTimeField(editable=False, default=None, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        """Set publication_date to now if status is set to published"""
+        if self.publication_date is None and self.status == "pub":
+            self.publication_date = timezone.now()
+
+        super(StatusMixin, self).save(*args, **kwargs)
 
 class OwnerMixinQuerySet(BaseMixinQuerySet):
     def owned_by(self, user):
