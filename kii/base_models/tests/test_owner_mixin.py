@@ -17,11 +17,11 @@ class TestOwnerMixin(base.UserTestCase):
 
     def test_owned_item_is_deleted_with_user(self):
         m = self.G(test_base_models.models.OwnerModel, owner=self.users[0])
-
+        pk = m.pk
         self.users[0].delete()
 
         with self.assertRaises(test_base_models.models.OwnerModel.DoesNotExist):
-            test_base_models.models.OwnerModel.objects.get(pk=m.pk)
+            test_base_models.models.OwnerModel.objects.get(pk=pk)
 
     def test_can_check_if_user_is_owner_of_object(self):
         m = self.G(test_base_models.models.OwnerModel, owner=self.users[0])

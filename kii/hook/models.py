@@ -2,6 +2,8 @@ from kii import base_models
 from django.db import models
 from kii.utils import meta
 from .core import HookManager
+from six import with_metaclass
+
 
 def field_getter(field_name):
     """Returns the actual function for getting a field value (with hooks called on it)"""
@@ -14,7 +16,7 @@ def field_getter(field_name):
     return hooks
 
 
-class HookMeta(type):
+class HookMeta(models.base.ModelBase):
     """Add a get_* method for each field 
     Allow registration of hooks that will be called inside this method, in order to transform
     the output of a field"""
@@ -26,6 +28,6 @@ class HookMeta(type):
             setattr(cls, "get_{0}".format(field.name), field_getter(field.name))
         return cls
 
-class HookMixin(base_models.models.BaseMixin):
+
+class HookMixin(with_metaclass(HookMeta, base_models.models.BaseMixin)):
     hooks = HookManager()
-    __metaclass__ = meta.classmaker((HookMeta,))
