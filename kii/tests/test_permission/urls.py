@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 from kii.permission import views
-import models
+from . import models
 
 
 

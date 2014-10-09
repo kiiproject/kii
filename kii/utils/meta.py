@@ -1,7 +1,7 @@
 """
     Used to avoid metaclass conflicts, especially in models
 """
-import inspect, types, __builtin__
+import inspect, types
 
 # from https://github.com/ojii/django-nani/issues/39
 ############## preliminary: two utility functions #####################

@@ -1,27 +1,26 @@
 from kii.app.tests import base
 from kii.tests import test_base_models
 import django
-from django_dynamic_fixture import G
 
 
 class TestNameMixin(base.BaseTestCase):
 
     
     def test_inherit_model_default_value_to_parent(self):
-        p = G(test_base_models.models.NameModel, name="hello")
-        i = G(test_base_models.models.InheritNameModel, parent=p)
+        p = self.G(test_base_models.models.NameModel, name="hello")
+        i = self.G(test_base_models.models.InheritNameModel, parent=p)
 
         self.assertEqual(i.name, "hello")
 
     def test_inherit_model_can_disable_inheritance(self):
-        p = G(test_base_models.models.NameModel, name="hello")
-        i = G(test_base_models.models.InheritNameModel, parent=p, inherit_name=False, name="yolo")
+        p = self.G(test_base_models.models.NameModel, name="hello")
+        i = self.G(test_base_models.models.InheritNameModel, parent=p, inherit_name=False, name="yolo")
 
         self.assertEqual(i.name, "yolo")
 
     def test_change_on_parent_model_change_inheriting_model(self):
-        p = G(test_base_models.models.NameModel, name="hello")
-        i = G(test_base_models.models.InheritNameModel, parent=p)
+        p = self.G(test_base_models.models.NameModel, name="hello")
+        i = self.G(test_base_models.models.InheritNameModel, parent=p)
 
         self.assertEqual(i.name, "hello")
 
@@ -31,8 +30,8 @@ class TestNameMixin(base.BaseTestCase):
         self.assertEqual(test_base_models.models.InheritNameModel.objects.get(pk=i.pk).name, "yolo")
         
     def test_setting_inheritance_to_true_replace_inherited_value_with_parents(self):
-        p = G(test_base_models.models.NameModel, name="hello")
-        i = G(test_base_models.models.InheritNameModel, parent=p, inherit_name=False, name="yolo")
+        p = self.G(test_base_models.models.NameModel, name="hello")
+        i = self.G(test_base_models.models.InheritNameModel, parent=p, inherit_name=False, name="yolo")
 
         self.assertEqual(i.name, "yolo")
 
@@ -42,8 +41,8 @@ class TestNameMixin(base.BaseTestCase):
         self.assertEqual(test_base_models.models.InheritNameModel.objects.get(pk=i.pk).name, "hello")
 
     def test_setting_inheritance_to_false_replace_inherited_value_with_given_value(self):
-        p = G(test_base_models.models.NameModel, name="hello")
-        i = G(test_base_models.models.InheritNameModel, parent=p, inherit_name=True)
+        p = self.G(test_base_models.models.NameModel, name="hello")
+        i = self.G(test_base_models.models.InheritNameModel, parent=p, inherit_name=True)
 
         self.assertEqual(i.name, "hello")
 

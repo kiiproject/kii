@@ -1,3 +1,4 @@
 nose
 django-nose
 django-dynamic-fixture
+tox

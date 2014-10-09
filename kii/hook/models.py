@@ -1,7 +1,7 @@
 from kii import base_models
 from django.db import models
 from kii.utils import meta
-from core import HookManager
+from .core import HookManager
 
 def field_getter(field_name):
     """Returns the actual function for getting a field value (with hooks called on it)"""

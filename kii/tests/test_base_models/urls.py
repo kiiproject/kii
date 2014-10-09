@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 from kii.base_models import views
-import models
+from . import models
 
 namemodel_patterns = patterns('',
     url(r'^(?P<pk>\d+)/$', 

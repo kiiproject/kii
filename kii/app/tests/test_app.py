@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 
 class TestApp(base.BaseTestCase):
 
+    
     def test_can_get_app(self):
         app = apps.get('test_app')
         self.assertEqual(isinstance(app, test_apps.App), True)

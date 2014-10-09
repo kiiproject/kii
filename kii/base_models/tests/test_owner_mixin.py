@@ -1,7 +1,6 @@
 from kii.user.tests import base
 from kii.tests import test_base_models
 import django
-from django_dynamic_fixture import G
 from django.conf import settings
 
 class TestOwnerMixin(base.UserTestCase):    
@@ -12,12 +11,12 @@ class TestOwnerMixin(base.UserTestCase):
             m.save()
 
     def test_can_retrieve_owned_item_via_user(self):
-        m = G(test_base_models.models.OwnerModel, owner=self.users[0])
+        m = self.G(test_base_models.models.OwnerModel, owner=self.users[0])
 
         self.assertEqual(m, self.users[0].ownermodels.first())
 
     def test_owned_item_is_deleted_with_user(self):
-        m = G(test_base_models.models.OwnerModel, owner=self.users[0])
+        m = self.G(test_base_models.models.OwnerModel, owner=self.users[0])
 
         self.users[0].delete()
 
@@ -25,7 +24,7 @@ class TestOwnerMixin(base.UserTestCase):
             test_base_models.models.OwnerModel.objects.get(pk=m.pk)
 
     def test_can_check_if_user_is_owner_of_object(self):
-        m = G(test_base_models.models.OwnerModel, owner=self.users[0])
+        m = self.G(test_base_models.models.OwnerModel, owner=self.users[0])
 
         self.assertEqual(m.owned_by(self.users[0]), True)
 
