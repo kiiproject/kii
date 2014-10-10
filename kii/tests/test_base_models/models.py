@@ -1,6 +1,6 @@
 from kii import base_models
 from django.db import models
-
+from kii.base_models import fields
 
 class TitleModel(base_models.models.TitleMixin):
     pass
@@ -28,3 +28,8 @@ post_save.connect(signals['post_save'])
 class StatusModel(base_models.models.StatusMixin):
 
     pass
+
+
+class MarkupFieldModel(base_models.models.BaseMixin):
+
+    content = fields.MarkupField(markup_type="markdown")
