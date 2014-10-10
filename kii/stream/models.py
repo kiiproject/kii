@@ -20,6 +20,7 @@ class Stream(
     
 class StreamItem(
     base_models.models.TitleMixin,
+    base_models.models.ContentMixin,
     base_models.models.StatusMixin,
     base_models.models.BaseDateTimeMixin,
     permission.models.InheritPermissionMixin):
