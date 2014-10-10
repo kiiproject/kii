@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
 from django.utils import timezone
-
+from . import fields
 
 class BaseMixinQuerySet(QuerySet):
     pass
@@ -75,6 +75,11 @@ class TitleMixin(BaseMixin):
             raise ValidationError('Empty title is not allowed')
 
         super(TitleMixin, self).clean()
+
+
+class ContentMixin(BaseMixin):
+
+    content = fields.MarkupField(default_markup_type="markdown")
 
 
 class BaseDateTimeMixin(BaseMixin):

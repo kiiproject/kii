@@ -30,6 +30,6 @@ class StatusModel(base_models.models.StatusMixin):
     pass
 
 
-class MarkupFieldModel(base_models.models.BaseMixin):
+class ContentModel(base_models.models.ContentMixin):
 
-    content = fields.MarkupField(markup_type="markdown")
+    pass
