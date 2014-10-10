@@ -4,6 +4,8 @@ from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
+from model_utils.managers import InheritanceManager
+from six import with_metaclass
 
 
 class Stream(
@@ -17,19 +19,29 @@ class Stream(
 
     pass
 
-    
-class StreamItem(
+
+class StreamItemQueryManager(InheritanceManager, 
+    permission.models.InheritPermissionMixinQueryset.as_manager().__class__):
+    pass
+
+
+class StreamItem(     
     base_models.models.TitleMixin,
     base_models.models.ContentMixin,
     base_models.models.StatusMixin,
     base_models.models.BaseDateTimeMixin,
-    permission.models.InheritPermissionMixin):
+    permission.models.InheritPermissionMixin,):
+
     """A base class for streamable models"""
 
-    root = models.ForeignKey(Stream, related_name="items")
+    root = models.ForeignKey(Stream, related_name="children")
+
+    objects = StreamItemQueryManager()
 
     class Meta(permission.models.InheritPermissionMixin.Meta):
         pass
+
+
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:
