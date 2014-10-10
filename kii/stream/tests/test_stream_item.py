@@ -10,3 +10,8 @@ class TestStreamItem(base.StreamTestCase):
 
         with self.assertRaises(django.db.IntegrityError):
             i.save()   
+
+    def test_stream_item_status_default_to_draft(self):
+
+        m = self.G(stream.models.StreamItem)
+        self.assertEqual(m.status, "dra")

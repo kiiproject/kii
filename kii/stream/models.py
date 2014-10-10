@@ -18,7 +18,9 @@ class Stream(
     pass
 
     
-class StreamItem(base_models.models.TitleMixin):
+class StreamItem(
+    base_models.models.TitleMixin,
+    base_models.models.StatusMixin):
     """A base class for streamable models"""
 
     stream = models.ForeignKey(Stream, related_name="items")
