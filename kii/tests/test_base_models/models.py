@@ -33,3 +33,6 @@ class StatusModel(base_models.models.StatusMixin):
 class ContentModel(base_models.models.ContentMixin):
 
     pass
+
+class SlugModel(base_models.models.TitleMixin):
+    slug = fields.SlugField(populate_from=("title",))
