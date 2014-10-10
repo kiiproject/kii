@@ -20,7 +20,8 @@ class Stream(
     
 class StreamItem(
     base_models.models.TitleMixin,
-    base_models.models.StatusMixin):
+    base_models.models.StatusMixin,
+    base_models.models.BaseDateTimeMixin):
     """A base class for streamable models"""
 
     stream = models.ForeignKey(Stream, related_name="items")
