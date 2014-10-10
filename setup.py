@@ -21,7 +21,8 @@ setup(
         'django>=1.7',
         'six',
         'django-guardian',
-        'django-mptt'
+        'django-mptt',
+        'django-model-utils',
     ],
     zip_safe=False,
     classifiers=[

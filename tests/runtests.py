@@ -28,6 +28,7 @@ TEST_APPS = (
     'kii.tests.test_theme',
     'kii.tests.test_permission',
     'kii.tests.templates',
+    'kii.tests.test_stream',
 )
 
 TEST_APPS_FULL = ()

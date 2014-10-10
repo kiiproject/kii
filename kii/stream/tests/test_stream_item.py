@@ -2,6 +2,8 @@ from . import base
 from kii import stream
 import django
 from django.utils import timezone
+from ...tests import test_stream
+
 
 class TestStreamItem(base.StreamTestCase):
     
@@ -36,5 +38,11 @@ class TestStreamItem(base.StreamTestCase):
         self.assertEqual(m.readable_by(u), True)
 
 
-        
+    def test_polymorphic_integration(self):
+
+        m1 = self.G(test_stream.models.StreamItemChild1, root=self.streams[0])
+        m2 = self.G(test_stream.models.StreamItemChild2, root=self.streams[0])
+
+        self.assertQuerysetEqualIterable(self.streams[0].children.all().select_subclasses(), [m1, m2], ordered=False)
+
 
