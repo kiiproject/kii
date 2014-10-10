@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Stream(
     permission.models.PermissionMixin,
-    base_models.models.NameMixin):
+    base_models.models.TitleMixin):
     """
     A place were StreamItem instances will be published.
 
@@ -18,7 +18,7 @@ class Stream(
     pass
 
     
-class StreamItem(base_models.models.NameMixin):
+class StreamItem(base_models.models.TitleMixin):
     """A base class for streamable models"""
 
     stream = models.ForeignKey(Stream, related_name="items")
@@ -26,8 +26,8 @@ class StreamItem(base_models.models.NameMixin):
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:
-        # create a new stream, named after the owner
-        stream = Stream(name=instance.username, owner=instance)
+        # create a new stream, set title after the owner
+        stream = Stream(title=instance.username, owner=instance)
         stream.save()
 
 post_save.connect(create_user_stream, sender=settings.AUTH_USER_MODEL)

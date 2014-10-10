@@ -60,21 +60,21 @@ class BaseMixin(models.Model):
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.pk)
 
-class NameMixin(BaseMixin):
+class TitleMixin(BaseMixin):
 
-    """An abstract base class for models with a name"""
+    """An abstract base class for models with a title"""
 
-    name = models.CharField(_('base_models.namemixin.name'), max_length=255, blank=False)
+    title = models.CharField(_('base_models.namemixin.title'), max_length=255, blank=False)
 
     class Meta:
         abstract = True
 
     def clean(self):
         from django.core.exceptions import ValidationError
-        if self.name == '':
-            raise ValidationError('Empty name is not allowed')
+        if self.title == '':
+            raise ValidationError('Empty title is not allowed')
 
-        super(NameMixin, self).clean()
+        super(TitleMixin, self).clean()
 
 
 class BaseDateTimeMixin(BaseMixin):

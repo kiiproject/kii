@@ -2,7 +2,7 @@ from kii import base_models
 from django.db import models
 
 
-class NameModel(base_models.models.NameMixin):
+class TitleModel(base_models.models.TitleMixin):
     pass
 
 class OwnerModel(base_models.models.OwnerMixin):
@@ -10,14 +10,14 @@ class OwnerModel(base_models.models.OwnerMixin):
 
 
 InheritModel, signals = base_models.models.get_inherit_model(
-    local_field='name', 
+    local_field='title', 
     target="parent",
-    target_class=NameModel,
+    target_class=TitleModel,
     target_related_name="yolo")
 
-class InheritNameModel(InheritModel, base_models.models.NameMixin):
+class InheritTitleModel(InheritModel, base_models.models.TitleMixin):
 
-    parent = models.ForeignKey(NameModel, related_name="yolo")
+    parent = models.ForeignKey(TitleModel, related_name="yolo")
 
 from django.db.models.signals import pre_save, post_save
 

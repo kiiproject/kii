@@ -2,12 +2,12 @@ from django.conf.urls import patterns, url, include
 from kii.base_models import views
 from . import models
 
-namemodel_patterns = patterns('',
+titlemodel_patterns = patterns('',
     url(r'^(?P<pk>\d+)/$', 
-        views.Detail.as_view(model=models.NameModel), 
+        views.Detail.as_view(model=models.TitleModel), 
         name='detail'),
     url(r'$', 
-        views.List.as_view(model=models.NameModel, template_name="templates/test.html"), 
+        views.List.as_view(model=models.TitleModel, template_name="templates/test.html"), 
         name='list'),
 )
 ownermodel_patterns = patterns('',
@@ -21,11 +21,11 @@ ownermodel_patterns = patterns('',
 
 urlpatterns = patterns('',
     url(
-        r'^namemodel/', 
+        r'^titlemodel/', 
         include(
-            namemodel_patterns, 
-            namespace='namemodel', 
-            app_name='namemodel')
+            titlemodel_patterns, 
+            namespace='titlemodel', 
+            app_name='titlemodel')
         ),
     url(
         r'^ownermodel/', 

@@ -3,51 +3,51 @@ from kii.tests import test_base_models
 import django
 
 
-class TestNameMixin(base.BaseTestCase):
+class TestInheritModel(base.BaseTestCase):
 
     
     def test_inherit_model_default_value_to_parent(self):
-        p = self.G(test_base_models.models.NameModel, name="hello")
-        i = self.G(test_base_models.models.InheritNameModel, parent=p)
+        p = self.G(test_base_models.models.TitleModel, title="hello")
+        i = self.G(test_base_models.models.InheritTitleModel, parent=p)
 
-        self.assertEqual(i.name, "hello")
+        self.assertEqual(i.title, "hello")
 
     def test_inherit_model_can_disable_inheritance(self):
-        p = self.G(test_base_models.models.NameModel, name="hello")
-        i = self.G(test_base_models.models.InheritNameModel, parent=p, inherit_name=False, name="yolo")
+        p = self.G(test_base_models.models.TitleModel, title="hello")
+        i = self.G(test_base_models.models.InheritTitleModel, parent=p, inherit_title=False, title="yolo")
 
-        self.assertEqual(i.name, "yolo")
+        self.assertEqual(i.title, "yolo")
 
     def test_change_on_parent_model_change_inheriting_model(self):
-        p = self.G(test_base_models.models.NameModel, name="hello")
-        i = self.G(test_base_models.models.InheritNameModel, parent=p)
+        p = self.G(test_base_models.models.TitleModel, title="hello")
+        i = self.G(test_base_models.models.InheritTitleModel, parent=p)
 
-        self.assertEqual(i.name, "hello")
+        self.assertEqual(i.title, "hello")
 
-        p.name = "yolo"
+        p.title = "yolo"
         p.save()
 
-        self.assertEqual(test_base_models.models.InheritNameModel.objects.get(pk=i.pk).name, "yolo")
+        self.assertEqual(test_base_models.models.InheritTitleModel.objects.get(pk=i.pk).title, "yolo")
         
     def test_setting_inheritance_to_true_replace_inherited_value_with_parents(self):
-        p = self.G(test_base_models.models.NameModel, name="hello")
-        i = self.G(test_base_models.models.InheritNameModel, parent=p, inherit_name=False, name="yolo")
+        p = self.G(test_base_models.models.TitleModel, title="hello")
+        i = self.G(test_base_models.models.InheritTitleModel, parent=p, inherit_title=False, title="yolo")
 
-        self.assertEqual(i.name, "yolo")
+        self.assertEqual(i.title, "yolo")
 
-        i.inherit_name = True
+        i.inherit_title = True
         i.save()
 
-        self.assertEqual(test_base_models.models.InheritNameModel.objects.get(pk=i.pk).name, "hello")
+        self.assertEqual(test_base_models.models.InheritTitleModel.objects.get(pk=i.pk).title, "hello")
 
     def test_setting_inheritance_to_false_replace_inherited_value_with_given_value(self):
-        p = self.G(test_base_models.models.NameModel, name="hello")
-        i = self.G(test_base_models.models.InheritNameModel, parent=p, inherit_name=True)
+        p = self.G(test_base_models.models.TitleModel, title="hello")
+        i = self.G(test_base_models.models.InheritTitleModel, parent=p, inherit_title=True)
 
-        self.assertEqual(i.name, "hello")
+        self.assertEqual(i.title, "hello")
 
-        i.inherit_name = False
-        i.name = "yolo"
+        i.inherit_title = False
+        i.title = "yolo"
         i.save()
 
-        self.assertEqual(test_base_models.models.InheritNameModel.objects.get(pk=i.pk).name, "yolo")
+        self.assertEqual(test_base_models.models.InheritTitleModel.objects.get(pk=i.pk).title, "yolo")

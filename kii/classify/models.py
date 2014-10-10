@@ -7,7 +7,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 class Tag(
     MPTTModel,
     base_models.models.OwnerMixin,
-    base_models.models.NameMixin):
+    base_models.models.TitleMixin):
     """
     A model for storing StreamItem instances"""
 
@@ -15,7 +15,7 @@ class Tag(
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
     class MPTTMeta:
-        order_insertion_by = ['name']
+        order_insertion_by = ['title']
         
 class TagStreamItem(models.Model):
     """Many to many relationship between StreamItem and Tag"""

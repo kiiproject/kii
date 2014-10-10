@@ -17,6 +17,12 @@ setup(
     long_description=README,
     author='Eliot Berriot',
     author_email='contact@eliotberriot.com',
+    install_requires=[
+        'django>=1.7',
+        'six',
+        'django-guardian',
+        'django-mptt'
+    ],
     zip_safe=False,
     classifiers=[
         'Intended Audience :: Developers',

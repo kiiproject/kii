@@ -10,7 +10,7 @@ class TestUserData(base.UserTestCase):
 
     def test_can_link_model_to_user_data(self):
         m = self.users[0].data
-        recipe = test_user.models.Recipe(name="Something", userdata=m)
+        recipe = test_user.models.Recipe(title="Something", userdata=m)
         recipe.save()
         m.recipes.add(recipe)
         
