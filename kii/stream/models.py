@@ -21,11 +21,14 @@ class Stream(
 class StreamItem(
     base_models.models.TitleMixin,
     base_models.models.StatusMixin,
-    base_models.models.BaseDateTimeMixin):
+    base_models.models.BaseDateTimeMixin,
+    permission.models.InheritPermissionMixin):
     """A base class for streamable models"""
 
-    stream = models.ForeignKey(Stream, related_name="items")
+    root = models.ForeignKey(Stream, related_name="items")
 
+    class Meta(permission.models.InheritPermissionMixin.Meta):
+        pass
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:
