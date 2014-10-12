@@ -29,7 +29,7 @@ class StreamItem(
     base_models.models.TitleMixin,
     base_models.models.ContentMixin,
     base_models.models.StatusMixin,
-    base_models.models.BaseDateTimeMixin,
+    base_models.models.TimestampMixin,
     permission.models.InheritPermissionMixin,):
 
     """A base class for streamable models"""

@@ -82,10 +82,10 @@ class ContentMixin(BaseMixin):
     content = fields.MarkupField(default_markup_type="markdown")
 
 
-class BaseDateTimeMixin(BaseMixin):
+class TimestampMixin(BaseMixin):
     """Add two fields that are automatically set"""
-    creation_date = models.DateTimeField(auto_now_add=True, editable=False)
-    last_modification_date = models.DateTimeField(auto_now=True, editable=False)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_modified = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         abstract = True

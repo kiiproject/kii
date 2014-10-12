@@ -16,8 +16,8 @@ class TestStreamItem(base.StreamTestCase):
         now = timezone.now()
 
         m = self.G(stream.models.StreamItem)
-        self.assertEqual(m.creation_date > now, True)
-        self.assertEqual(m.last_modification_date > now, True)
+        self.assertEqual(m.created > now, True)
+        self.assertEqual(m.last_modified > now, True)
 
     def test_permission_inheritance(self):
         m = self.G(stream.models.StreamItem, root=self.streams[0])

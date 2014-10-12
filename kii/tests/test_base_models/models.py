@@ -36,3 +36,7 @@ class ContentModel(base_models.models.ContentMixin):
 
 class SlugModel(base_models.models.TitleMixin):
     slug = fields.SlugField(populate_from=("title",))
+
+class TimestampModel(base_models.models.TimestampMixin):
+
+    pass
