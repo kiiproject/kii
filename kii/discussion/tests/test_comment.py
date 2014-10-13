@@ -34,8 +34,28 @@ class CommentTestCase(base.UserTestCase):
             c.save()
 
         c.user_profile = p
-
         c.save()
+
+    def test_comment_with_both_user_and_user_profile_raise_integrity_error(self):
+        m = self.G(models.DiscussionModel)
+        p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
+        with self.assertRaises(IntegrityError):
+            c1 = models.DiscussionModelComment(user_profile=p, user=self.users[0], subject=m)
+            c1.save()
+
+    def test_can_access_authenticated_and_anonymous_user_infos(self):
+        m = self.G(models.DiscussionModel)
+        p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
+        c1 = self.G(models.DiscussionModelComment, user_profile=p)
+        c2 = self.G(models.DiscussionModelComment, user=self.users[0])
+
+        self.assertEqual(c1.profile.username, "something")
+        self.assertEqual(c2.profile.username, self.users[0].username)
+
+        self.assertEqual(c1.profile.email, "hello@me.com")
+        self.assertEqual(c2.profile.email, self.users[0].email)
+
+
 
 
 
