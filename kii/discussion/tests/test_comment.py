@@ -1,6 +1,8 @@
 from ...user.tests import base
 from kii.tests.test_discussion import models
 from django.db import IntegrityError
+from ..models import AnonymousCommenterProfile
+
 
 class CommentTestCase(base.UserTestCase):
 
@@ -25,20 +27,15 @@ class CommentTestCase(base.UserTestCase):
     def test_comment_anonymous_comment_requires_username_and_email(self):
 
         m = self.G(models.DiscussionModel)
+        p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
         c = models.DiscussionModelComment(subject=m)
 
         with self.assertRaises(IntegrityError):
             c.save()
 
-        c.user_name = "something"
-        c.user_email = "hello@me.com"
+        c.user_profile = p
 
         c.save()
-
-    def test_comment_have_url_field(self):
-        c = models.DiscussionModelComment(user=self.users[0], user_url="http://hellothere.com")
-
-        self.assertEqual(c.user_url, "http://hellothere.com")
 
 
 
