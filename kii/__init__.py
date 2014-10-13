@@ -9,6 +9,7 @@ APPS = (
     'kii.permission',
     'kii.user',
     'kii.app',
+    'kii.discussion',
     'kii.stream',
     'kii.classify',
 )
