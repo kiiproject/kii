@@ -7,7 +7,8 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 
-class CommentMixin(base_models.models.BaseMixin):
+class CommentMixin(
+    base_models.models.ContentMixin):
 
     pass
 
