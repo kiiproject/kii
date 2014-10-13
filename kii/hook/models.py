@@ -1,19 +1,18 @@
 from kii import base_models
 from django.db import models
 from kii.utils import meta
-from .core import HookManager
+from . import model_filters
 from six import with_metaclass
 
 
 def field_getter(field_name):
-    """Returns the actual function for getting a field value (with hooks called on it)"""
+    """Returns the actual function for getting a field value (with registered filters called on it)"""
 
-    def hooks(self):
+    def filter_field(self):
         v = getattr(self, field_name)
-        for hook in self.hooks.get("get_{0}".format(field_name)):
-            v = hook(v)
-        return v
-    return hooks
+        return model_filters.filter(field_name, instance=self)
+
+    return filter_field
 
 
 class HookMeta(models.base.ModelBase):
@@ -25,9 +24,9 @@ class HookMeta(models.base.ModelBase):
         
         cls = super(HookMeta, meta).__new__(meta, class_name, bases, class_dict)
         for field in cls._meta.fields:
-            setattr(cls, "get_{0}".format(field.name), field_getter(field.name))
+            setattr(cls, "filtered_{0}".format(field.name), property(field_getter(field.name)))
         return cls
 
 
 class HookMixin(with_metaclass(HookMeta, base_models.models.BaseMixin)):
-    hooks = HookManager()
+    pass
