@@ -11,15 +11,16 @@ class CommentMixin(
     base_models.models.ContentMixin):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss", editable=False, null=True, default=None)
-    username = models.CharField(max_length=50, default=None, null=True)
-    email = models.EmailField(default=False, null=True)
+    user_name = models.CharField(max_length=50, default=None, null=True)
+    user_email = models.EmailField(default=False, null=True)
+    user_url = models.URLField(default=False, null=True)
 
     class Meta:
         abstract = True
 
     def save(self, **kwargs):
 
-        if self.user is None and (self.username is None or self.email is None):
+        if self.user is None and (self.user_name is None or self.user_email is None):
             raise IntegrityError(_('Username and email are required for anonymous comments'))
 
         return super(CommentMixin, self).save(**kwargs)

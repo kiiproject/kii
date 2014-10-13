@@ -30,9 +30,16 @@ class CommentTestCase(base.UserTestCase):
         with self.assertRaises(IntegrityError):
             c.save()
 
-        c.username = "something"
-        c.email = "hello@me.com"
+        c.user_name = "something"
+        c.user_email = "hello@me.com"
 
         c.save()
+
+    def test_comment_have_url_field(self):
+        c = models.DiscussionModelComment(user=self.users[0], user_url="http://hellothere.com")
+
+        self.assertEqual(c.user_url, "http://hellothere.com")
+
+
 
 
