@@ -74,16 +74,23 @@ class CommentTestCase(base.UserTestCase):
         c = self.G(models.DiscussionModelComment, user=self.users[0])
         self.assertEqual(c.published, True)
 
-    def test_can_add_custom_rules_for_setting_publishing(self):
+    def test_can_hook_into_detect_unwanted(self):
 
-        # see in test_discussion/models.py the method that publish comments when user email starts with publish
+        # see test_discussion/models.py for signal callback
 
-        p = self.G(AnonymousCommenterProfile, email="publish@me.com", username="something")
+        p = self.G(AnonymousCommenterProfile, email="hello@spam", username="something")
         m = self.G(models.DiscussionModel)
-        c = self.G(models.DiscussionModelComment,subject=m, user_profile=p)
-
-        self.assertEqual(c.published, True)
+        c = models.DiscussionModelComment(subject=m, user_profile=p)
+        c.save()
+        self.assertEqual(c.unwanted, True)
         
+    def test_unwanted_comment_default_to_published_false(self):
+
+        m = self.G(models.DiscussionModel)
+        c = self.G(models.DiscussionModelComment,subject=m, unwanted=True, user=self.users[0])
+
+        self.assertEqual(c.published, False)
+
 
 
 

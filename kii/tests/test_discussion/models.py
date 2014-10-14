@@ -8,10 +8,11 @@ class DiscussionModel(models.DiscussionMixin):
 class DiscussionModelComment(models.CommentMixin):
     subject = django.db.models.ForeignKey(DiscussionModel, related_name="comments")
 
-    def set_publish(self):
-        publish  = super(DiscussionModelComment, self).set_publish()
 
-        if self.profile.email.startswith('publish'):
-            publish = True
+def spam_domain_is_unwanted(**kwargs):
+    
+    if kwargs.get('instance').profile.email.endswith('spam'):
+        return True
+    return False
 
-        return publish
+models.comment_detect_unwanted.connect(spam_domain_is_unwanted)

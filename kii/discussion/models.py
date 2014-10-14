@@ -1,9 +1,14 @@
 from __future__ import unicode_literals
+
 from kii import base_models
+from kii.hook import signals
+
 from django.db import models, IntegrityError
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
+
+
 
 
 
@@ -47,7 +52,14 @@ class CommentMixin(
 
     published = models.BooleanField(default=False)
 
+    # Set this to true for spam comments
+    unwanted = models.BooleanField(default=False)
+
     profile = None
+
+    # signals
+
+    
 
     class Meta:
         abstract = True
@@ -70,18 +82,27 @@ class CommentMixin(
         if not self.subject.discussion_open:
             raise ValueError(_("You cannot register a comment for model instance that has discussion_open set to False"))
         
-        self.published = self.set_publish()        
+        if self.new:
+            results = self.send(comment_detect_unwanted, instance=self)
+            
+            # only set unwanted to True if all receiver think the comment is unwanted
+            self.unwanted = all(unwanted for receiver, unwanted in results)
+
+        if self.unwanted:
+            self.published = False
+
+        elif self.user is not None:
+            self.published = True
 
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
 
         return super(CommentMixin, self).save(**kwargs)
 
-    def set_publish(self):
-        """Override this method if your want to set custom rules for setting publish status"""
-        if self.user is not None:
-            return True
-        return False
+
+# signals
+
+comment_detect_unwanted = signals.InstanceSignal()
 
 class DiscussionMixin(base_models.models.BaseMixin):
 

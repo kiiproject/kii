@@ -60,6 +60,16 @@ class BaseMixin(models.Model):
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.pk)
 
+    @property
+    def new(self):
+        """Shortcut to check if instance is already saved or not"""
+        return self.pk is None
+
+    def send(self, signal, instance, **kwargs):
+        """Send the given signal"""
+        return signal.send(sender=instance.__class__, instance=instance)
+
+
 class TitleMixin(BaseMixin):
 
     """An abstract base class for models with a title"""
