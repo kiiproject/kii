@@ -57,10 +57,6 @@ class CommentMixin(
 
     profile = None
 
-    # signals
-
-    
-
     class Meta:
         abstract = True
 
