@@ -43,7 +43,7 @@ class CommentTestCase(base.UserTestCase):
             c1 = models.DiscussionModelComment(user_profile=p, user=self.users[0], subject=m)
             c1.save()
 
-    def test_can_access_authenticated_and_anonymous_user_infos(self):
+    def test_can_access_authenticated_and_anonymous_user_infos_with_the_same_api(self):
         m = self.G(models.DiscussionModel)
         p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
         c1 = self.G(models.DiscussionModelComment, user_profile=p)
@@ -61,10 +61,29 @@ class CommentTestCase(base.UserTestCase):
         with self.assertRaises(ValueError):
             c.save()
 
-    def test_comment_has_validation_published_field_default_true_for_authenticated_users(self):
+    def test_comment_published_field_default_to_false_for_anonymous_users(self):
+        
+        p = self.G(AnonymousCommenterProfile, email="mail@me.com", username="something")
+        m = self.G(models.DiscussionModel)
+        c = self.G(models.DiscussionModelComment,subject=m, user_profile=p)
+
+        self.assertEqual(c.published, False)
+
+    def test_comment_published_field_default_true_for_authenticated_users(self):
         
         c = self.G(models.DiscussionModelComment, user=self.users[0])
         self.assertEqual(c.published, True)
+
+    def test_can_add_custom_rules_for_setting_publishing(self):
+
+        # see in test_discussion/models.py the method that publish comments when user email starts with publish
+
+        p = self.G(AnonymousCommenterProfile, email="publish@me.com", username="something")
+        m = self.G(models.DiscussionModel)
+        c = self.G(models.DiscussionModelComment,subject=m, user_profile=p)
+
+        self.assertEqual(c.published, True)
+        
 
 
 

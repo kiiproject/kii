@@ -45,7 +45,10 @@ class CommentMixin(
     # for anonymous users
     user_profile = models.ForeignKey(AnonymousCommenterProfile, null=True, default=None, blank=True)
 
+    published = models.BooleanField(default=False)
+
     profile = None
+
     class Meta:
         abstract = True
 
@@ -66,11 +69,19 @@ class CommentMixin(
 
         if not self.subject.discussion_open:
             raise ValueError(_("You cannot register a comment for model instance that has discussion_open set to False"))
+        
+        self.published = self.set_publish()        
+
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
 
         return super(CommentMixin, self).save(**kwargs)
 
+    def set_publish(self):
+        """Override this method if your want to set custom rules for setting publish status"""
+        if self.user is not None:
+            return True
+        return False
 
 class DiscussionMixin(base_models.models.BaseMixin):
 
