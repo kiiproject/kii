@@ -38,6 +38,8 @@ class AnonymousCommenterProfile(models.Model):
 class CommentMixin(
     base_models.models.ContentMixin):
 
+    """Subclass MUST implement a subject ForeignKey field to the model that is commented"""
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss", editable=False, null=True, blank=True, default=None)
     
     # for anonymous users
@@ -55,12 +57,15 @@ class CommentMixin(
 
     def save(self, **kwargs):
 
+
         if self.user is not None and self.user_profile is not None:
             raise IntegrityError(_('You cannot create a comment with both user and user_profile'))
             
         if self.user is None and self.user_profile is None:
             raise IntegrityError(_('Comments require either an authenticated user, either an AnonymousCommenterProfile'))
 
+        if not self.subject.discussion_open:
+            raise ValueError(_("You cannot register a comment for model instance that has discussion_open set to False"))
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
 
@@ -69,5 +74,7 @@ class CommentMixin(
 
 class DiscussionMixin(base_models.models.BaseMixin):
 
+    discussion_open = models.BooleanField(default=True)
+    
     class Meta:
         abstract = True

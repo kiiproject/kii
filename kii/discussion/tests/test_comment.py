@@ -55,6 +55,17 @@ class CommentTestCase(base.UserTestCase):
         self.assertEqual(c1.profile.email, "hello@me.com")
         self.assertEqual(c2.profile.email, self.users[0].email)
 
+    def test_cannot_comment_if_dicussion_is_closed(self):
+        m = self.G(models.DiscussionModel, discussion_open=False)
+        c = models.DiscussionModelComment(subject=m, user=self.users[0])
+        with self.assertRaises(ValueError):
+            c.save()
+
+    def test_comment_has_validation_published_field_default_true_for_authenticated_users(self):
+        
+        c = self.G(models.DiscussionModelComment, user=self.users[0])
+        self.assertEqual(c.published, True)
+
 
 
 
