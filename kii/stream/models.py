@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from .. import base_models, permission
+from .. import base_models, permission, discussion
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -30,6 +30,7 @@ class StreamItem(
     base_models.models.ContentMixin,
     base_models.models.StatusMixin,
     base_models.models.TimestampMixin,
+    discussion.models.DiscussionMixin,
     permission.models.InheritPermissionMixin,):
 
     """A base class for streamable models"""
@@ -42,6 +43,9 @@ class StreamItem(
         pass
 
 
+class StreamItemComment(discussion.models.CommentMixin):
+
+    subject = models.ForeignKey(StreamItem, related_name="comments")
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:

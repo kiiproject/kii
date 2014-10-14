@@ -46,3 +46,9 @@ class TestStreamItem(base.StreamTestCase):
         self.assertQuerysetEqualIterable(self.streams[0].children.all().select_subclasses(), [m1, m2], ordered=False)
 
 
+    def test_comments(self):
+        m = self.G(stream.models.StreamItem, root=self.streams[0])
+        c = self.G(stream.models.StreamItemComment, subject=m, user=m.owner)
+
+        self.assertEqual(c.published, True)
+        self.assertEqual(c.unwanted, False)
