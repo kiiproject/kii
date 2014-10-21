@@ -14,6 +14,5 @@ class AppMixin(object):
         context = super(AppMixin, self).get_context_data()
 
         context['app'] = self.app
-        context['title'] = self.app.verbose_name
         
         return context

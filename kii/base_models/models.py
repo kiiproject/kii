@@ -3,8 +3,8 @@ from django.db import models
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
 from kii import user
+from kii.app.models import AppModel
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
 from django.utils import timezone
 from . import fields
@@ -13,7 +13,7 @@ class BaseMixinQuerySet(QuerySet):
     pass
 
 
-class BaseMixin(models.Model):
+class BaseMixin(AppModel):
     """Add some common behaviour to all mixins"""
 
     objects = BaseMixinQuerySet.as_manager()
@@ -25,40 +25,7 @@ class BaseMixin(models.Model):
     def save(self, **kwargs):
         # force model validation
         self.clean()
-        return super(BaseMixin, self).save(**kwargs)
-
-    @property
-    def url_namespace(self):
-        """Return the URL namespace of the class, such as `app_label:model_label:`"""       
-
-        app_name = self._meta.app_label
-        model_name = self.__class__.__name__.lower()
-
-        return "kii:{0}:{1}:".format(app_name, model_name)
-
-    def reverse(self, suffix):
-        """Return a reversed URL for given suffix (for example: detail, list, edit...)
-        you can override per-suffix URLs by defining .reverse_<suffix> methods
-        """
-
-        if hasattr(self, 'reverse_{0}'.format(suffix)):
-            return getattr(self, 'reverse_{0}'.format(suffix))()  
-                      
-        return reverse(self.url_namespace + suffix)
-        
-    def reverse_detail(self):
-        return reverse(self.url_namespace + "detail", kwargs={"pk":self.pk})
-
-    def get_absolute_url(self):
-        return self.reverse_detail()
-
-    @classmethod
-    def class_reverse(cls, suffix):
-        """Call reverse with an actual instance of the class. Used for reversing if you don't have a class instance"""
-        return cls.reverse(cls(), suffix)
-
-    def __repr__(self):
-        return "<{0}: {1}>".format(self.__class__.__name__, self.pk)
+        return super(BaseMixin, self).save(**kwargs)    
 
     @property
     def new(self):
