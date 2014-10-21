@@ -5,6 +5,10 @@ from kii.base_models import fields
 class TitleModel(base_models.models.TitleMixin):
     pass
 
+
+class TitleModel2(TitleModel):
+    pass
+
 class OwnerModel(base_models.models.OwnerMixin):
     useless_field = models.CharField(max_length=255, default="", blank=True)
 

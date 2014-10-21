@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+import inspect
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
 from kii import user
@@ -36,6 +37,27 @@ class BaseMixin(AppModel):
         """Send the given signal"""
         return signal.send(sender=instance.__class__, instance=instance)
 
+    @classmethod
+    def get_template_names(cls, suffix):
+        """Return a list of templates name corresponding to the given suffix (detail, list, etc.). Will include templates 
+        from parent classes, if any"""
+
+        def get_template(model, suffix):
+            try:
+                app_name = model._meta.app_label
+                model_name = model.__name__.lower()
+                return "{0}/{1}/{2}.html".format(app_name, model_name, suffix)
+            except AttributeError:
+                return None
+        models = (cls,) + inspect.getmro(cls)
+
+        template_names = []
+        for model in models:
+            t = get_template(model, suffix)
+            if t is not None:
+                template_names.append(t)
+
+        return template_names
 
 class TitleMixin(BaseMixin):
 

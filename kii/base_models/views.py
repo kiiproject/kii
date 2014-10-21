@@ -11,11 +11,7 @@ class ModelTemplateMixin(object):
             # use given template name
             return self.template_name
 
-        app_name = self.model._meta.app_label
-        model_name = self.model.__name__.lower()
-        template_name = "{0}/{1}/{2}.html".format(app_name, model_name, self.name)
-
-        return [template_name]
+        return self.model.get_template_names(self.name)
 
 
 class Create(ModelTemplateMixin, CreateView):

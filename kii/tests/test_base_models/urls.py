@@ -10,6 +10,12 @@ titlemodel_patterns = patterns('',
         views.List.as_view(model=models.TitleModel, template_name="templates/test.html"), 
         name='list'),
 )
+titlemodel2_patterns = patterns('',
+    url(r'^(?P<pk>\d+)/$', 
+        views.Detail.as_view(model=models.TitleModel2), 
+        name='detail'),
+)
+
 ownermodel_patterns = patterns('',
     url(r'^create$', 
         views.OwnerMixinCreate.as_view(
@@ -26,6 +32,13 @@ urlpatterns = patterns('',
             titlemodel_patterns, 
             namespace='titlemodel', 
             app_name='titlemodel')
+        ),
+    url(
+        r'^titlemodel2/', 
+        include(
+            titlemodel2_patterns, 
+            namespace='titlemodel2', 
+            app_name='titlemodel2')
         ),
     url(
         r'^ownermodel/', 

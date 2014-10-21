@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url, include
 from .. import views
 from django.views.generic import TemplateView
-from .views import Home
+from .views import Home#, ModelView
 
 urlpatterns = patterns('',
      url(r'^hello', views.blank, name='index'),

@@ -3,7 +3,9 @@ from django.db import models
 
 
 class TestModel1(models.Model):
-    pass
+    
+    class Meta:
+        verbose_name = "Test Model"
 
 class TestModel2(models.Model):
     pass
