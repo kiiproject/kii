@@ -46,6 +46,5 @@ class TestApp(base.BaseTestCase):
 
     def test_app_pages_title_contains_app_verbose_name(self):
         response = self.client.get(reverse('kii:test_app:home'))
-
         parsed = self.parse_html(response.content)
         self.assertIn("Test app", parsed.title.string)
