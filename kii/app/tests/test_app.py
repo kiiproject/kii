@@ -38,3 +38,14 @@ class TestApp(base.BaseTestCase):
         reverse('kii:test_app:index')
         reverse('kii:test_app1:some_view')
         reverse('kii:test_app2:third_view')
+
+    def test_app_templates_inherit_from_page_template(self):
+        response = self.client.get(reverse('kii:test_app:home'))
+        self.assertTemplateUsed(response, "app/app_page.html")
+        self.assertTemplateUsed(response, "app/base.html")
+
+    def test_app_pages_title_contains_app_verbose_name(self):
+        response = self.client.get(reverse('kii:test_app:home'))
+
+        parsed = self.parse_html(response.content)
+        self.assertIn("Test app", parsed.title.string)

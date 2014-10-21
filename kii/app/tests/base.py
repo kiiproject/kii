@@ -1,7 +1,7 @@
 import django.test
 from django.test import RequestFactory
 from django_dynamic_fixture import G
-
+from bs4 import BeautifulSoup
 
 class BaseTestCase(django.test.LiveServerTestCase):
     """A base Testcase other kii apps test cases inherit from"""    
@@ -19,3 +19,7 @@ class BaseTestCase(django.test.LiveServerTestCase):
 
         r = [repr(e) for e in it]
         self.assertQuerysetEqual(qs, r, **kwargs)
+
+    def parse_html(self, html):
+        """Return a BeaufifulSoup object with parsed HTML"""
+        return BeautifulSoup(html)

@@ -15,3 +15,16 @@ class TestTitleMixin(base.BaseTestCase):
 
         with self.assertRaises(django.core.exceptions.ValidationError):
             m.save()
+
+
+class TestTitleMixinView(base.BaseTestCase):
+
+    
+    def test_detail_title_mixin_sets_page_title_to_model_title(self):
+        m = self.G(test_base_models.models.TitleModel, title="Hello world!")
+        url = m.reverse('detail')
+        print(url, m.url_namespace)
+        response = self.client.get(url)
+        parsed = self.parse_html(response.content)
+        self.assertIn("Hello world!", parsed.title.string)
+        
