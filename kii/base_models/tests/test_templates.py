@@ -25,11 +25,16 @@ class TestTemplates(base.BaseTestCase):
         url = reverse("kii:test_base_models:titlemodel2:list")
         response = self.client.get(url)
         self.assertTemplateUsed(response, "base_models/basemixin/list.html")
-
     def test_model_create_uses_basemixin_create(self):
 
         url = reverse("kii:test_base_models:titlemodel2:create")
         response = self.client.get(url)
         self.assertTemplateUsed(response, "base_models/basemixin/create.html")
+
+    def test_model_list_uses_basemixin_list_item(self):
+        m = self.G(test_base_models.models.TitleModel2, title="hello")
+        url = reverse("kii:test_base_models:titlemodel2:list")
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, "base_models/basemixin/list_item.html")
 
 

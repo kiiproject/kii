@@ -59,6 +59,11 @@ class BaseMixin(AppModel):
 
         return template_names
 
+    def list_item_template(self):
+        app_name = self._meta.app_label
+        model_name = self.__name__.lower()
+        return "{0}/{1}/{2}.html".format(app_name, model_name, "list_item.html")
+        
 class TitleMixin(BaseMixin):
 
     """An abstract base class for models with a title"""
