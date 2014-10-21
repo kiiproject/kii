@@ -1,4 +1,4 @@
-from django.views.generic import DetailView, ListView, CreateView
+from django.views.generic import DetailView, ListView, CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -19,6 +19,13 @@ class Create(ModelTemplateMixin, CreateView):
 
     def get_success_url(self):
         return "/"
+
+class Delete(ModelTemplateMixin, DeleteView):
+    name = "delete"
+
+    def get_success_url(self):
+        return "/"
+
 
 class Detail(ModelTemplateMixin, DetailView):
     name = "detail"
