@@ -90,7 +90,8 @@ class TitleMixin(BaseMixin):
 class ContentMixin(BaseMixin):
 
     content = fields.MarkupField(default_markup_type="markdown")
-
+    class Meta:
+        abstract = True
 
 class TimestampMixin(BaseMixin):
     """Add two fields that are automatically set"""
