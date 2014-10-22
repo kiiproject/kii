@@ -14,6 +14,7 @@ class MenuItem(object):
         self.parent = kwargs.get('parent', None)        
         self.title = kwargs.get('title', self.label)
         self.weight = kwargs.get('weight', 0)
+        self.username_url = kwargs.get('username_url', False)
 
 
     def path(self, **kwargs):
