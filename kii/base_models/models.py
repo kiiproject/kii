@@ -20,6 +20,9 @@ class BaseMixin(AppModel):
     objects = BaseMixinQuerySet.as_manager()
 
     queryset = BaseMixinQuerySet
+
+    list_item_template = "base_models/basemixin/list_item.html"
+    
     class Meta:
         abstract = True
 
@@ -58,11 +61,6 @@ class BaseMixin(AppModel):
                 template_names.append(t)
 
         return template_names
-
-    def list_item_template(self):
-        app_name = self._meta.app_label
-        model_name = self.__name__.lower()
-        return "{0}/{1}/{2}.html".format(app_name, model_name, "list_item.html")
         
 class TitleMixin(BaseMixin):
 

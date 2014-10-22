@@ -35,6 +35,7 @@ class TestTemplates(base.BaseTestCase):
         m = self.G(test_base_models.models.TitleModel2, title="hello")
         url = reverse("kii:test_base_models:titlemodel2:list")
         response = self.client.get(url)
+        print(response.content)
         self.assertTemplateUsed(response, "base_models/basemixin/list_item.html")
 
 
