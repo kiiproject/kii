@@ -3,12 +3,13 @@ from django.db import models
 import inspect
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
-from kii import user
-from kii.app.models import AppModel
 from django.conf import settings
 from django.db.models.query import QuerySet
 from django.utils import timezone
+
 from . import fields
+from kii.app.models import AppModel
+from kii import user
 
 class BaseMixinQuerySet(QuerySet):
     pass

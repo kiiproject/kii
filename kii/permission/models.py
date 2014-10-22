@@ -2,12 +2,14 @@ from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 from guardian.shortcuts import assign
 from django.conf import settings
-from kii import base_models, user
 from django.db import models
 from guardian.shortcuts import get_objects_for_user, get_anonymous_user
 from guardian.core import ObjectPermissionChecker
 
-class PermissionMixinQuerySet(base_models.models.OwnerMixinQuerySet):
+from kii.base_models import models as base_models_models
+from kii.user import models as user_models
+
+class PermissionMixinQuerySet(base_models_models.OwnerMixinQuerySet):
 
     def filter_permission(self, permissions, target):
         """Generic filter for permission. Rather low-level, you should use readable/writable/deletable_by instead"""
@@ -26,7 +28,7 @@ class PermissionMixinQuerySet(base_models.models.OwnerMixinQuerySet):
         return self.filter_permission(["read", 'write', 'delete'], target)
 
 
-class PermissionMixin(base_models.models.OwnerMixin):
+class PermissionMixin(base_models_models.OwnerMixin):
     """Add some utility methods to retrieve permissions. Target always designate a Group or a User instance"""
 
     class Meta:
@@ -67,7 +69,7 @@ class PermissionMixin(base_models.models.OwnerMixin):
 
         if target.pk == get_anonymous_user().pk:
             # add also permission to all_users_group
-            assign(permission, user.models.get_all_users_group(), self)
+            assign(permission, user_models.get_all_users_group(), self)
 
         return assign(permission, target, self)
 

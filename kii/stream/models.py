@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from .. import base_models, permission, discussion
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -7,10 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 from model_utils.managers import InheritanceManager
 from six import with_metaclass
 
+from kii.base_models import models as base_models_models
+from kii.permission import models as permission_models
+from kii.discussion import models as discussion_models
 
 class Stream(
-    permission.models.PermissionMixin,
-    base_models.models.TitleMixin):
+    permission_models.PermissionMixin,
+    base_models_models.TitleMixin):
     """
     A place were StreamItem instances will be published.
 
@@ -21,17 +23,17 @@ class Stream(
 
 
 class StreamItemQueryManager(InheritanceManager, 
-    permission.models.InheritPermissionMixinQueryset.as_manager().__class__):
+    permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
     pass
 
 
 class StreamItem(     
-    base_models.models.TitleMixin,
-    base_models.models.ContentMixin,
-    base_models.models.StatusMixin,
-    base_models.models.TimestampMixin,
-    discussion.models.DiscussionMixin,
-    permission.models.InheritPermissionMixin,):
+    base_models_models.TitleMixin,
+    base_models_models.ContentMixin,
+    base_models_models.StatusMixin,
+    base_models_models.TimestampMixin,
+    discussion_models.DiscussionMixin,
+    permission_models.InheritPermissionMixin,):
 
     """A base class for streamable models"""
 
@@ -39,11 +41,11 @@ class StreamItem(
 
     objects = StreamItemQueryManager()
 
-    class Meta(permission.models.InheritPermissionMixin.Meta):
+    class Meta(permission_models.InheritPermissionMixin.Meta):
         pass
 
 
-class StreamItemComment(discussion.models.CommentMixin):
+class StreamItemComment(discussion_models.CommentMixin):
 
     subject = models.ForeignKey(StreamItem, related_name="comments")
 
