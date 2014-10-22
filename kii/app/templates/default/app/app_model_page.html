@@ -1,1 +1,3 @@
 {% extends "app/app_page.html" %}
+
+{% block title %}{{ model.meta.verbose_name_plural }} | {{ block.super }}{% endblock %}

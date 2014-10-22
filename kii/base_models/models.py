@@ -26,6 +26,10 @@ class BaseMixin(AppModel):
     class Meta:
         abstract = True
 
+    def meta(self):
+        """For metadata access in template (underscored attributes are forbidden in django templates)"""
+        return self._meta
+
     def save(self, **kwargs):
         # force model validation
         self.clean()

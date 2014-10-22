@@ -3,7 +3,9 @@ from django.db import models
 from kii.base_models import fields
 
 class TitleModel(base_models.models.TitleMixin):
-    pass
+    
+    class Meta:
+        verbose_name = "Title Model"
 
 
 class TitleModel2(TitleModel):

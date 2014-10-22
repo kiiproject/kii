@@ -7,7 +7,7 @@ titlemodel_patterns = patterns('',
         views.Detail.as_view(model=models.TitleModel), 
         name='detail'),
     url(r'$', 
-        views.List.as_view(model=models.TitleModel, template_name="templates/test.html"), 
+        views.List.as_view(model=models.TitleModel), 
         name='list'),
 )
 titlemodel2_patterns = patterns('',

@@ -10,8 +10,8 @@ class AppMixin(object):
         self.app = apps.get(request.resolver_match.app_name)
         return super(AppMixin, self).dispatch(request, *args, **kwargs)
 
-    def get_context_data(self):
-        context = super(AppMixin, self).get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super(AppMixin, self).get_context_data(**kwargs)
 
         context['app'] = self.app
         

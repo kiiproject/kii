@@ -19,5 +19,9 @@ class TestViews(base.BaseTestCase):
         url = reverse("kii:test_base_models:titlemodel2:detail", kwargs={'pk': m.pk})
         response = self.client.get(url)
         self.assertTemplateUsed(response, "test_base_models/titlemodel/detail.html")
+    
+    def test_app_model_page_contains_model_verbose_name(self):
 
-        
+        response = self.client.get(reverse('kii:test_base_models:titlemodel:list'))
+        parsed = self.parse_html(response.content)
+        self.assertIn("Title Model", parsed.title.string)

@@ -2,10 +2,11 @@ from django.views.generic import DetailView, ListView, CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
+from kii.app.views import AppMixin
 
-class ModelTemplateMixin(object):
-    """Deduce template_name from model, app and view names"""
+class ModelTemplateMixin(AppMixin):
     def get_template_names(self):
+        """Deduce template_name from model, app and view names"""
 
         if self.template_name:
             # use given template name
@@ -13,6 +14,11 @@ class ModelTemplateMixin(object):
 
         return self.model.get_template_names(self.name)
 
+    def get_context_data(self, **kwargs):
+
+        context = super(ModelTemplateMixin, self).get_context_data(**kwargs)
+        context["model"] = self.model
+        return context
 
 class Create(ModelTemplateMixin, CreateView):
     name = "create"
