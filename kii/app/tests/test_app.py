@@ -39,6 +39,7 @@ class TestApp(base.BaseTestCase):
         reverse('kii:test_app1:some_view')
         reverse('kii:test_app2:third_view')
 
+
     def test_app_templates_inherit_from_page_template(self):
         response = self.client.get(reverse('kii:test_app:home'))
         self.assertTemplateUsed(response, "app/app_page.html")

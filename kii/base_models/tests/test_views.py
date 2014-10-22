@@ -1,10 +1,10 @@
-from kii.app.tests import base
+from kii.user.tests import base
 from kii.tests import test_base_models
 import django
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 
-
-class TestViews(base.BaseTestCase):
+class TestViews(base.UserTestCase):
     
     def test_model_template_mixin_automatically_find_templates(self):
         m = self.G(test_base_models.models.TitleModel, title="hello")
@@ -25,3 +25,22 @@ class TestViews(base.BaseTestCase):
         response = self.client.get(reverse('kii:test_base_models:titlemodel:list'))
         parsed = self.parse_html(response.content)
         self.assertIn("Title Model", parsed.title.string)
+
+    @override_settings(KII_DEFAULT_USER='test0')
+    def test_owner_view_require_username_argument_or_deduce_it_automatically_from_logged_in_user_or_settings(self):
+        url = reverse('kii:test_base_models:ownermodel:list')
+
+        # anonymous user should see test0 page
+        response = self.client.get(url)
+        self.assertEqual(response.context['owner'], self.users[0])
+
+        # authenticated user should see his own page
+        self.login("test1")
+        response = self.client.get(url)
+        self.assertEqual(response.context['owner'], self.users[1])
+
+    def test_owner_view_raise_404_for_anonymous_user_without_KII_DEFAULT_USER_SET(self):
+        url = reverse('kii:test_base_models:ownermodel:list')
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)

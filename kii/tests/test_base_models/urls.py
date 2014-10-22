@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url, include
 from kii.base_models import views
 from . import models
+from .views import OwnerModelList
 
 titlemodel_patterns = patterns('',
     url(r'^(?P<pk>\d+)/$', 
@@ -32,6 +33,10 @@ ownermodel_patterns = patterns('',
             template_name="base_models/modelform.html",
             fields=['useless_field']), 
         name='create'),
+    url(r'^$', 
+        OwnerModelList.as_view(), 
+        name='list'),
+
 )
 
 urlpatterns = patterns('',
@@ -56,4 +61,5 @@ urlpatterns = patterns('',
             namespace='ownermodel', 
             app_name='ownermodel')
         ),
+
 )

@@ -1,8 +1,13 @@
 from django.views.generic import DetailView, ListView, CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth import get_user_model
+from django.http import Http404
+from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from kii.app.views import AppMixin
+
 
 class ModelTemplateMixin(AppMixin):
     def get_template_names(self):
@@ -43,6 +48,31 @@ class List(ModelTemplateMixin, ListView):
     name = "list"
    
 
+class OwnerMixin(object):
+    """Deduce owner of given page/elements from url or logged in user"""
+
+    def dispatch(self, request, **kwargs):
+
+        owner_name = kwargs.get('username', None)
+        if owner_name is None:
+            if request.user.is_authenticated():
+                self.owner = request.user
+
+            else:
+                if getattr(settings, "KII_DEFAULT_USER", None) is not None:
+                    self.owner = get_object_or_404(get_user_model(), username=getattr(settings, "KII_DEFAULT_USER"))
+                else:
+                    raise Http404
+        else:
+            self.owner = get_object_or_404(get_user_model(), username=owner_name)
+
+        return super(OwnerMixin, self).dispatch(request, **kwargs) 
+
+    def get_context_data(self, **kwargs):
+        context = super(OwnerMixin, self).get_context_data(**kwargs)
+        context['owner'] = self.owner
+        return context
+
 class RequireAuthenticationMixin(object):
     """Force user authentication before accessing view"""
 
@@ -51,7 +81,7 @@ class RequireAuthenticationMixin(object):
         return super(RequireAuthenticationMixin, self).dispatch(*args, **kwargs)
 
 
-class OwnerMixinCreate(RequireAuthenticationMixin, Create):
+class OwnerMixinCreate(RequireAuthenticationMixin, OwnerMixin, Create):
     """Automatically set model.owner to request.user"""
 
     def form_valid(self, form):

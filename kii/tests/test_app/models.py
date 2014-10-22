@@ -7,3 +7,6 @@ class TestModel1(models.Model):
 
 class TestModel2(models.Model):
     pass
+
+class TestAppModel(models.Model):
+    pass
