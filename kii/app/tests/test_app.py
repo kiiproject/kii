@@ -54,3 +54,19 @@ class TestApp(base.BaseTestCase):
         response = self.client.get(reverse('kii:test_app:home'))
         parsed = self.parse_html(response.content)
         self.assertIn("Test app", parsed.title.string)
+
+    def test_app_can_register_menu_items(self):
+        self.assertEqual(apps.get('test_app').menu.path(), "/kii/test_app/hello")
+        self.assertEqual(apps.get('test_app').menu.label, "Test App Index")
+        self.assertEqual(apps.get('test_app').menu.title, "Click to return home")
+
+    def test_menu_item_children_are_ordered_by_weight(self):
+        self.assertEqual(apps.get('test_app').menu.children[0].path(), "/kii/test_app/hello/first")
+        self.assertEqual(apps.get('test_app').menu.children[1].path(), "/kii/test_app/hello/second")
+        self.assertEqual(apps.get('test_app').menu.children[2].path(), "/kii/test_app/hello/third")
+
+    def test_menu_item_with_user_url(self):
+        self.assertEqual(apps.get('test_app').menu.children[3].path(
+            username="test0"), "/kii/test0/test_app/hello/user")
+        
+        

@@ -1,6 +1,9 @@
 from django.apps import AppConfig, apps as django_app_registry
 from django.conf.urls import include, url
 
+from . import menu
+
+
 
 class AppManager(object):
     """Provide a cleaner API to django.apps.apps"""
@@ -59,6 +62,9 @@ class App(AppConfig):
     # if the string start with a dot, such as ".urls", a full path will be built by joining
     # app.name and app.urls
     urls = None
+
+
+    menu = None
 
     @property
     def installed(self):
