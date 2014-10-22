@@ -84,6 +84,9 @@ class TitleMixin(BaseMixin):
         super(TitleMixin, self).clean()
 
 
+    def __unicode__(self):
+        return u'{0}'.format(self.title)
+
 class ContentMixin(BaseMixin):
 
     content = fields.MarkupField(default_markup_type="markdown")
