@@ -9,6 +9,14 @@ from django.shortcuts import get_object_or_404
 from kii.app.views import AppMixin
 
 
+class RequireAuthenticationMixin(object):
+    """Force user authentication before accessing view"""
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(RequireAuthenticationMixin, self).dispatch(*args, **kwargs)
+
+
 class ModelTemplateMixin(AppMixin):
     def get_template_names(self):
         """Deduce template_name from model, app and view names"""
@@ -25,13 +33,28 @@ class ModelTemplateMixin(AppMixin):
         context["model"] = self.model
         return context
 
-class Create(ModelTemplateMixin, CreateView):
+
+class ModelFormMixin(RequireAuthenticationMixin, ModelTemplateMixin):
+
+    @classmethod
+    def as_view(cls, *args, **kwargs):
+        """Deduce model from form class if needed"""
+        if kwargs.get('model') is None:
+            kwargs['model'] = kwargs.get('form_class').Meta.model
+        return super(ModelFormMixin, cls).as_view(*args, **kwargs)
+
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super(ModelFormMixin, self).get_form_kwargs(**kwargs)
+        kwargs['user'] = self.request.user
+        return kwargs
+
+class Create(ModelFormMixin, CreateView):
     name = "create"
 
     def get_success_url(self):
         return "/"
 
-class Delete(ModelTemplateMixin, DeleteView):
+class Delete(ModelFormMixin, DeleteView):
     name = "delete"
 
     def get_success_url(self):
@@ -73,15 +96,9 @@ class OwnerMixin(object):
         context['owner'] = self.owner
         return context
 
-class RequireAuthenticationMixin(object):
-    """Force user authentication before accessing view"""
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(RequireAuthenticationMixin, self).dispatch(*args, **kwargs)
 
 
-class OwnerMixinCreate(RequireAuthenticationMixin, OwnerMixin, Create):
+class OwnerMixinCreate(OwnerMixin, Create):
     """Automatically set model.owner to request.user"""
 
     def form_valid(self, form):

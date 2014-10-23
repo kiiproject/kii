@@ -5,6 +5,7 @@ from django.test import override_settings
 from kii.user.tests import base
 from kii.tests import test_base_models
 
+
 class TestViews(base.UserTestCase):
     
     def test_model_template_mixin_automatically_find_templates(self):

@@ -1,7 +1,9 @@
-from . import base
-from kii import stream
 import django
 from django.utils import timezone
+
+from . import base
+from .. import models, forms
+from kii import stream
 from ...tests import test_stream
 
 
@@ -52,3 +54,8 @@ class TestStreamItem(base.StreamTestCase):
 
         self.assertEqual(c.published, True)
         self.assertEqual(c.unwanted, False)
+
+    def test_form_select_user_stream_as_default_stream(self):
+        form = forms.StreamItemForm(user=self.users[0])
+        self.assertEqual(form.initial['root'], models.Stream.objects.get(title=self.users[0].username))
+

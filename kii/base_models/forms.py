@@ -5,7 +5,10 @@ from . import models
 
 
 class BaseMixinForm(ModelForm):
-    pass
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(BaseMixinForm, self).__init__(*args, **kwargs)
 
 
 class TitleMixinForm(BaseMixinForm):
@@ -30,3 +33,4 @@ class StatusMixinForm(BaseMixinForm):
     class Meta:
         model = models.StatusMixin
         fields = ('status',)
+
