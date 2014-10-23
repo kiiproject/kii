@@ -67,6 +67,8 @@ settings.configure(
         'django.contrib.admin',
         'django_nose',
         'guardian',
+        "compressor",
+        "djangobower",
         'mptt',
     )+kii.APPS_CONFIGS + TEST_APPS_FULL,
     TEST_APPS=TEST_APPS,
@@ -85,6 +87,7 @@ settings.configure(
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'compressor.finders.CompressorFinder',
     ),
     TEST_RUNNER='django_nose.NoseTestSuiteRunner',
 
@@ -98,12 +101,36 @@ settings.configure(
 
     # group where all users will be registered. Used for permissions
     ALL_USERS_GROUP="all_users",
+
+    # Bower
+
+    BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, "components"),
+    BOWER_INSTALLED_APPS = (
+        "foundation",
+    ),
+    # Compressor
+    COMPRESS_ENABLED = False,
+    COMPRESS_PARSER = 'compressor.parser.LxmlParser',
+    COMPRESS_CSS_FILTERS = ['compressor.filters.cssmin.CSSMinFilter'],
+    COMPRESS_JS_FILTERS = ['compressor.filters.jsmin.JSMinFilter'],
+    # in case of emergency, refer to http://stackoverflow.com/questions/20559698/django-bower-foundation-5-sass-how-to-configure
+    COMPRESS_PRECOMPILERS = (
+        ('text/x-scss', 'sass --scss --compass -I "{0}/bower_components/foundation/scss" "{infile}" "{outfile}"'.format(os.path.join(BASE_DIR, "components"), infile="{infile}", outfile="{outfile}")),
+    ),
+    STATIC_ROOT=os.path.join(BASE_DIR, "static")
+
 )
 
 from django.test.utils import get_runner
 TestRunner = get_runner(settings)
 
+
 django.setup()
+
+from djangobower.management.commands.bower_install import Command as bower_install
+
+b = bower_install()
+b.execute()
 call_command('syncdb', verbosity=1, interactive=False)
 
 # ---- app start

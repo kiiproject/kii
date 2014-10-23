@@ -6,3 +6,6 @@ django-markupfield
 markdown
 django-extensions
 django-model-utils
+django-compressor
+lxml
+django-bower

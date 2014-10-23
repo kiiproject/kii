@@ -1,8 +1,15 @@
+{% load compress %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>{% block title %}{{ title }}{% endblock %}</title>
     <meta charset="utf-8" />
+
+    {% compress css %}
+        {% block css %}
+        {% endblock %}
+    {% endcompress %}
 </head>
 
 <body>
