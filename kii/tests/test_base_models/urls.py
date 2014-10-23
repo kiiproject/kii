@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 from kii.base_models import views
-from . import models
+from . import models, forms
 from .views import OwnerModelList
 
 titlemodel_patterns = patterns('',
@@ -29,7 +29,7 @@ titlemodel2_patterns = patterns('',
 ownermodel_patterns = patterns('',
     url(r'^create$', 
         views.OwnerMixinCreate.as_view(
-            model=models.OwnerModel, 
+            form_class=forms.OwnerModelForm, 
             template_name="base_models/modelform.html",
             fields=['useless_field']), 
         name='create'),

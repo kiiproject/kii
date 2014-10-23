@@ -7,6 +7,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from kii.app.views import AppMixin
+from . import forms
 
 
 class RequireAuthenticationMixin(object):
@@ -34,7 +35,7 @@ class ModelTemplateMixin(AppMixin):
         return context
 
 
-class ModelFormMixin(RequireAuthenticationMixin, ModelTemplateMixin):
+class ModelFormMixin(ModelTemplateMixin):
 
     @classmethod
     def as_view(cls, *args, **kwargs):
@@ -45,7 +46,8 @@ class ModelFormMixin(RequireAuthenticationMixin, ModelTemplateMixin):
 
     def get_form_kwargs(self, **kwargs):
         kwargs = super(ModelFormMixin, self).get_form_kwargs(**kwargs)
-        kwargs['user'] = self.request.user
+        if isinstance(self.form_class, forms.BaseMixinForm):
+            kwargs['user'] = self.request.user
         return kwargs
 
 class Create(ModelFormMixin, CreateView):
@@ -75,7 +77,6 @@ class OwnerMixin(object):
     """Deduce owner of given page/elements from url or logged in user"""
 
     def dispatch(self, request, **kwargs):
-
         owner_name = kwargs.get('username', None)
         if owner_name is None:
             if request.user.is_authenticated():
@@ -98,7 +99,7 @@ class OwnerMixin(object):
 
 
 
-class OwnerMixinCreate(OwnerMixin, Create):
+class OwnerMixinCreate(RequireAuthenticationMixin, Create, OwnerMixin):
     """Automatically set model.owner to request.user"""
 
     def form_valid(self, form):
