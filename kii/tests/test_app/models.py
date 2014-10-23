@@ -1,12 +1,13 @@
-from . import apps
-from django.db import models
+from kii.app import models
 
-
-class TestModel1(models.Model):
+class TestModel1(models.AppModel):
     pass
 
-class TestModel2(models.Model):
+class TestModel2(models.AppModel):
     pass
 
-class TestAppModel(models.Model):
+class TestAppModel(models.AppModel):
     pass
+
+class PublicModel(models.AppModel):
+    public = True

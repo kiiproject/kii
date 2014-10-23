@@ -85,3 +85,9 @@ class App(AppConfig):
             return self.name + self.urls
 
         return self.urls
+
+    def public_models(self):
+        """return a list of models from this app that can be created by any user
+        """
+
+        return [model for model in self.get_models() if getattr(model, "public", False)]

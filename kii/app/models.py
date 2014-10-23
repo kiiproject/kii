@@ -4,6 +4,9 @@ from django.core.urlresolvers import reverse
 
 class AppModel(models.Model):
 
+    # If True, any users will be able to create isntances of this model
+    public = False
+
     @property
     def url_namespace(self):
         """Return the URL namespace of the class, such as `app_label:model_label:`"""       

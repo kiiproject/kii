@@ -34,6 +34,10 @@ class TestApp(base.BaseTestCase):
         for app in apps.kii_apps():
             self.assertEqual(app.installed, True)
 
+    def test_can_get_app_available_models_for_user(self):
+        public_models = apps.get('test_app').public_models()
+        self.assertEqual(public_models, [models.PublicModel])
+
     def test_can_gather_urls_for_kii_apps(self):
         reverse('kii:test_app:index')
         reverse('kii:test_app1:some_view')
