@@ -46,7 +46,7 @@ class ModelFormMixin(ModelTemplateMixin):
 
     def get_form_kwargs(self, **kwargs):
         kwargs = super(ModelFormMixin, self).get_form_kwargs(**kwargs)
-        if isinstance(self.form_class, forms.BaseMixinForm):
+        if self.form_class is not None and issubclass(self.form_class, forms.BaseMixinForm):
             kwargs['user'] = self.request.user
         return kwargs
 

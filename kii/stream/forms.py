@@ -1,6 +1,7 @@
 from kii.base_models import forms
 from . import models
 
+
 class StreamItemForm(
         forms.TitleMixinForm,
         forms.ContentMixinForm,
@@ -22,6 +23,9 @@ class StreamItemForm(
         super(StreamItemForm, self).__init__(*args, **kwargs)
 
         queryset = models.Stream.objects.filter(owner=self.user)
+        if len(queryset) < 1:
+            raise Exception('User must have at lest one stream')
+
         self.fields['root'].queryset = queryset
         self.initial['root'] = queryset.first()
         self.fields['root'].empty_label = None
