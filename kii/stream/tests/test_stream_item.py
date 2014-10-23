@@ -39,7 +39,6 @@ class TestStreamItem(base.StreamTestCase):
 
         self.assertEqual(m.readable_by(u), True)
 
-
     def test_polymorphic_integration(self):
 
         m1 = self.G(test_stream.models.StreamItemChild1, root=self.streams[0])
@@ -59,3 +58,12 @@ class TestStreamItem(base.StreamTestCase):
         form = forms.StreamItemForm(user=self.users[0])
         self.assertEqual(form.initial['root'], models.Stream.objects.get(title=self.users[0].username))
 
+    def test_readable_queryset_does_not_include_drafts(self):
+        self.streams[0].assign_perm("read", self.anonymous_user)
+        m1 = self.G(stream.models.StreamItem, status="pub", root=self.streams[0])
+        m2 = self.G(stream.models.StreamItem, status="pub", root=self.streams[0])
+        m3 = self.G(stream.models.StreamItem, status="draft", root=self.streams[0])
+        m4 = self.G(stream.models.StreamItem, status="draft", root=self.streams[0])
+
+        self.assertQuerysetEqualIterable(
+            stream.models.StreamItem.objects.all().readable_by(self.anonymous_user), [m1, m2], ordered=False)

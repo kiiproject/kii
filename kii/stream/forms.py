@@ -23,4 +23,5 @@ class StreamItemForm(
 
         queryset = models.Stream.objects.filter(owner=self.user)
         self.fields['root'].queryset = queryset
+        self.initial['root'] = queryset.first()
         self.fields['root'].empty_label = None

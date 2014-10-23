@@ -3,8 +3,9 @@ from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
-from model_utils.managers import InheritanceManager
+from model_utils.managers import InheritanceManager, InheritanceQuerySetMixin
 from six import with_metaclass
+import inspect
 
 from kii.base_models import models as base_models_models
 from kii.permission import models as permission_models
@@ -21,10 +22,17 @@ class Stream(
 
     pass
 
+class StreamItemQuerySet(InheritanceQuerySetMixin, permission_models.InheritPermissionMixinQueryset):
+    def readable_by(self, target):
+        """Exclude draft items"""        
+
+        return super(StreamItemQuerySet, self).readable_by(target).filter(status="pub")
 
 class StreamItemQueryManager(InheritanceManager, 
     permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
-    pass
+    def get_queryset(self):
+        return StreamItemQuerySet(self.model, using=self._db)
+
 
 
 class StreamItem(     
