@@ -10,4 +10,4 @@ class TestAppModel(models.AppModel):
     pass
 
 class PublicModel(models.AppModel):
-    public = True
+    public_model = True

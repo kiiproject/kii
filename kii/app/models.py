@@ -4,8 +4,8 @@ from django.core.urlresolvers import reverse
 
 class AppModel(models.Model):
 
-    # If True, any users will be able to create isntances of this model
-    public = False
+    # If True, any authenticated user will be able to create isntances of this model
+    public_model = False
 
     @property
     def url_namespace(self):
