@@ -67,6 +67,7 @@ class BaseMixin(AppModel):
 
         return template_names
         
+
 class TitleMixin(BaseMixin):
 
     """An abstract base class for models with a title"""
@@ -87,11 +88,13 @@ class TitleMixin(BaseMixin):
     def __unicode__(self):
         return u'{0}'.format(self.title)
 
+
 class ContentMixin(BaseMixin):
 
     content = fields.MarkupField(default_markup_type="markdown")
     class Meta:
         abstract = True
+
 
 class TimestampMixin(BaseMixin):
     """Add two fields that are automatically set"""
@@ -122,9 +125,11 @@ class StatusMixin(BaseMixin):
 
         super(StatusMixin, self).save(*args, **kwargs)
 
+
 class OwnerMixinQuerySet(BaseMixinQuerySet):
     def owned_by(self, user):
         return self.filter(owner=user.pk)
+
 
 class OwnerMixin(BaseMixin):
     """A mixin for model instance that have an owner"""

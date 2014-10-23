@@ -34,7 +34,7 @@ class TestApp(base.BaseTestCase):
         for app in apps.kii_apps():
             self.assertEqual(app.installed, True)
 
-    def test_can_get_app_available_models_for_user(self):
+    def test_can_get_app_public_models(self):
         public_models = apps.get('test_app').public_models()
         self.assertEqual(public_models, [models.PublicModel])
 
@@ -72,5 +72,4 @@ class TestApp(base.BaseTestCase):
     def test_menu_item_with_user_url(self):
         self.assertEqual(apps.get('test_app').menu.children[3].path(
             username="test0"), "/kii/test0/test_app/hello/user")
-        
-        
+         

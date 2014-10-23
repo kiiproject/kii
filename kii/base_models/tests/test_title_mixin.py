@@ -1,7 +1,8 @@
-from kii.app.tests import base
-from kii.tests import test_base_models
 import django
 
+from kii.app.tests import base
+from kii.tests import test_base_models
+from ..forms import TitleMixinForm
 
 class TestTitleMixin(base.BaseTestCase):
 
@@ -26,4 +27,18 @@ class TestTitleMixinView(base.BaseTestCase):
         response = self.client.get(url)
         parsed = self.parse_html(response.content)
         self.assertIn("Hello world!", parsed.title.string)
+        
+
+
+class TestTitleMixinForm(base.BaseTestCase):
+    
+    def test_form(self):
+        form_data = {'title': 'test'}
+        form = TitleMixinForm(data=form_data)
+        self.assertEqual(form.is_valid(), True)
+
+    def test_form_empty_title_not_allowed(self):
+        form_data = {'title': ''}
+        form = TitleMixinForm(data=form_data)
+        self.assertEqual(form.is_valid(), False)
         

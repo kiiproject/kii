@@ -10,4 +10,3 @@ class TestSlugField(base.BaseTestCase):
         m = self.G(test_base_models.models.SlugModel, title="This is my title")
         self.assertEqual(m.slug, "this-is-my-title")
 
-

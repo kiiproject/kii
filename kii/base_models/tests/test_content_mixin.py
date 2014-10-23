@@ -1,6 +1,8 @@
+import django
+
 from kii.app.tests import base
 from kii.tests import test_base_models
-import django
+from kii.tests.test_base_models import forms
 
 class TestContentMixin(base.BaseTestCase):
     
@@ -10,3 +12,10 @@ class TestContentMixin(base.BaseTestCase):
         self.assertEqual(m.content.rendered, "<h1>hello</h1>")
 
 
+class TestContentMixinForm(base.BaseTestCase):
+    
+    def test_form(self):
+        form_data = {'content': 'test'}
+        form = forms.ContentModelForm(data=form_data)
+        print(form.errors)
+        self.assertEqual(form.is_valid(), True)

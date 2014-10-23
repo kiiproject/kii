@@ -1,10 +1,11 @@
-from kii.app.tests import base
-from kii.tests import test_base_models
 import django
 from django.utils import timezone
 
-class TestStatusMixin(base.BaseTestCase):
+from kii.app.tests import base
+from kii.tests import test_base_models
+from ..forms import StatusMixinForm
 
+class TestStatusMixin(base.BaseTestCase):
     
     def test_setting_status_to_published_set_publication_date(self):
 
@@ -18,3 +19,10 @@ class TestStatusMixin(base.BaseTestCase):
 
         self.assertEqual(m.publication_date > now, True)
 
+
+class TestStatusMixinForm(base.BaseTestCase):
+    
+    def test_form(self):
+        form_data = {'status': 'dra'}
+        form = StatusMixinForm(data=form_data)
+        self.assertEqual(form.is_valid(), True)
