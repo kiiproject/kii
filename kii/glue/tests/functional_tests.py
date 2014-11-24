@@ -6,6 +6,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 import time
 
+from kii.app.core import apps as app_manager
+
 
 class GlueTest(StaticLiveServerTestCase):
     def setUp(self):
@@ -52,5 +54,9 @@ class GlueTest(StaticLiveServerTestCase):
         apps = self.browser.find_elements_by_css_selector(".apps > li > a")
         expected_apps = app_manager.filter(user_access=True)
         self.assertEqual(len(apps), len(expected_apps))
-        for i, app in enumerate(apps)
+        for i, app in enumerate(apps):
             self.assertEqual(app.text, expected_apps[i].verbose_name)
+
+        # he clicks on the first app and is redirected to the app index
+        apps[0].click()
+        self.assertEqual(self.browser.current_url, self.url(reverse("kii:{0}:index".format(expected_apps[0].label))))
