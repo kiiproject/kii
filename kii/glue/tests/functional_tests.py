@@ -47,3 +47,10 @@ class GlueTest(StaticLiveServerTestCase):
         # logged in
         result_popup = self.browser.find_element_by_css_selector(".messages .success")
         self.assertIn('user.login.success', result_popup.text)
+
+        # his homepage lists currently enabled apps
+        apps = self.browser.find_elements_by_css_selector(".apps > li > a")
+        expected_apps = app_manager.filter(user_access=True)
+        self.assertEqual(len(apps), len(expected_apps))
+        for i, app in enumerate(apps)
+            self.assertEqual(app.text, expected_apps[i].verbose_name)
