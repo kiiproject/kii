@@ -1,4 +1,4 @@
-{% load compress %}
+{% load compress static %}
 
 <!DOCTYPE html>
 <html>
@@ -8,6 +8,8 @@
 
     {% compress css %}
         {% block css %}
+            <link href="{% static 'app/scss/app.scss' %}" rel="stylesheet" type="text/x-scss" />
+        
         {% endblock %}
     {% endcompress %}
 </head>

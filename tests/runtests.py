@@ -85,6 +85,7 @@ settings.configure(
     ),
     TESTING=True,      
     STATICFILES_FINDERS = (
+        'kii.theme.finders.ThemeFinder',
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
         'compressor.finders.CompressorFinder',
@@ -112,7 +113,7 @@ settings.configure(
     COMPRESS_ENABLED = False,
     COMPRESS_PARSER = 'compressor.parser.LxmlParser',
     COMPRESS_CSS_FILTERS = ['compressor.filters.cssmin.CSSMinFilter'],
-    COMPRESS_JS_FILTERS = ['compressor.filters.jsmin.JSMinFilter'],
+    COMPRESS_JS_FILTERS = [],
     # in case of emergency, refer to http://stackoverflow.com/questions/20559698/django-bower-foundation-5-sass-how-to-configure
     COMPRESS_PRECOMPILERS = (
         ('text/x-scss', 'sass --scss --compass -I "{0}/bower_components/foundation/scss" "{infile}" "{outfile}"'.format(os.path.join(BASE_DIR, "components"), infile="{infile}", outfile="{outfile}")),
