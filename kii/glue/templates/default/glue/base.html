@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>{% load i18n %}
+    <head>
+        <title>Welcome</title>
+    </head>
+    <body> 
+        <div class="main-content">
+            {% block messages %}       
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% endblock %}
+            {% block header %}
+                {% if not request.user.is_authenticated %}
+                    <form action="{% url 'kii:user:login' %}" method="POST" id="login" >
+                        {% csrf_token %}
+                        {{ login_form }}
+                        <input type="submit" value="{% trans 'login' %}" />
+                    </form>
+                {% else %}
+                    <ul class="apps">
+                        {% for app in user_apps %}
+                            <li class="{{ app.label }}"><a href="{% url 'kii:'|add:app.label|add:':index' %}">{{ app.verbose_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endblock %}
+            {% block main_content %}{% endblock %}
+        </div>
+    </body>
+</html>

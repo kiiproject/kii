@@ -74,7 +74,7 @@ class CommentTestCase(base.UserTestCase):
         c = self.G(models.DiscussionModelComment, user=self.users[0])
         self.assertEqual(c.published, True)
 
-    def test_can_hook_into_detect_unwanted(self):
+    def test_can_hook_into_detect_junk(self):
 
         # see test_discussion/models.py for signal callback
 
@@ -82,12 +82,12 @@ class CommentTestCase(base.UserTestCase):
         m = self.G(models.DiscussionModel)
         c = models.DiscussionModelComment(subject=m, user_profile=p)
         c.save()
-        self.assertEqual(c.unwanted, True)
+        self.assertEqual(c.junk, True)
         
-    def test_unwanted_comment_default_to_published_false(self):
+    def test_junk_comment_default_to_published_false(self):
 
         m = self.G(models.DiscussionModel)
-        c = self.G(models.DiscussionModelComment,subject=m, unwanted=True, user=self.users[0])
+        c = self.G(models.DiscussionModelComment,subject=m, junk=True, user=self.users[0])
 
         self.assertEqual(c.published, False)
 

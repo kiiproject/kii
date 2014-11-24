@@ -53,7 +53,7 @@ class CommentMixin(
     published = models.BooleanField(default=False)
 
     # Set this to true for spam comments
-    unwanted = models.BooleanField(default=False)
+    junk = models.NullBooleanField(default=None)
 
     profile = None
 
@@ -78,17 +78,18 @@ class CommentMixin(
         if not self.subject.discussion_open:
             raise ValueError(_("You cannot register a comment for model instance that has discussion_open set to False"))
         
-        if self.new:
-            results = self.send(comment_detect_unwanted, instance=self)
+        if self.new and self.junk is None:
+            results = self.send(comment_detect_junk, instance=self)
             
-            # only set unwanted to True if all receiver think the comment is unwanted
-            self.unwanted = all(unwanted for receiver, unwanted in results)
+            # only set junk to True if all receiver think the comment is junk
+            self.junk = all(junk for receiver, junk in results)
 
-        if self.unwanted:
+        if self.user is not None:
+            self.published = True
+
+        if self.junk:
             self.published = False
 
-        elif self.user is not None:
-            self.published = True
 
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
@@ -98,7 +99,7 @@ class CommentMixin(
 
 # signals
 
-comment_detect_unwanted = signals.InstanceSignal()
+comment_detect_junk = signals.InstanceSignal()
 
 class DiscussionMixin(base_models.models.BaseMixin):
 
