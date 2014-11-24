@@ -20,7 +20,8 @@ class Stream(
     Think of it as a timeline, a wall, a list of element, such as blog entries for exemple,
     but more generic"""
 
-    pass
+    class Meta(permission_models.PermissionMixin.Meta):
+        unique_together = ('owner', 'title')
 
 class StreamItemQuerySet(InheritanceQuerySetMixin, permission_models.InheritPermissionMixinQueryset):
     def readable_by(self, target):

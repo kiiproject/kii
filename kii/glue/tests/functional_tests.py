@@ -28,6 +28,9 @@ class GlueTest(StaticLiveServerTestCase):
         user = G(get_user_model(), username="harold")
         user.set_password('test')
         user.save()
+        stream = stream_models.Stream.objects.get(owner=user, title=user.username)
+        for i in range(0, 5):
+            G(stream_models.StreamItem, root=stream)
 
         for i in range(0, 5):
             G(Tag, owner=user)
@@ -59,6 +62,13 @@ class GlueTest(StaticLiveServerTestCase):
 
         tags = self.browser.find_elements_by_css_selector('.widget.tags > ul > .tag')
         self.assertEqual(len(tags), Tag.objects.filter(owner=user).count())
+        expected_items = stream.children.all().order_by('-publication_date')
+        items = self.browser.find_elements_by_css_selector('.stream-items > article')
+        self.assertEqual(len(items), len(expected_items))
+        for i, item in enumerate(items):
+            title = item.find_element_by_css_selector('h2.title')
+            self.assertEqual(title.text, expected_items[i].title)
+
 
         # on the top of the page, there is a menu which list enabled apps
         # he clicks on the first app and is redirected to the app index

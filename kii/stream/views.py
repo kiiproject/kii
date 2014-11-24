@@ -2,9 +2,9 @@ from django.views.generic import DetailView
 from django.http import Http404
 
 from . import models
+from kii.base_models import views
 
-
-class Index(DetailView):
+class Index(views.RequireAuthenticationMixin, DetailView):
 
     template_name = "stream/stream/detail.html"
 
