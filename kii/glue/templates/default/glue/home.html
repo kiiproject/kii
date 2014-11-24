@@ -1,17 +1,2 @@
 {% extends "glue/base.html" %}
 {% load i18n %}
-{% block main_content %}
-    {% if not request.user.is_authenticated %}
-        <form action="{% url 'kii:user:login' %}" method="POST" id="login" >
-            {% csrf_token %}
-            {{ login_form }}
-            <input type="submit" value="{% trans 'login' %}" />
-        </form>
-    {% else %}
-        <ul class="apps">
-            {% for app in user_apps %}
-                <li class="{{ app.label }}"><a href="{% url 'kii:'|add:app.label|add:':index' %}">{{ app.verbose_name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endblock %}

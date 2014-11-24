@@ -7,7 +7,8 @@ from selenium import webdriver
 import time
 
 from kii.app.core import apps as app_manager
-
+from kii.stream import models as stream_models
+from kii.classify.models import Tag
 
 class GlueTest(StaticLiveServerTestCase):
     def setUp(self):
@@ -27,6 +28,9 @@ class GlueTest(StaticLiveServerTestCase):
         user = G(get_user_model(), username="harold")
         user.set_password('test')
         user.save()
+
+        for i in range(0, 5):
+            G(Tag, owner=user)
 
         # As every morning, he opens Kii's homepage
         # withing his web browser
@@ -51,11 +55,11 @@ class GlueTest(StaticLiveServerTestCase):
         self.assertIn('user.login.success', result_popup.text)
 
         # his homepage lists his tags and display his main stream
-        self.assertEqual(self.browser.current_url, self.url(reverse("kii:{0}:index".format(expected_apps[0].label))))
+        self.assertEqual(self.browser.current_url, self.url(reverse("kii:stream:index")))
 
         tags = self.browser.find_elements_by_css_selector('.widget.tags > ul > .tag')
-        self.assertEqual(len(tags), Tag.objects.filter(owner=user))
-        
+        self.assertEqual(len(tags), Tag.objects.filter(owner=user).count())
+
         # on the top of the page, there is a menu which list enabled apps
         # he clicks on the first app and is redirected to the app index
         apps = self.browser.find_elements_by_css_selector(".apps > li > a")

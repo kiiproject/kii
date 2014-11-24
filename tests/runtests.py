@@ -50,6 +50,7 @@ settings.configure(
     },
     TEMPLATE_CONTEXT_PROCESSORS = default_settings.TEMPLATE_CONTEXT_PROCESSORS + (
         'django.core.context_processors.request',
+        'kii.app.context_processors.user_apps',
     ),
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
@@ -98,7 +99,7 @@ settings.configure(
 
     # group where all users will be registered. Used for permissions
     ALL_USERS_GROUP="all_users",
-    LOGIN_REDIRECT_URL="kii:glue:home",
+    LOGIN_REDIRECT_URL="kii:stream:index",
     LOGGING= {
         'version': 1,
         'handlers': {
