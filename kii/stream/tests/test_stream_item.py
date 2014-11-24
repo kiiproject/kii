@@ -52,7 +52,7 @@ class TestStreamItem(base.StreamTestCase):
         c = self.G(stream.models.StreamItemComment, subject=m, user=m.owner)
 
         self.assertEqual(c.published, True)
-        self.assertEqual(c.unwanted, False)
+        self.assertEqual(c.junk, False)
 
     def test_form_select_user_stream_as_default_stream(self):
         form = forms.StreamItemForm(user=self.users[0])
