@@ -98,6 +98,23 @@ settings.configure(
 
     # group where all users will be registered. Used for permissions
     ALL_USERS_GROUP="all_users",
+    LOGIN_REDIRECT_URL="kii:glue:home",
+    LOGGING= {
+        'version': 1,
+        'handlers': {
+            'console':{
+                'level':'DEBUG',
+                'class':'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'django.request': {
+                'handlers':['console'],
+                'propagate': True,
+                'level':'DEBUG',
+            }, 
+        },  
+    },
 )
 
 from django.test.utils import get_runner
@@ -110,7 +127,17 @@ call_command('syncdb', verbosity=1, interactive=False)
 verbosity = 2 if '-v' in sys.argv else 1
 
 runner = TestRunner(verbosity=verbosity, interactive=True, failfast=False)
-apps_to_test = sys.argv[1:] or kii.APPS
+functional = len(sys.argv) > 0 and "_functional" == sys.argv[-1]
+
+argv = sys.argv[1:]
+
+if functional:
+    # exclude functional param 
+    argv = sys.argv[1:-1]
+
+apps_to_test = argv or kii.APPS
+if functional:
+    apps_to_test = ["{0}.tests.functional_tests".format(app_name) for app_name in apps_to_test]
 failures = runner.run_tests(apps_to_test)
 
 if failures:

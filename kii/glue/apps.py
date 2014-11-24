@@ -2,5 +2,5 @@
 from kii.app import core
 
 class App(core.App):
-    name = "kii.user"
+    name = "kii.glue"
     urls = ".urls"

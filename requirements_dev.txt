@@ -3,3 +3,4 @@ django-nose
 django-dynamic-fixture
 tox
 beautifulsoup4
+selenium
