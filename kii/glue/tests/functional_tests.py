@@ -53,6 +53,9 @@ class GlueTest(StaticLiveServerTestCase):
         # his homepage lists his tags and display his main stream
         self.assertEqual(self.browser.current_url, self.url(reverse("kii:{0}:index".format(expected_apps[0].label))))
 
+        tags = self.browser.find_elements_by_css_selector('.widget.tags > ul > .tag')
+        self.assertEqual(len(tags), Tag.objects.filter(owner=user))
+        
         # on the top of the page, there is a menu which list enabled apps
         # he clicks on the first app and is redirected to the app index
         apps = self.browser.find_elements_by_css_selector(".apps > li > a")
