@@ -1,8 +1,17 @@
+{% load compress static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>{% block title %}{{ title }}{% endblock %}</title>
     <meta charset="utf-8" />
+
+    {% compress css %}
+        {% block css %}
+            <link href="{% static 'app/scss/app.scss' %}" rel="stylesheet" type="text/x-scss" />
+        
+        {% endblock %}
+    {% endcompress %}
 </head>
 
 <body>
