@@ -62,6 +62,7 @@ settings.configure(
     ),
     INSTALLED_APPS = (
         'django.contrib.auth',
+        'django.contrib.staticfiles',
         'django.contrib.sites',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
@@ -128,10 +129,12 @@ settings.configure(
         "foundation",
     ),
     # Compressor
-    COMPRESS_ENABLED = False,
+    # If compressor does not work, ensure you have compass installed (gem install compass)
+    COMPRESS_ENABLED = True,
     COMPRESS_PARSER = 'compressor.parser.LxmlParser',
     COMPRESS_CSS_FILTERS = ['compressor.filters.cssmin.CSSMinFilter'],
     COMPRESS_JS_FILTERS = [],
+    COMPRESS_OFFLINE = True,
     # in case of emergency, refer to http://stackoverflow.com/questions/20559698/django-bower-foundation-5-sass-how-to-configure
     COMPRESS_PRECOMPILERS = (
         ('text/x-scss', 'sass --scss --compass -I "{0}/bower_components/foundation/scss" "{infile}" "{outfile}"'.format(os.path.join(BASE_DIR, "components"), infile="{infile}", outfile="{outfile}")),
@@ -151,6 +154,7 @@ from djangobower.management.commands.bower_install import Command as bower_insta
 b = bower_install()
 b.execute()
 call_command('syncdb', verbosity=1, interactive=False)
+#call_command('compress', verbosity=1, interactive=False, force=True)
 
 # ---- app start
 verbosity = 2 if '-v' in sys.argv else 1

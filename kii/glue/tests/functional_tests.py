@@ -50,6 +50,7 @@ class GlueTest(StaticLiveServerTestCase):
         # He fills the form
         username_input.send_keys('harold')
         password_input.send_keys('test')
+        #time.sleep(50)
         password_input.send_keys(Keys.RETURN)
 
         # He is redirected to his homepage and a popup notice him he has successfully
@@ -69,7 +70,7 @@ class GlueTest(StaticLiveServerTestCase):
             title = item.find_element_by_css_selector('h2.title')
             self.assertEqual(title.text, expected_items[i].title)
 
-
+        
         # on the top of the page, there is a menu which list enabled apps
         # he clicks on the first app and is redirected to the app index
         apps = self.browser.find_elements_by_css_selector(".apps > li > a")
