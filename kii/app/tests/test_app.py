@@ -52,7 +52,7 @@ class TestApp(base.BaseTestCase):
     def test_app_templates_inherit_from_page_template(self):
         response = self.client.get(reverse('kii:test_app:home'))
         self.assertTemplateUsed(response, "app/app_page.html")
-        self.assertTemplateUsed(response, "app/base.html")
+        self.assertTemplateUsed(response, "glue/base.html")
 
     def test_app_pages_title_contains_app_verbose_name(self):
         response = self.client.get(reverse('kii:test_app:home'))
