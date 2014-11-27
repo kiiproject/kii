@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, url, include
 from django.contrib import admin
-from kii import app
+from kii.app import core
 
-kii_urls = app.core.apps.get_apps_urls()
+kii_urls = core.apps.get_apps_urls()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),

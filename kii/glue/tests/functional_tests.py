@@ -1,26 +1,16 @@
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django_dynamic_fixture import G
-from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
+
 import time
 
 from kii.app.core import apps as app_manager
 from kii.stream import models as stream_models
 from kii.classify.models import Tag
 
-class GlueTest(StaticLiveServerTestCase):
-    def setUp(self):
-        self.browser = webdriver.Firefox()
+from . import SeleniumTestCase
 
-    def tearDown(self):
-
-        self.browser.quit()
-
-    def url(self, url):
-        """Return a full URL from a reversed django url for selenium testing"""
-        return "{0}{1}".format(self.live_server_url, url)
+class GlueTest(SeleniumTestCase):
 
     def test_user_can_display_home_page_and_login(self):
 
