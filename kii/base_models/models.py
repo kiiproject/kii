@@ -27,6 +27,10 @@ class BaseMixin(AppModel):
     class Meta:
         abstract = True
 
+    @classmethod
+    def class_name(cls):
+        return cls.__name__.lower()
+
     def meta(self):
         """For metadata access in template (underscored attributes are forbidden in django templates)"""
         return self._meta
