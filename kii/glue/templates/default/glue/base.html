@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>{% load i18n compress static %}
+<html>{% load i18n static %}
     <head>
         <title>{% block title %}{{ title }}{% endblock %}</title>
         <meta charset="utf-8" />
-        {% compress css %}
+
             {% block css %}
                 <link href="{% static 'default/glue/scss/app.scss' %}" rel="stylesheet" type="text/x-scss" />            
             {% endblock %}
-        {% endcompress %}
+
     </head>
     <body> 
         <div class="main-content">
