@@ -1,4 +1,5 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.core.urlresolvers import reverse
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 
@@ -16,4 +17,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
 
     def url(self, url):
         """Return a full URL from a reversed django url for selenium testing"""
+        if not url.startswith('/'):
+            # we need reversing 
+            url = reverse(url)
         return "{0}{1}".format(self.live_server_url, url)
