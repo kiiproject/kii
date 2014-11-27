@@ -91,6 +91,7 @@ settings.configure(
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
         'compressor.finders.CompressorFinder',
+        'djangobower.finders.BowerFinder',
     ),
     TEST_RUNNER='django_nose.NoseTestSuiteRunner',
 

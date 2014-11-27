@@ -7,7 +7,9 @@
             {% block css %}
                 <link href="{% static 'default/glue/scss/app.scss' %}" rel="stylesheet" type="text/x-scss" />            
             {% endblock %}
-
+            {% block head_js %}
+                <script type="text/javascript" src="{% static 'jquery/jquery.js' %}"></script>
+            {% endblock %}
     </head>
     <body> 
         <div class="main-content">
@@ -37,5 +39,7 @@
             {% endblock %}
             {% block main_content %}{% endblock %}
         </div>
+        {% block bottom_js %}
+        {% endblock %}
     </body>
 </html>
