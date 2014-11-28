@@ -61,8 +61,6 @@ class ModelFormMixin(ModelTemplateMixin):
 class Create(ModelFormMixin, CreateView):
     action = "create"
 
-    def get_success_url(self):
-        return "/"
 
 class Delete(ModelFormMixin, DeleteView):
     action = "delete"

@@ -1,4 +1,5 @@
 from django.views.generic import DetailView
+from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 
 from . import models
@@ -15,8 +16,8 @@ class Index(views.RequireAuthenticationMixin, DetailView):
         except models.Stream.DoesNotExist:
             raise Http404
 
-class Create(views.RequireAuthenticationMixin, views.Create):
-    pass
+class Create(views.OwnerMixinCreate):
+    success_url = reverse_lazy('kii:stream:index')
 
 class Detail(views.Detail):
     pass

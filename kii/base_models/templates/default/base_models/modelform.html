@@ -1,4 +1,5 @@
-<form action="" class="{{ form.Meta.model.class_name }} {{ action }}" method="POST">{% csrf_token %}
+<form action="{{ request.path }}" class="{{ form.Meta.model.class_name }} {{ action }}" method="POST">
+    {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="OK" />
 </form>
