@@ -3,13 +3,12 @@
     <head>
         <title>{% block title %}{{ title }}{% endblock %}</title>
         <meta charset="utf-8" />
-
-            {% block css %}
-                <link href="{% static 'default/glue/scss/app.scss' %}" rel="stylesheet" type="text/x-scss" />            
-            {% endblock %}
-            {% block head_js %}
-                <script type="text/javascript" src="{% static 'jquery/jquery.min.js' %}"></script>
-            {% endblock %}
+        {% block css %}
+            <link href="{% static 'glue/scss/app.scss' %}" rel="stylesheet" type="text/x-scss" />            
+        {% endblock %}
+        {% block head_js %}
+            <script type="text/javascript" src="{% static 'jquery/jquery.min.js' %}"></script>
+        {% endblock %}
     </head>
     <body> 
         <div class="main-content">

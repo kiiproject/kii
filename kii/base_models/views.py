@@ -20,29 +20,36 @@ class RequireAuthenticationMixin(object):
 
 class ModelTemplateMixin(AppMixin):
     def get_template_names(self):
-        """Deduce template_name from model, app and view names"""
+        """Deduce template_name from model name, app name and action"""
 
         if self.template_name:
             # use given template name
             return self.template_name
 
-        return self.model.get_template_names(self.name)
+        return self.model.get_template_names(self.action)
 
     def get_context_data(self, **kwargs):
 
         context = super(ModelTemplateMixin, self).get_context_data(**kwargs)
         context["model"] = self.model
+        context["action"] = self.action
         return context
 
 
 class ModelFormMixin(ModelTemplateMixin):
 
+    form_template = "base_models/modelform.html"
     @classmethod
     def as_view(cls, *args, **kwargs):
         """Deduce model from form class if needed"""
         if kwargs.get('model') is None:
             kwargs['model'] = kwargs.get('form_class').Meta.model
         return super(ModelFormMixin, cls).as_view(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ModelFormMixin, self).get_context_data(**kwargs)
+        context['form_template'] = self.form_template
+        return context
 
     def get_form_kwargs(self, **kwargs):
         kwargs = super(ModelFormMixin, self).get_form_kwargs(**kwargs)
@@ -51,26 +58,26 @@ class ModelFormMixin(ModelTemplateMixin):
         return kwargs
 
 class Create(ModelFormMixin, CreateView):
-    name = "create"
+    action = "create"
 
     def get_success_url(self):
         return "/"
 
 class Delete(ModelFormMixin, DeleteView):
-    name = "delete"
+    action = "delete"
 
     def get_success_url(self):
         return "/"
 
 
 class Detail(ModelTemplateMixin, DetailView):
-    name = "detail"
+    action = "detail"
 
     def get_context_object_name(self, obj):
         return "object"
 
 class List(ModelTemplateMixin, ListView):
-    name = "list"
+    action = "list"
    
 
 class OwnerMixin(object):

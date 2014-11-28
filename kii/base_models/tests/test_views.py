@@ -28,6 +28,14 @@ class TestViews(base.UserTestCase):
         parsed = self.parse_html(response.content)
         self.assertIn("Title Model", parsed.title.string)
 
+    def test_model_template_mixin_pass_context(self):
+        response = self.client.get(reverse('kii:test_base_models:titlemodel2:list'))
+
+        self.assertEqual(response.context['action'], "list")
+        
+        response = self.client.get(reverse('kii:test_base_models:titlemodel2:create'))
+        self.assertEqual(response.context['action'], "create")
+
     @override_settings(KII_DEFAULT_USER='test0')
     def test_owner_view_require_username_argument_or_deduce_it_automatically_from_logged_in_user_or_settings(self):
         url = reverse('kii:test_base_models:ownermodel:list')

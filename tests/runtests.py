@@ -152,7 +152,7 @@ django.setup()
 # b = bower_install()
 # b.execute()
 call_command('syncdb', verbosity=1, interactive=False)
-call_command('compress', verbosity=1, interactive=False, force=True)
+#call_command('compress', verbosity=1, interactive=False, force=True)
 
 # ---- app start
 verbosity = 2 if '-v' in sys.argv else 1
