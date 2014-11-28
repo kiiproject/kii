@@ -70,7 +70,7 @@ settings.configure(
         'django_nose',
         'guardian',
         "compressor",
-        "djangobower",
+        #"djangobower",
         'mptt',
     )+kii.APPS_CONFIGS + TEST_APPS_FULL,
     TEST_APPS=TEST_APPS,
@@ -125,10 +125,7 @@ settings.configure(
 
     # Bower
 
-    BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, "components"),
-    BOWER_INSTALLED_APPS = (
-        "foundation",
-    ),
+
     # Compressor
     # If compressor does not work, ensure you have compass installed (gem install compass)
     COMPRESS_ENABLED = True,
@@ -150,10 +147,10 @@ TestRunner = get_runner(settings)
 
 django.setup()
 
-from djangobower.management.commands.bower_install import Command as bower_install
+# from djangobower.management.commands.bower_install import Command as bower_install
 
-b = bower_install()
-b.execute()
+# b = bower_install()
+# b.execute()
 call_command('syncdb', verbosity=1, interactive=False)
 call_command('compress', verbosity=1, interactive=False, force=True)
 
