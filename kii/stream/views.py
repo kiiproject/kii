@@ -14,3 +14,15 @@ class Index(views.RequireAuthenticationMixin, DetailView):
             return models.Stream.objects.get(owner=self.request.user.pk, title=self.request.user.username)
         except models.Stream.DoesNotExist:
             raise Http404
+
+class Create(views.RequireAuthenticationMixin, views.Create):
+    pass
+
+class Detail(views.Detail):
+    pass
+
+class Delete(views.RequireAuthenticationMixin, views.Delete):
+    pass
+
+class List(views.Create):
+    pass

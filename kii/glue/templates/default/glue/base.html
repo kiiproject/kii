@@ -39,6 +39,8 @@
             {% block main_content %}{% endblock %}
         </div>
         {% block bottom_js %}
+
+        <script type="text/javascript">var kii_root = "{{ kii_root|slice:":-1" }}";</script>
         {% endblock %}
     </body>
 </html>

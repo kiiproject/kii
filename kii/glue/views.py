@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from kii.app.core import apps
 
+
 class Home(TemplateView):
     
     template_name = "glue/home.html"

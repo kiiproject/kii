@@ -21,8 +21,7 @@ class StreamItemForm(
     def __init__(self, *args, **kwargs):
         """Set default stream to user's default stream if no stream is provided"""
         super(StreamItemForm, self).__init__(*args, **kwargs)
-
-        queryset = models.Stream.objects.filter(owner=self.user)
+        queryset = models.Stream.objects.filter(owner=self.user.pk)
         if len(queryset) < 1:
             raise Exception('User must have at lest one stream')
 

@@ -42,8 +42,9 @@ class ModelFormMixin(ModelTemplateMixin):
     @classmethod
     def as_view(cls, *args, **kwargs):
         """Deduce model from form class if needed"""
-        if kwargs.get('model') is None:
-            kwargs['model'] = kwargs.get('form_class').Meta.model
+        if getattr(cls, "model", None) is None and kwargs.get('model') is None:
+            form_class = kwargs.get('form_class', getattr(cls, "form_class"))
+            kwargs['model'] = form_class.Meta.model
         return super(ModelFormMixin, cls).as_view(*args, **kwargs)
 
     def get_context_data(self, **kwargs):

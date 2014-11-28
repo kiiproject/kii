@@ -1,4 +1,4 @@
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, reverse
 from .core import apps
 
 
@@ -14,5 +14,5 @@ class AppMixin(object):
         context = super(AppMixin, self).get_context_data(**kwargs)
 
         context['app'] = self.app
-        
+        context['kii_root'] = self.request.build_absolute_uri(reverse('kii:glue:home'))
         return context
