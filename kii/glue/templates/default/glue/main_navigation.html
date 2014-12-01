@@ -1,0 +1,31 @@
+{% load i18n %}
+{% block main_navigation %}
+    <div class="sticky fixed">
+        <nav class="top-bar" data-topbar role="navigation">
+            <ul class="title-area">
+                <li class="name">
+                    <h1><a href="{% url 'kii:stream:index' %}">Kii</a></h1>
+                </li>
+                <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+            </ul>
+            <section class="top-bar-section">
+                <ul class="right">
+                    {% if not request.user.is_authenticated %}
+                        <li><a href="{% url 'kii:user:login' %}">{% trans 'login' %}</a></li>
+                    {% else %}
+                        <li class="has-dropdown"><a href="#">{% trans 'kii.user.menu' %}</a>
+                            <ul class="dropdown">
+                                <li class="logout"><a href="{% url 'kii:user:logout' %}">{% trans 'logout' %}</a></li>
+                            </ul>
+                        </li>
+                        <ul class="apps">
+                            {% for app in user_apps %}
+                                <li class="{{ app.label }}"><a href="{% url 'kii:'|add:app.label|add:':index' %}">{{ app.verbose_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </ul>
+            </section>
+        </nav>
+    </div>
+{% endblock %}
