@@ -1,10 +1,11 @@
-from django.views.generic import DetailView, ListView, CreateView, DeleteView
+from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied
 
 from kii.app.views import AppMixin
 from . import forms
@@ -62,6 +63,10 @@ class Create(ModelFormMixin, CreateView):
     action = "create"
 
 
+class Update(ModelFormMixin, UpdateView):
+    action = "update"
+
+
 class Delete(ModelFormMixin, DeleteView):
     action = "delete"
 
@@ -112,3 +117,13 @@ class OwnerMixinCreate(RequireAuthenticationMixin, Create, OwnerMixin):
         form.instance.owner = self.request.user
         return super(OwnerMixinCreate, self).form_valid(form)
     
+class OwnerMixinUpdate(RequireAuthenticationMixin, Update, OwnerMixin):
+    """Requires request.user to be owner of the model instance"""
+
+    def get_object(self, **kwargs):
+        obj = super(OwnerMixinUpdate, self).get_object(**kwargs)
+
+        if not obj.owned_by(self.request.user):
+            raise PermissionDenied()
+
+        return obj

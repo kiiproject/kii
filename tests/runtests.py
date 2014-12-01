@@ -69,7 +69,6 @@ settings.configure(
         'django.contrib.admin',
         'django_nose',
         'guardian',
-        "compressor",
         #"djangobower",
         'mptt',
     )+kii.APPS_CONFIGS + TEST_APPS_FULL,

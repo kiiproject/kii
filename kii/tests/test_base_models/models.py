@@ -1,5 +1,7 @@
-from kii import base_models
 from django.db import models
+from django.core.urlresolvers import reverse
+
+from kii import base_models
 from kii.base_models import fields
 
 class TitleModel(base_models.models.TitleMixin):
@@ -14,6 +16,8 @@ class TitleModel2(TitleModel):
 class OwnerModel(base_models.models.OwnerMixin):
     useless_field = models.CharField(max_length=255, default="", blank=True)
 
+    def get_absolute_url(self):
+        reverse('kii:stream:index')
 
 InheritModel, signals = base_models.models.get_inherit_model(
     local_field='title', 

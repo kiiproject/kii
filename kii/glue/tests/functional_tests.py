@@ -32,7 +32,9 @@ class GlueTest(SeleniumTestCase):
         # He sees a welcome message
         self.assertIn('Welcome', self.browser.title)
 
-        # And, below, a login form
+        # And, in the menu, a link to the login form, which he clicks
+        self.browser.find_element_by_css_selector('nav .login').click()
+
         login_form = self.browser.find_element_by_css_selector("form#login")
         username_input = login_form.find_element_by_css_selector('input[type="text"]')
         password_input = login_form.find_element_by_css_selector('input[name="password"]')
@@ -41,8 +43,7 @@ class GlueTest(SeleniumTestCase):
         username_input.send_keys('harold')
         password_input.send_keys('test')
         #time.sleep(50)
-        password_input.send_keys(Keys.RETURN)
-
+        password_input.send_keys(self.keys.RETURN)
         # He is redirected to his homepage and a popup notice him he has successfully
         # logged in
         result_popup = self.browser.find_element_by_css_selector(".messages .success")
@@ -53,9 +54,12 @@ class GlueTest(SeleniumTestCase):
 
         tags = self.browser.find_elements_by_css_selector('.widget.tags > ul > .tag')
         self.assertEqual(len(tags), Tag.objects.filter(owner=user).count())
+
         expected_items = stream.children.all().order_by('-publication_date')
         items = self.browser.find_elements_by_css_selector('.stream-items > article')
+        time.sleep(55)
         self.assertEqual(len(items), len(expected_items))
+
         for i, item in enumerate(items):
             title = item.find_element_by_css_selector('h2.title')
             self.assertEqual(title.text, expected_items[i].title)

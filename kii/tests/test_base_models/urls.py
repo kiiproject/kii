@@ -36,6 +36,11 @@ ownermodel_patterns = patterns('',
     url(r'^$', 
         OwnerModelList.as_view(), 
         name='list'),
+    url(r'^(?P<pk>\d+)/update$', 
+        views.OwnerMixinUpdate.as_view(form_class=forms.OwnerModelForm,        
+        template_name="base_models/modelform.html",
+        fields=['useless_field']),  
+        name='update'),
 
 )
 
