@@ -41,6 +41,9 @@ ownermodel_patterns = patterns('',
         template_name="base_models/modelform.html",
         fields=['useless_field']),  
         name='update'),
+    url(r'^(?P<pk>\d+)/delete$', 
+        views.OwnerMixinDelete.as_view(model=models.OwnerModel),  
+        name='delete'),
 
 )
 

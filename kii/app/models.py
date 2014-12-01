@@ -32,6 +32,9 @@ class AppModel(models.Model):
     def reverse_update(self):
         return reverse(self.url_namespace + "update", kwargs={"pk":self.pk})
 
+    def reverse_delete(self):
+        return reverse(self.url_namespace + "delete", kwargs={"pk":self.pk})
+
     def get_absolute_url(self):
         return self.reverse_detail()
 

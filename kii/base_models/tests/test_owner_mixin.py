@@ -73,3 +73,26 @@ class TestOwnerMixin(base.UserTestCase):
         self.login(self.users[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_owner_mixin_delete_requires_owner(self):
+        instance = self.G(test_base_models.models.OwnerModel, owner=self.users[0])
+        url = instance.reverse('delete')
+
+        # try with anonymous, should redirect to login
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, settings.LOGIN_URL+"?next="+url)
+
+        # try with logged in user (but not owner)
+        self.login(self.users[1])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 403)
+
+        self.logout()
+
+        # try with owner        
+        self.login(self.users[0])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

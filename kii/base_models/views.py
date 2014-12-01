@@ -67,11 +67,11 @@ class Update(ModelFormMixin, UpdateView):
     action = "update"
 
 
-class Delete(ModelFormMixin, DeleteView):
+class Delete(DeleteView):
     action = "delete"
 
     def get_success_url(self):
-        return "/"
+        return reverse("kii:glue:home")
 
 
 class Detail(ModelTemplateMixin, DetailView):
@@ -109,21 +109,28 @@ class OwnerMixin(object):
         return context
 
 
-
 class OwnerMixinCreate(RequireAuthenticationMixin, Create, OwnerMixin):
     """Automatically set model.owner to request.user"""
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(OwnerMixinCreate, self).form_valid(form)
-    
-class OwnerMixinUpdate(RequireAuthenticationMixin, Update, OwnerMixin):
+
+
+class RequireOwnerMixin(RequireAuthenticationMixin):
     """Requires request.user to be owner of the model instance"""
 
     def get_object(self, **kwargs):
-        obj = super(OwnerMixinUpdate, self).get_object(**kwargs)
+        obj = super(RequireOwnerMixin, self).get_object(**kwargs)
 
         if not obj.owned_by(self.request.user):
             raise PermissionDenied()
 
         return obj
+    
+class OwnerMixinUpdate(RequireOwnerMixin, Update, OwnerMixin):
+    pass
+
+class OwnerMixinDelete(RequireOwnerMixin, Delete, OwnerMixin):
+
+    template_name = "base_models/basemixin/delete.html"
