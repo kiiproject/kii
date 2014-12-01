@@ -1,0 +1,11 @@
+{% load i18n %}
+{% block tags %}
+    <div class="widget tags">
+        <h3><i class="fi-price-tag"></i>{% trans "classify.tags" %}</h3>
+        <ul>
+            {% for tag in owner.tags.all %}
+                <li class="tag">{{ tag.title }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

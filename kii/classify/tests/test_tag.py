@@ -1,7 +1,11 @@
-import kii.stream.tests.base
-from kii import stream, classify
 import django.db
 import django.core.exceptions
+from django.core.urlresolvers import reverse
+
+import kii.stream.tests.base
+from kii import stream, classify
+from kii.classify import models
+
 
 class Tag(stream.tests.base.StreamTestCase):
     
@@ -30,3 +34,15 @@ class Tag(stream.tests.base.StreamTestCase):
         t0 = self.G(classify.models.Tag, name="level0")
         t1 = self.G(classify.models.Tag, name="level1", parent=t0)
         t2 = self.G(classify.models.Tag, name="level2", parent=t1)
+
+    def test_tag_create(self):
+        url = reverse('kii:classify:tag:create')
+        self.login(self.users[0].username)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(url, {"title": "Hello"})
+
+        tag = models.Tag.objects.get(owner=self.users[0])
+        self.assertEqual(tag.title, "Hello")

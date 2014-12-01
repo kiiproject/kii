@@ -1,11 +1,10 @@
-from django.views.generic import DetailView
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 
 from . import models
 from kii.base_models import views
 
-class Index(views.RequireAuthenticationMixin, DetailView):
+class Index(views.RequireAuthenticationMixin, views.OwnerMixinDetail):
 
     template_name = "stream/stream/detail.html"
 

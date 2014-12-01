@@ -1,18 +1,8 @@
 {% extends 'glue/base.html' %}
 
-{% block main_content %}
+{% block main_content %}    
     
-    
-    {% block tags %}
-    <div class="widget tags">
-        <ul>
-            {% for tag in request.user.tags.all %}
-                <li class="tag">{{ tag.title }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endblock %}
-
+    {% include "classify/widget.tags.html" %}
     {% include 'stream/streamitem/list.html' with items=items %}
     
 {% endblock %}

@@ -109,6 +109,12 @@ class OwnerMixin(object):
         return context
 
 
+class OwnerMixinDetail(OwnerMixin, Detail):
+    pass
+
+class OwnerMixinList(OwnerMixin, List):
+    pass
+
 class OwnerMixinCreate(RequireAuthenticationMixin, Create, OwnerMixin):
     """Automatically set model.owner to request.user"""
 
