@@ -1,5 +1,6 @@
 @import "settings";
 @import "foundation";
+@import "foundation-icons";
 
 // Or selectively include components
 // @import
@@ -42,4 +43,21 @@
 
 .main-content {
     @include grid-row;
+
+    .stream-items {
+        @media #{$medium-up} { 
+            @include grid-column(9)
+        }
+    }
+    .widget.tags {
+        @media #{$medium-up} { 
+            @include grid-column(3)
+        }
+    }
+}
+
+// icons
+
+i[class^="fi-"] {
+    margin-right: 0.5rem;
 }

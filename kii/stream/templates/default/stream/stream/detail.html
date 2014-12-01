@@ -13,13 +13,6 @@
     </div>
     {% endblock %}
 
-    <div class="stream-items">
-    {% block stream_items %}
-        {% for item in object.children.all %}
-            <article class="stream-item">
-                <h2 class="title">{{ item.title }}</h2>
-            </article>
-        {% endfor %}
-    {% endblock %}
-    </div>
+    {% include 'stream/streamitem/list.html' with items=object.children.all %}
+    
 {% endblock %}

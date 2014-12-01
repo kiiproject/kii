@@ -29,7 +29,11 @@ class BaseMixin(AppModel):
 
     @classmethod
     def class_name(cls):
-        return cls.__name__.lower()
+        try:
+            return cls.__name__.lower()
+        except: 
+            # instance passed instead of class
+            return cls.__class__.__name__.lower()
 
     def meta(self):
         """For metadata access in template (underscored attributes are forbidden in django templates)"""
