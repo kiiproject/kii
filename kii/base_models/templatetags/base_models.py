@@ -14,3 +14,7 @@ def list_item_template(item):
         except template.TemplateDoesNotExist:
             pass
 
+
+@register.filter(name="is_owner")
+def is_owner(item, user):
+    return item.owned_by(user)
