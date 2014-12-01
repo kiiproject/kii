@@ -1,7 +1,7 @@
 {% extends "glue/base.html" %}
 {% load i18n %}
 {% block main_content %}
-    <form action="{% url 'kii:user:login' %}" class="login" method="POST" id="login" >
+    <form action="{% url 'kii:user:login' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="login" method="POST" id="login" >
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="{% trans 'login' %}" />
