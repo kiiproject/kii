@@ -1,4 +1,4 @@
-{% load base_models %}
+{% load base_models i18n %}
 
 <article class="{{ item.class_name }}">
     <h2 class="title">{% block title %}{{ item.title }}{% endblock %}</h2>
@@ -16,5 +16,12 @@
             {% endif %}
         {% endwith %}
     {% endblock %}
-
+    {% block admin %}
+        {% if item.owner == request.user %}
+            <ul class="actions admin">
+                <li class="update"><a href="{{ item.reverse_update }}"><i class="fi-pencil"></i>{% trans "update" %}</a></li>
+                <li class="delete"><a href="{{ item.reverse_delete }}"><i class="fi-trash"></i>{% trans "delete" %}</a></li>
+            </ul>
+        {% endif %}
+    {% endblock %}
 </article>

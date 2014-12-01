@@ -120,7 +120,7 @@ class StatusMixin(BaseMixin):
         ('pub', _('base_models.status_mixin.published')),
     )
 
-    status = models.CharField(choices=STATUS_CHOICES, default="dra", max_length=5)
+    status = models.CharField(choices=STATUS_CHOICES, default="pub", max_length=5)
     publication_date = models.DateTimeField(editable=False, default=None, blank=True, null=True)
 
     class Meta:

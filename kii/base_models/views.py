@@ -6,6 +6,8 @@ from django.http import Http404
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
+
 
 from kii.app.views import AppMixin
 from . import forms

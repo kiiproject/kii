@@ -20,14 +20,24 @@ class Index(views.RequireAuthenticationMixin, views.OwnerMixinDetail):
         context["items"] = self.object.children.readable_by(self.request.user)
         return context
         
+
 class Create(views.OwnerMixinCreate):
     success_url = reverse_lazy('kii:stream:index')
+
+
+class Update(views.OwnerMixinUpdate):
+    success_url = reverse_lazy('kii:stream:index')
+
 
 class Detail(views.Detail):
     pass
 
-class Delete(views.RequireAuthenticationMixin, views.Delete):
-    pass
+
+class Delete(views.OwnerMixinDelete):
+    model = models.StreamItem
+
+    def get_success_url(self):
+        return reverse_lazy("kii:stream:index")
 
 class List(views.Create):
     pass

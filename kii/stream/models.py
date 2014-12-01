@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from model_utils.managers import InheritanceManager, InheritanceQuerySetMixin
 from six import with_metaclass
@@ -53,6 +54,8 @@ class StreamItem(
     class Meta(permission_models.InheritPermissionMixin.Meta):
         pass
 
+    def reverse_delete(self):
+        return reverse("kii:stream:streamitem:delete", kwargs={"pk":self.pk})
 
 class StreamItemComment(discussion_models.CommentMixin):
 
