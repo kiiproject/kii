@@ -66,7 +66,6 @@ class Create(ModelFormMixin, CreateView):
 class Update(ModelFormMixin, UpdateView):
     action = "update"
 
-
 class Delete(DeleteView):
     action = "delete"
 

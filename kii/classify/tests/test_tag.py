@@ -46,3 +46,16 @@ class Tag(stream.tests.base.StreamTestCase):
 
         tag = models.Tag.objects.get(owner=self.users[0])
         self.assertEqual(tag.title, "Hello")
+
+    def test_tag_update(self):
+        tag = self.G(models.Tag, title="Hello", owner=self.users[0])
+        url = tag.reverse('update')
+        self.login(self.users[0].username)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(url, {"title": "Hello World"})
+
+        tag = models.Tag.objects.get(owner=self.users[0])
+        self.assertEqual(tag.title, "Hello World")
