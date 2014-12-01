@@ -16,6 +16,11 @@ class Index(views.RequireAuthenticationMixin, DetailView):
         except models.Stream.DoesNotExist:
             raise Http404
 
+    def get_context_data(self, **kwargs):
+        context = super(Index, self).get_context_data(**kwargs)
+        context["items"] = self.object.children.readable_by(self.request.user)
+        return context
+        
 class Create(views.OwnerMixinCreate):
     success_url = reverse_lazy('kii:stream:index')
 

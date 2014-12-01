@@ -32,7 +32,7 @@ class StreamItemQuerySet(InheritanceQuerySetMixin, permission_models.InheritPerm
 class StreamItemQueryManager(InheritanceManager, 
     permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
     def get_queryset(self):
-        return StreamItemQuerySet(self.model, using=self._db)
+        return StreamItemQuerySet(self.model, using=self._db).select_subclasses()
 
 
 
