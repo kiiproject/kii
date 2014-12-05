@@ -4,8 +4,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
-from model_utils.managers import InheritanceManager, InheritanceQuerySetMixin
-from six import with_metaclass
+from polymorphic import PolymorphicModel, PolymorphicManager, PolymorphicQuerySet
 import inspect
 
 from kii.base_models import models as base_models_models
@@ -24,20 +23,21 @@ class Stream(
     class Meta(permission_models.PermissionMixin.Meta):
         unique_together = ('owner', 'title')
 
-class StreamItemQuerySet(InheritanceQuerySetMixin, permission_models.InheritPermissionMixinQueryset):
+class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissionMixinQueryset):
     def readable_by(self, target):
         """Exclude draft items"""        
 
         return super(StreamItemQuerySet, self).readable_by(target).filter(status="pub")
 
-class StreamItemQueryManager(InheritanceManager, 
+class StreamItemQueryManager(PolymorphicManager, 
     permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
     def get_queryset(self):
-        return StreamItemQuerySet(self.model, using=self._db).select_subclasses()
+        return StreamItemQuerySet(self.model, using=self._db)
 
 
 
-class StreamItem(     
+class StreamItem(
+    PolymorphicModel,     
     base_models_models.TitleMixin,
     base_models_models.ContentMixin,
     base_models_models.StatusMixin,
@@ -51,7 +51,7 @@ class StreamItem(
 
     objects = StreamItemQueryManager()
 
-    class Meta(permission_models.InheritPermissionMixin.Meta):
+    class Meta(PolymorphicModel.Meta, permission_models.InheritPermissionMixin.Meta):
         pass
 
     def reverse_delete(self):

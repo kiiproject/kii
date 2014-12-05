@@ -91,14 +91,14 @@ class OwnerMixin(object):
     def dispatch(self, request, **kwargs):
         owner_name = kwargs.get('username', None)
         if owner_name is None:
+
             if request.user.is_authenticated():
                 self.owner = request.user
+            elif getattr(settings, "KII_DEFAULT_USER", None) is not None:
+                self.owner = get_object_or_404(get_user_model(), username=getattr(settings, "KII_DEFAULT_USER"))
 
             else:
-                if getattr(settings, "KII_DEFAULT_USER", None) is not None:
-                    self.owner = get_object_or_404(get_user_model(), username=getattr(settings, "KII_DEFAULT_USER"))
-                else:
-                    raise Http404
+                raise Http404
         else:
             self.owner = get_object_or_404(get_user_model(), username=owner_name)
 

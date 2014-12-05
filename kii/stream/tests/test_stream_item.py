@@ -22,7 +22,8 @@ class TestStreamItem(base.StreamTestCase):
         self.assertEqual(m.last_modified > now, True)
 
     def test_permission_inheritance(self):
-        m = self.G(stream.models.StreamItem, root=self.streams[0])
+        m = stream.models.StreamItem(title="test", root=self.streams[0])
+        m.save()
 
         u = self.users[1]
         self.assertEqual(m.readable_by(u), False)
@@ -41,14 +42,16 @@ class TestStreamItem(base.StreamTestCase):
 
     def test_polymorphic_integration(self):
 
-        m1 = self.G(test_stream.models.StreamItemChild1, root=self.streams[0])
-        m2 = self.G(test_stream.models.StreamItemChild2, root=self.streams[0])
-
-        self.assertQuerysetEqualIterable(self.streams[0].children.all().select_subclasses(), [m1, m2], ordered=False)
+        m1 = test_stream.models.StreamItemChild1(title="test", root=self.streams[0])
+        m2 = test_stream.models.StreamItemChild2(title="test", root=self.streams[0])
+        m1.save()
+        m2.save()
+        self.assertQuerysetEqualIterable(self.streams[0].children.all(), [m1, m2], ordered=False)
 
 
     def test_comments(self):
-        m = self.G(stream.models.StreamItem, root=self.streams[0])
+        m = stream.models.StreamItem(title="test", root=self.streams[0])
+        m.save()
         c = self.G(stream.models.StreamItemComment, subject=m, user=m.owner)
 
         self.assertEqual(c.published, True)
@@ -60,10 +63,13 @@ class TestStreamItem(base.StreamTestCase):
 
     def test_readable_queryset_does_not_include_drafts(self):
         self.streams[0].assign_perm("read", self.anonymous_user)
-        m1 = self.G(stream.models.StreamItem, status="pub", root=self.streams[0])
-        m2 = self.G(stream.models.StreamItem, status="pub", root=self.streams[0])
-        m3 = self.G(stream.models.StreamItem, status="draft", root=self.streams[0])
-        m4 = self.G(stream.models.StreamItem, status="draft", root=self.streams[0])
-
+        m1 = stream.models.StreamItem(title="test", status="pub", root=self.streams[0])
+        m2 = stream.models.StreamItem(title="test", status="pub", root=self.streams[0])
+        m3 = stream.models.StreamItem(title="test", status="draft", root=self.streams[0])
+        m4 = stream.models.StreamItem(title="test", status="draft", root=self.streams[0])
+        m1.save()
+        m2.save()
+        m3.save()
+        m4.save()
         self.assertQuerysetEqualIterable(
             stream.models.StreamItem.objects.all().readable_by(self.anonymous_user), [m1, m2], ordered=False)

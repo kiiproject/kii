@@ -35,7 +35,7 @@ class TestOwnerMixin(base.UserTestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, settings.LOGIN_URL+"?next="+url)
+        self.assertRedirects(response, settings.REVERSED_LOGIN_URL+"?next="+url)
 
         # try with logged in user
         self.login(self.users[0])
@@ -59,7 +59,7 @@ class TestOwnerMixin(base.UserTestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, settings.LOGIN_URL+"?next="+url)
+        self.assertRedirects(response, settings.REVERSED_LOGIN_URL+"?next="+url)
 
         # try with logged in user (but not owner)
         self.login(self.users[1])
@@ -82,7 +82,7 @@ class TestOwnerMixin(base.UserTestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, settings.LOGIN_URL+"?next="+url)
+        self.assertRedirects(response, settings.REVERSED_LOGIN_URL+"?next="+url)
 
         # try with logged in user (but not owner)
         self.login(self.users[1])

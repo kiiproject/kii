@@ -45,7 +45,8 @@ class TestViews(base.UserTestCase):
         self.assertEqual(response.context['owner'], self.users[0])
 
         # authenticated user should see his own page
-        self.login("test1")
+        re = self.login(self.users[1].username)
+        print(re.content)
         response = self.client.get(url)
         self.assertEqual(response.context['owner'], self.users[1])
 

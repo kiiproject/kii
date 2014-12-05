@@ -1,8 +1,10 @@
-from ...app.tests import base
 import django
 from django.conf import settings
 from django.contrib.auth.models import Group
 from guardian.utils import get_anonymous_user
+from django.core.urlresolvers import reverse
+from ...app.tests import base
+
 
 class UserTestCase(base.BaseTestCase):
 
@@ -23,7 +25,7 @@ class UserTestCase(base.BaseTestCase):
         self.anonymous_user = get_anonymous_user()
 
     def login(self, username, password="test"):
-        return self.client.post(settings.LOGIN_URL, {"username": username, "password": password})
+        return self.client.post(reverse(settings.LOGIN_URL), {"username": username, "password": password})
 
     def logout(self):
         return self.client.get(settings.LOGOUT_URL)

@@ -1,7 +1,7 @@
 """Base settings shared by all environments"""
 # Import global settings to make it easier to extend settings.
 from django.conf.global_settings import *   # pylint: disable=W0614,W0401
-
+from django.core.urlresolvers import reverse_lazy
 #from https://github.com/lincolnloop/django-layout/blob/master/project_name/settings/base.py
 
 
@@ -32,6 +32,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_nose',
     'guardian',
+    'polymorphic',
     'mptt',
 ) + kii.APPS_CONFIGS
 
@@ -65,6 +66,7 @@ AUTHENTICATION_BACKENDS += (
 )
 
 LOGIN_URL = "kii:user:login"
+REVERSED_LOGIN_URL = reverse_lazy(LOGIN_URL)
 LOGIN_REDIRECT_URL="kii:stream:index"
 
 # localization
