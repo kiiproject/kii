@@ -7,7 +7,7 @@ from kii.base_models import views
 class Index(views.RequireAuthenticationMixin, views.OwnerMixinDetail):
 
     template_name = "stream/stream/detail.html"
-
+    streamitem_class = None
     def get_object(self):
 
         try:
@@ -17,7 +17,11 @@ class Index(views.RequireAuthenticationMixin, views.OwnerMixinDetail):
 
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
-        context["items"] = self.object.children.readable_by(self.request.user)
+        items = self.object.children.readable_by(self.request.user)
+        if self.streamitem_class is not None:
+            # filter items using given class
+            items = items.select_subclasses(self.streamitem_class)
+        context["items"] = items
         return context
         
 
@@ -39,5 +43,5 @@ class Delete(views.OwnerMixinDelete):
     def get_success_url(self):
         return reverse_lazy("kii:stream:index")
 
-class List(views.Create):
+class List(views.OwnerMixinList):
     pass
