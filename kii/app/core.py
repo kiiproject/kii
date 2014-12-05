@@ -1,5 +1,6 @@
 from django.apps import AppConfig, apps as django_app_registry
 from django.conf.urls import include, url
+from django.core.urlresolvers import reverse
 
 from . import menu
 
@@ -91,3 +92,9 @@ class App(AppConfig):
         """
 
         return [model for model in self.get_models() if getattr(model, "public_model", False)]
+
+    @property
+    def index(self):
+        """Return the index URL for the app"""
+        print("kii:{0}:index".format(self.label))
+        return reverse("kii:{0}:index".format(self.label))

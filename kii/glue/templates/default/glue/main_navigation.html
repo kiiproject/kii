@@ -9,6 +9,17 @@
                 <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
             </ul>
             <section class="top-bar-section">
+                {% if request.user.is_authenticated %}
+                    <ul>
+                        <li class="has-dropdown"><a href="#"><i class="fi-thumbnails"></i>{% trans 'kii.apps' %}</a>
+                            <ul class="dropdown">
+                                {% for app in user_apps %}
+                                    <li class="{{ app.label }}"><a href="{{ app.index }}"><i class="{{ app.css_class }}"></i>{{ app.verbose_name }}</a></li>
+                                {% endfor %}                                
+                            </ul>
+                        </li>
+                    </ul>
+                {% endif %}
                 <ul class="right">
                     {% if not request.user.is_authenticated %}
                         <li><a href="{% url 'kii:user:login' %}" class="login">{% trans 'login' %}</a></li>
@@ -18,11 +29,7 @@
                                 <li class="logout"><a href="{% url 'kii:user:logout' %}"><i class="fi-x"></i>{% trans 'logout' %}</a></li>
                             </ul>
                         </li>
-                        <ul class="apps">
-                            {% for app in user_apps %}
-                                <li class="{{ app.label }}"><a href="{% url 'kii:'|add:app.label|add:':index' %}">{{ app.verbose_name }}</a></li>
-                            {% endfor %}
-                        </ul>
+                        
                     {% endif %}
                 </ul>
             </section>

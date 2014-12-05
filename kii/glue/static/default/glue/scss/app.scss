@@ -43,7 +43,7 @@
 
 .main-content {
     @include grid-row;
-
+    padding: 0.5rem;
     .stream-items {
         @media #{$medium-up} { 
             @include grid-column(9)
