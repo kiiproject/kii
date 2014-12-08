@@ -66,3 +66,7 @@ i[class^="fi-"] {
     list-style-type: none;
     margin-left: 0
 }
+
+.date {
+    @include label;
+}

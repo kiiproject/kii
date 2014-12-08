@@ -31,7 +31,7 @@ class Index(StreamContextMixin, views.RequireAuthenticationMixin, views.OwnerMix
 
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
-        items = self.current_stream.children.readable_by(self.request.user)
+        items = self.current_stream.children.readable_by(self.request.user).select_related()
         if self.streamitem_class is not None:
             # filter items using given class
             items = items.instance_of(self.streamitem_class)

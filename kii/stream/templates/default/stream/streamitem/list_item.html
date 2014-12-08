@@ -2,20 +2,21 @@
 
 <article class="{{ item.class_name }}">
     <h2 class="title">{% block title %}{{ item.title }}{% endblock %}</h2>
+    {% block info %}
+        <p class="info">
+            {% block status %}<span class="status">{{ item.get_status_display }}</span>{% endblock %}
+            {% block date %}
+                {% with item.created|timesince as created %}
+                    <time class="created date" datetime="{{ item.created|date:'c' }}" pubdate=>{{ created }}</time>
+                    {% if item.last_modified|timesince != created %}
+                        <time class="last-modified date" datetime="{{ item.created|date:'c' }}">{{ item.last_modified|timesince }}</time>
+                    {% endif %}
+                {% endwith %}
+            {% endblock %}
+            {% block owner %}<span class="owner">{{ item.owner.username }}</span>{% endblock %}            
+        </p>
+    {% endblock %}
     <div class="content">{% block content %}{{ item.content }}{% endblock %}</div>
-    {% block status %}
-        {% if item|is_owner:request.user %}
-            <p class="status">{{ item.get_status_display }}</p>
-        {% endif %}
-    {% endblock %}
-    {% block date %}
-        {% with item.created|timesince as created %}
-            <p class="created date">{{ created }}</p>
-            {% if item.last_modified|timesince != created %}
-                <p class="last-modified date">{{ item.last_modified|timesince }}</p>
-            {% endif %}
-        {% endwith %}
-    {% endblock %}
     {% block admin %}
         {% if item.owner == request.user %}
             <ul class="actions admin">
