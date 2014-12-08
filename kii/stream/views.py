@@ -25,13 +25,14 @@ class Index(StreamContextMixin, views.RequireAuthenticationMixin, views.OwnerMix
 
     template_name = "stream/stream/detail.html"
     streamitem_class = None
+
     def get_object(self):
 
         return self.get_current_stream()
 
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
-        items = self.current_stream.children.readable_by(self.request.user).select_related()
+        items = self.current_stream.children.readable_by(self.request.user).select_related().order_by('-publication_date')
         if self.streamitem_class is not None:
             # filter items using given class
             items = items.instance_of(self.streamitem_class)
