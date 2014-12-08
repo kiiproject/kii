@@ -14,7 +14,7 @@
                         <li class="has-dropdown"><a href="#"><i class="fi-thumbnails"></i>{% trans 'kii.apps' %}</a>
                             <ul class="dropdown">
                                 {% for app in user_apps %}
-                                    <li class="{{ app.label }}"><a href="{{ app.index }}"><i class="{{ app.css_class }}"></i>{{ app.verbose_name }}</a></li>
+                                    {% include "glue/menu_node.html" with node=app.menu %}
                                 {% endfor %}                                
                             </ul>
                         </li>
@@ -28,8 +28,7 @@
                             <ul class="dropdown">
                                 <li class="logout"><a href="{% url 'kii:user:logout' %}"><i class="fi-x"></i>{% trans 'logout' %}</a></li>
                             </ul>
-                        </li>
-                        
+                        </li>                        
                     {% endif %}
                 </ul>
             </section>

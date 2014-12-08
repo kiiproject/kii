@@ -21,6 +21,7 @@ class MenuNode(object):
         self.parent = kwargs.get('parent', self.parent)        
         self.title = kwargs.get('title', self.label)
         self.weight = kwargs.get('weight', self.weight)
+        self.icon = kwargs.get('icon', None)
 
         self.reverse_kwargs = kwargs.get('reverse_kwargs', self.reverse_kwargs)
 
