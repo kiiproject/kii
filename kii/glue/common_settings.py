@@ -80,9 +80,6 @@ LANGUAGES = (
     ('en', 'English'),
 )
 
-
-
-
 import markdown
 #markupfield
 MARKUP_FIELD_TYPES = (
