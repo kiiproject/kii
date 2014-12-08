@@ -12,5 +12,5 @@ class TestStreamViews(base.StreamTestCase):
         stream = models.Stream.objects.get(owner=self.users[0], title=self.users[0].username)
         self.login(self.users[0].username)
         response = self.client.get(url)
-        
-        self.assertEqual(response.context['stream'], stream)
+
+        self.assertEqual(response.context['current_stream'], stream)

@@ -17,7 +17,7 @@ class StreamContextMixin(object):
 
     def get_context_data(self, **kwargs):
         context = super(StreamContextMixin, self).get_context_data(**kwargs)
-        context['stream'] = self.current_stream
+        context['current_stream'] = self.current_stream
 
         return context
 
