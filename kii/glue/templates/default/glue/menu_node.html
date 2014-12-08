@@ -1,7 +1,7 @@
 {% load app_tags %}
 
 <li class="{{ node.label }} {% if node.children %}has-dropdown{% endif %}">
-    <a href="{% node_url node %}">{% if node.icon %}<i class="{{ node.icon }}"></i>{% endif %}{{ node.label }}</a>
+    <a href="{% node_url node=node %}">{% if node.icon %}<i class="{{ node.icon }}"></i>{% endif %}{{ node.label }}</a>
     {% if node.children %}
         <ul class="dropdown">
             {% for children_node in node.children %}

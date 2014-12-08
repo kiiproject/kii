@@ -14,7 +14,9 @@
                         <li class="has-dropdown"><a href="#"><i class="fi-thumbnails"></i>{% trans 'kii.apps' %}</a>
                             <ul class="dropdown">
                                 {% for app in user_apps %}
-                                    {% include "glue/menu_node.html" with node=app.menu %}
+                                    {% if app.menu %}
+                                        {% include "glue/menu_node.html" with node=app.menu %}
+                                    {% endif %}
                                 {% endfor %}                                
                             </ul>
                         </li>
