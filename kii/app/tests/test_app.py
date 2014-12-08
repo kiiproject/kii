@@ -1,11 +1,13 @@
+from django.conf import settings
+from django.apps import apps as django_app_registry
+from django.core.urlresolvers import reverse
+
+from ..core import apps
+from .. import menu
 from . import base
 from kii import app
 from kii.tests.test_app import apps as test_apps, models
-from django.conf import settings
-from django.apps import apps as django_app_registry
-from ..core import apps
-from django.core.urlresolvers import reverse
-
+from ..templatetags import app_tags
 
 class TestApp(base.BaseTestCase):
 
@@ -60,16 +62,36 @@ class TestApp(base.BaseTestCase):
         self.assertIn("Test app", parsed.title.string)
 
     def test_app_can_register_menu_items(self):
-        self.assertEqual(apps.get('test_app').menu.path(), "/kii/test_app/hello")
+        self.assertEqual(apps.get('test_app').menu.url(), "/kii/test_app/hello")
         self.assertEqual(apps.get('test_app').menu.label, "Test App Index")
         self.assertEqual(apps.get('test_app').menu.title, "Click to return home")
 
     def test_menu_item_children_are_ordered_by_weight(self):
-        self.assertEqual(apps.get('test_app').menu.children[0].path(), "/kii/test_app/hello/first")
-        self.assertEqual(apps.get('test_app').menu.children[1].path(), "/kii/test_app/hello/second")
-        self.assertEqual(apps.get('test_app').menu.children[2].path(), "/kii/test_app/hello/third")
+        self.assertEqual(apps.get('test_app').menu.children[0].url(), "/kii/test_app/hello/first")
+        self.assertEqual(apps.get('test_app').menu.children[1].url(), "/kii/test_app/hello/second")
+        self.assertEqual(apps.get('test_app').menu.children[2].url(), "/kii/test_app/hello/third")
+
+    def test_can_have_menu_node_without_reversing_url(self):
+        m = menu.MenuNode(
+            route="http://example.com",
+            reverse=False,
+        )
+        self.assertEqual(m.url(), "http://example.com")
 
     def test_menu_item_with_user_url(self):
-        self.assertEqual(apps.get('test_app').menu.children[3].path(
-            username="test0"), "/kii/test0/test_app/hello/user")
+        m = menu.MenuNode(
+            route="kii_user:test_app:user",
+            reverse=True,
+            reverse_kwargs=["username"],
+        )
+        self.assertEqual(m.url(username="test0"), "/kii/test0/test_app/hello/user")
          
+    def test_menu_url_template_tag(self):
+        m = menu.MenuNode(
+            route="kii_user:test_app:user",
+            reverse=True,
+            reverse_kwargs=["username"],
+        )
+
+        url = app_tags.node_url(m, username="test0")
+        self.assertEqual(url, "/kii/test0/test_app/hello/user")

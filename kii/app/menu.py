@@ -2,39 +2,43 @@ from django.core.urlresolvers import reverse
 
 
 
-class MenuItem(object):
+class MenuNode(object):
     """Used to describe menu elements"""
 
+    reverse_kwargs = []
+    route = "#"
+    parent = None
+    weight = 0
+    reverse = True
 
     def __init__(self, **kwargs):
 
-        # a route that will be reversed
-        self.route = kwargs.get('route', "#")
+        self.reverse = kwargs.get('reverse', self.reverse)
+
+        # a route that will be reversed if reverse is True
+        self.route = kwargs.get('route', self.route)
         self.label = kwargs.get('label', self.route)
-        self.parent = kwargs.get('parent', None)        
+        self.parent = kwargs.get('parent', self.parent)        
         self.title = kwargs.get('title', self.label)
-        self.weight = kwargs.get('weight', 0)
-        self.username_url = kwargs.get('username_url', False)
+        self.weight = kwargs.get('weight', self.weight)
 
+        self.reverse_kwargs = kwargs.get('reverse_kwargs', self.reverse_kwargs)
 
-    def path(self, **kwargs):
-        if self.route == "#":
-            return self.route
-        return reverse(self.route, kwargs=kwargs)
-
-
-class Menu(MenuItem):
-    """A MenuItem that can have children"""
-
-    def __init__(self, **kwargs):
-
-        super(Menu, self).__init__(**kwargs)   
         self.children = []
         for item in kwargs.get('children', []):
             self.add(item)
 
+    def url(self, **kwargs):
+        if self.reverse :
+            expected_kwargs = {key: value for key, value in kwargs.items() if key in self.reverse_kwargs}
+            return reverse(self.route, kwargs=expected_kwargs)
+        return self.route
+
     def add(self, item):
         self.children.append(item)
         self.children = sorted(self.children, key=lambda i: i.weight, reverse=True)
+
+        
+
 
 

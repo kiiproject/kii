@@ -5,29 +5,23 @@ class App(core.App):
     urls = ".urls"
     verbose_name = "Test app"
 
-
     def ready(self):
-        self.menu = menu.Menu(
+        self.menu = menu.MenuNode(
             route="kii:test_app:index", 
             label="Test App Index", 
             title="Click to return home",
             children = [
-                menu.MenuItem(
+                menu.MenuNode(
                     route="kii:test_app:first",
                     weight=100,
-
                 ),
-                menu.MenuItem(
+                menu.MenuNode(
                     route="kii:test_app:third",
                     weight=80,
                 ),
-                menu.MenuItem(
+                menu.MenuNode(
                     route="kii:test_app:second",
                     weight=90,
-                ),
-                menu.MenuItem(
-                    route="kii_user:test_app:user",
-                    weight=50,
                 ),
             ]
         )

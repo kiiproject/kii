@@ -64,7 +64,7 @@ class App(AppConfig):
     # app.name and app.urls
     urls = None
 
-
+    # attach a kii.app.MenuNode instance here if needed
     menu = None
 
     @property
