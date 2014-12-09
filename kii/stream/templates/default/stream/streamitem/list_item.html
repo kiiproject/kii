@@ -4,7 +4,7 @@
     <div class="main">
         {% block main %}
             <h2 class="title">{% block title %}{{ item.filtered_title }}{% endblock %}</h2>
-            <div class="content">{% block content %}{{ item.filtered_content }}{% endblock %}</div>
+            <div class="content">{% block content %}{{ item.filtered_content|safe }}{% endblock %}</div>
         {% endblock %}        
     </div>
     <div class="secondary">

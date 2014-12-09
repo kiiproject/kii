@@ -12,7 +12,7 @@ class HookMixin(base_models.models.BaseMixin):
         abstract = True
 
     def _filter_field(self, field_name):
-        
+
         return model_filters.filter(field_name, instance=self)
 
     def __getattribute__(self, name):
