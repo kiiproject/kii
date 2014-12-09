@@ -84,4 +84,5 @@ import markdown
 #markupfield
 MARKUP_FIELD_TYPES = (
     ('markdown', markdown.markdown),
+    ('none', lambda s: s),
 )

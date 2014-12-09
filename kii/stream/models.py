@@ -10,6 +10,8 @@ import inspect
 from kii.base_models import models as base_models_models
 from kii.permission import models as permission_models
 from kii.discussion import models as discussion_models
+from kii.hook.models import HookMixin
+
 
 class Stream(
     permission_models.PermissionMixin,
@@ -37,7 +39,8 @@ class StreamItemQueryManager(PolymorphicManager,
 
 
 class StreamItem(
-    PolymorphicModel,     
+    PolymorphicModel,    
+    HookMixin, 
     base_models_models.TitleMixin,
     base_models_models.ContentMixin,
     base_models_models.StatusMixin,

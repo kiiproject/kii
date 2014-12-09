@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from . import base
 from .. import models, forms
-from kii import stream
+from kii import stream, hook
 from ...tests import test_stream
 
 
@@ -73,3 +73,13 @@ class TestStreamItem(base.StreamTestCase):
         m4.save()
         self.assertQuerysetEqualIterable(
             stream.models.StreamItem.objects.all().readable_by(self.anonymous_user), [m1, m2], ordered=False)
+
+    def test_streamitem_hooks(self):
+        m1 = stream.models.StreamItem(title="test", root=self.streams[0])
+        m1.save()
+        
+        def uppercase(value, **kwargs):
+            return value.upper()
+
+        hook.model_filters.register(stream.models.StreamItem, "title", uppercase)
+        self.assertEqual(m1.filtered_title, "TEST")

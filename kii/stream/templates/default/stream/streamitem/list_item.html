@@ -3,8 +3,8 @@
 <article class="stream-item {{ item.class_name }}">
     <div class="main">
         {% block main %}
-            <h2 class="title">{% block title %}{{ item.title }}{% endblock %}</h2>
-            <div class="content">{% block content %}{{ item.content }}{% endblock %}</div>
+            <h2 class="title">{% block title %}{{ item.filtered_title }}{% endblock %}</h2>
+            <div class="content">{% block content %}{{ item.filtered_content }}{% endblock %}</div>
         {% endblock %}        
     </div>
     <div class="secondary">

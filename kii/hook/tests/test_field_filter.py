@@ -5,11 +5,6 @@ from .. import model_filters
 
 class TestFieldFilter(kii.app.tests.base.BaseTestCase):
 
-    def test_fieldhookmixin_has_filtered_field_property(self):
-
-        model = models.NameModel
-        self.assertEqual(hasattr(model, "filtered_name"), True)
-
     def test_can_register_filter(self):
         def uppercase(value, **kwargs):
             return value.capitalize()
