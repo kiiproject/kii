@@ -19,6 +19,7 @@ setup(
     author_email='contact@eliotberriot.com',
     install_requires=[
         'django>=1.7',
+        'markdown',
         'six',
         'django-guardian',
         'django-mptt',

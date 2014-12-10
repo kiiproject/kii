@@ -27,10 +27,9 @@ Then install required packages (PyPi install will be available soon)::
 
     pip install kii
 
-Now, you can create a new kii instance using the built-in template::
+Now, you can create a new kii instance using a template::
 
-    # replace pythonX.X by your own python version
-    django-admin.py startproject kii_instance --template=https://code.eliotberriot.com/kii/instance-template/archive/master.zip
+    django-admin.py startproject kii_instance --template=https://code.eliotberriot.com/kii/kii-instance-template/repository/archive.zip
 
     cd kii_instance
 

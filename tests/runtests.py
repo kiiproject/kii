@@ -20,7 +20,11 @@ sys.path.append(KII_DIR)
 import kii
 from kii.tests import settings as test_settings
 # Inline settings file
-settings.configure(test_settings)
+settings.configure(test_settings, 
+    INSTALLED_APPS=test_settings.INSTALLED_APPS+(
+        'django_nose',
+    )
+)
 
 from django.test.utils import get_runner
 TestRunner = get_runner(settings)
