@@ -75,7 +75,7 @@ If Gunicorn works, you can now set up Nginx:
     sudo cp kii_instance/conf/nginx.conf /etc/nginx/sites-enabled/kii
 
     # Especially, in Nginx conf, you will have to set a correct server name.
-    nano /etc/nginx/sites-enabled/kii
+    sudo nano /etc/nginx/sites-enabled/kii
     
     sudo service nginx reload
 
