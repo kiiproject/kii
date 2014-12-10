@@ -25,6 +25,7 @@ setup(
         'django-mptt',
         'django-polymorphic',
         'django-markupfield',
+        'django-extensions',
     ],
     zip_safe=False,
     classifiers=[
