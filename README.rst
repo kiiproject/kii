@@ -1,3 +1,9 @@
+Warning
+#######
+
+Kii is still in early development. Do not use it unless you're ready to experience breaks in API, bugs, universe collapsing, etc.
+
+
 Installation
 ############
 
@@ -15,16 +21,16 @@ Create a virtualenvironment::
 
 Work on it::
 
-    source ./kii-virtualenv
+    source ./kii-virtualenv/bin/activate
 
 Then install required packages (PyPi install will be available soon)::
 
-    pip install git+https://code.eliotberriot.com/kii/kii.git
+    pip install kii
 
 Now, you can create a new kii instance using the built-in template::
 
     # replace pythonX.X by your own python version
-    django-admin.py startproject kii_instance --template=./kii-virtualenv/lib/pythonX.X/site-packages/kii/install/instance_template
+    django-admin.py startproject kii_instance --template=https://code.eliotberriot.com/kii/instance-template/archive/master.zip
 
     cd kii_instance
 
@@ -50,7 +56,7 @@ As Kii is not bundled with any app, you app to install these separately. Each ap
 
 The Snippets app is a good place to understand the procedure. Step 1::
 
-    pip install git+https://code.eliotberriot.com/kii/kii-snippets.git
+    pip install kii_snippets
 
 Step 2 and 3::
 
