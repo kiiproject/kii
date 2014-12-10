@@ -53,7 +53,6 @@ TEMPLATE_LOADERS = (
 
 )   
 STATICFILES_FINDERS = (
-    'kii.theme.finders.ThemeFinder',
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
