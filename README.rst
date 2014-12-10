@@ -29,7 +29,7 @@ Then install required packages (PyPi install will be available soon)::
 
 Now, you can create a new kii instance using a template::
 
-    django-admin.py startproject kii_instance --template=https://code.eliotberriot.com/kii/kii-instance-template/repository/archive.zip
+    django-admin.py startproject kii_instance --template=https://code.eliotberriot.com/kii/kii-instance-template/repository/archive.zip --extension=py,sh
 
     cd kii_instance
 
@@ -40,6 +40,55 @@ You can now adapt the settings under `kii_instance/settings.py` to suit your nee
 When you're done, you can initialize the database with::
 
     python manage.py syncdb
+
+    # create an admin account
+    python manage.py createsuperuser
+
+And collect static files::
+
+    sudo mkdir /var/www/kii/static -p
+    sudo chown kii:www-data /var/www/kii/static -R
+    sudo chmod 770 /var/www/kii/static
+
+    python manage.py collectstatic
+
+
+Server deployment
+#################
+
+Nginx is the recommanded web server for deploying Kii, however, you can totally use Kii behind Apache2.
+
+The following setup uses Supervisor and Gunicorn for easier maintenance of kii.
+
+First, install dependencies::
+
+    pip install gunicorn
+    sudo apt-get install supervisor nginx
+
+Then, check gunicorn is correctly working. You will have to make change to this file if you did not followed exactly the install procedure (different username, path, etc.):
+
+    chmod +x ./gunicorn_start.sh
+    ./gunicorn_start.sh
+
+If Gunicorn works, you can now set up Nginx:
+
+    sudo cp kii_instance/conf/nginx.conf /etc/nginx/sites-enabled/kii
+
+    # Especially, in Nginx conf, you will have to set a correct server name.
+    nano /etc/nginx/sites-enabled/kii
+    
+    sudo service nginx reload
+
+
+
+Next, create a supervisor file::
+
+    sudo cp kii_instance/conf/supervisor.conf /etc/supervisor/conf.d/kii.conf
+
+    # you can edit it, eventually, but defaults should be fine
+    nano /etc/supervisor/conf.d/kii.conf
+
+
 
 
 Install kii apps
