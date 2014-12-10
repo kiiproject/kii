@@ -23,7 +23,7 @@ setup(
         'six',
         'django-guardian',
         'django-mptt',
-        'django-model-utils',
+        'django-polymorphic',
     ],
     zip_safe=False,
     classifiers=[
