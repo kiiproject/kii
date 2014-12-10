@@ -24,6 +24,7 @@ setup(
         'django-guardian',
         'django-mptt',
         'django-polymorphic',
+        'django-markupfield',
     ],
     zip_safe=False,
     classifiers=[
