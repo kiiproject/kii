@@ -79,17 +79,13 @@ If Gunicorn works, you can now set up Nginx:
     
     sudo service nginx reload
 
-
-
 Next, create a supervisor file::
 
     sudo cp kii_instance/conf/supervisor.conf /etc/supervisor/conf.d/kii.conf
 
     # you can edit it, eventually, but defaults should be fine
-    nano /etc/supervisor/conf.d/kii.conf
-
-
-
+    sudo nano /etc/supervisor/conf.d/kii.conf
+    
 
 Install kii apps
 ################
