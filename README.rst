@@ -79,13 +79,16 @@ If Gunicorn works, you can now set up Nginx:
     
     sudo service nginx reload
 
-Next, create a supervisor file::
+For easier management of your kii instance, you'll probably want to use a process manager. Your kii instance is bundled with a sample supervisor file you can use to start and stop your instance. Also, your instance will be started on boot, which is nice::
 
     sudo cp kii_instance/conf/supervisor.conf /etc/supervisor/conf.d/kii.conf
 
     # you can edit it, eventually, but defaults should be fine
     sudo nano /etc/supervisor/conf.d/kii.conf
-    
+
+    # launch the server
+    sudo supervisorctl update
+    sudo supervisorctl start kii
 
 Install kii apps
 ################
