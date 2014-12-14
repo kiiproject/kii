@@ -7,19 +7,13 @@ class RequirePermissionMixin(object):
 
     permission_denied = Http404
 
-    def get_object(self, **kwargs):
-        obj = super(RequirePermissionMixin, self).get_object(**kwargs)
-        if not self.has_required_permission(obj, self.request.user):
-            raise self.permission_denied
-        return obj
-
-    def has_required_permission(self, obj, user):        
+    def has_required_permission(self, user):        
         mapping = {
             "read": "readable_by",
             "write": "writable_by",
             "delete": "deletable_by",
         } 
-        checker = getattr(obj, mapping[self.required_permission])
+        checker = getattr(self.object, mapping[self.required_permission])
         return checker(user)
 
 

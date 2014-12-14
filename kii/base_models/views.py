@@ -131,15 +131,15 @@ class RequireOwnerMixin(RequireAuthenticationMixin):
     permission_denied = Http404
     required_permission = "owner"
 
-    def get_object(self, **kwargs):
-        obj = super(RequireOwnerMixin, self).get_object(**kwargs)
-        if self.required_permission is not None and not self.has_required_permission(obj, self.request.user):
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.required_permission is not None and not self.has_required_permission(request.user):
             raise self.permission_denied
-        return obj
-
-    def has_required_permission(self, obj, user):        
         
-        return obj.owned_by(user)
+        return super(RequireOwnerMixin, self).get(request, *args, **kwargs)
+
+    def has_required_permission(self, user):      
+        return self.object.owned_by(user)
     
 class OwnerMixinUpdate(RequireOwnerMixin, Update, OwnerMixin):
     pass

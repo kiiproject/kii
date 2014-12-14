@@ -23,7 +23,7 @@ class StreamContextMixin(object):
 
         return context
 
-class Index(StreamContextMixin, views.RequireAuthenticationMixin, permission_views.PermissionMixinDetail):
+class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
 
     template_name = "stream/stream/detail.html"
     streamitem_class = None

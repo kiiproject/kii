@@ -25,6 +25,9 @@ class Stream(
     class Meta(permission_models.PermissionMixin.Meta):
         unique_together = ('owner', 'title')
 
+    def reverse_detail(self):
+        return reverse("kii:stream:index")
+
 class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissionMixinQueryset):
     def readable_by(self, target):
         """Exclude draft items"""        
