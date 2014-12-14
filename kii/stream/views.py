@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 
-from . import models
+from . import models, forms
 from kii.base_models import views
 
 class StreamContextMixin(object):
@@ -60,3 +60,10 @@ class Delete(views.OwnerMixinDelete):
 
 class List(views.OwnerMixinList):
     pass
+
+class StreamUpdate(StreamContextMixin, Update):
+    model = models.Stream
+    form_class = forms.StreamForm
+    def get_object(self):
+
+        return self.get_current_stream()

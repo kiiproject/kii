@@ -1,3 +1,4 @@
 tests/static
 tests/components
 tests/.sass*
+build

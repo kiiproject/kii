@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
-from guardian.shortcuts import assign
+from guardian.shortcuts import assign, remove_perm
 from django.conf import settings
 from django.db import models
 from guardian.shortcuts import get_objects_for_user, get_anonymous_user
@@ -73,6 +73,11 @@ class PermissionMixin(base_models_models.OwnerMixin):
 
         return assign(permission, target, self)
 
+    def remove_perm(self, permission, target):
+        if target.pk == get_anonymous_user().pk:
+            # add also remove all_user_group permission
+            remove_perm(permission, get_anonymous_user(), self)
+            remove_perm(permission, user_models.get_all_users_group(), self)
 
 class InheritPermissionMixinQueryset(PermissionMixinQuerySet):
     
