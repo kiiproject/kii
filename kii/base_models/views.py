@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 
@@ -99,7 +99,8 @@ class OwnerMixin(object):
                 self.owner = get_object_or_404(get_user_model(), username=getattr(settings, "KII_DEFAULT_USER"))
 
             else:
-                raise Http404
+                login = reverse('kii:user:login') + "?next=" + request.path
+                return redirect(login)
         else:
             self.owner = get_object_or_404(get_user_model(), username=owner_name)
 

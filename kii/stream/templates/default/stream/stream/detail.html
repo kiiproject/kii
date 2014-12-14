@@ -3,7 +3,9 @@
 {% block main_content %}    
     
     {% include "classify/widget.tags.html" %}
-
+    {% if owner != request.user %} 
+    <p class="owner-info">{% trans "stream.now_owner" %} <a href="{% url 'kii:stream:index' %}">{% trans "stream.back_to_your_stream" %}</a>
+    {% endif %}
     <div class="stream" id="stream-{{ current_stream.pk }}">        
         {% block stream %}
             <div class="info">
