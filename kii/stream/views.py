@@ -12,7 +12,7 @@ class StreamContextMixin(object):
     current_stream = None
     def get_current_stream(self):
         try:
-            self.current_stream = models.Stream.objects.get(owner=self.request.user.pk, title=self.request.user.username)
+            self.current_stream = models.Stream.objects.get(owner=self.owner.pk, title=self.owner.username)
             return self.current_stream
         except models.Stream.DoesNotExist:
             raise Http404
@@ -29,7 +29,6 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
     streamitem_class = None
 
     def get_object(self):
-
         return self.get_current_stream()
 
     def get_context_data(self, **kwargs):
