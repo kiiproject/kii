@@ -58,6 +58,7 @@ class TestOwnerMixin(base.UserTestCase):
         # try with anonymous, should redirect to login
         response = self.client.get(url)
 
+        print(response.content)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, settings.REVERSED_LOGIN_URL+"?next="+url)
 
@@ -65,7 +66,7 @@ class TestOwnerMixin(base.UserTestCase):
         self.login(self.users[1])
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
         self.logout()
 
@@ -88,7 +89,7 @@ class TestOwnerMixin(base.UserTestCase):
         self.login(self.users[1])
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
         self.logout()
 
