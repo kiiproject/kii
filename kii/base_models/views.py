@@ -83,7 +83,7 @@ class Detail(ModelTemplateMixin, DetailView):
 
 class List(ModelTemplateMixin, ListView):
     action = "list"
-   
+
 
 class OwnerMixin(object):
     """Deduce owner of given page/elements from url or logged in user"""
@@ -135,9 +135,9 @@ class RequireOwnerMixin(RequireAuthenticationMixin):
 
         return obj
     
-class OwnerMixinUpdate(RequireOwnerMixin, Update, OwnerMixin):
+class OwnerMixinUpdate(Update, OwnerMixin):
     pass
 
-class OwnerMixinDelete(RequireOwnerMixin, Delete, OwnerMixin):
+class OwnerMixinDelete(Delete, OwnerMixin):
 
     template_name = "base_models/basemixin/delete.html"

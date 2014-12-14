@@ -23,6 +23,29 @@ class TestViews(base.UserTestCase):
         self.login(self.users[1])
 
         response = self.client.get(m.reverse('detail'))
-        self.assertEqual(response.context['object'], m)        
+        self.assertEqual(response.context['object'], m)    
+    
+    def test_permission_mixin_update(self):
+        m = self.G(test_permission.models.PermissionModel, owner=self.users[0])
+        m.assign_perm("write", self.users[1])
+        self.login(self.users[1])
 
+        response = self.client.get(m.reverse('update'))
+        self.assertEqual(response.status_code, 200)  
+        self.assertEqual(response.context['object'], m)  
 
+    def test_permission_mixin_delete(self):
+        m = self.G(test_permission.models.PermissionModel, owner=self.users[0])
+        m.assign_perm("delete", self.users[1])
+        self.login(self.users[1])
+
+        response = self.client.get(m.reverse('delete'))
+        self.assertEqual(response.status_code, 200)  
+        self.assertEqual(response.context['object'], m) 
+
+    def test_permission_mixin_return_404_if_user_has_no_required_perm(self):
+        m = self.G(test_permission.models.PermissionModel, owner=self.users[0])
+        self.login(self.users[1])
+
+        response = self.client.get(m.reverse('delete'))
+        self.assertEqual(response.status_code, 404)

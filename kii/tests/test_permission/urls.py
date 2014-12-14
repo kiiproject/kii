@@ -10,6 +10,16 @@ permissionmodel_patterns = patterns('',
             model=models.PermissionModel, 
             template_name="templates/test.html"), 
         name='detail'),
+    url(r'^(?P<pk>\d+)/update', 
+        views.PermissionMixinUpdate.as_view(
+            model=models.PermissionModel, 
+            template_name="templates/test.html"), 
+        name='update'),
+    url(r'^(?P<pk>\d+)/delete', 
+        views.PermissionMixinDelete.as_view(
+            model=models.PermissionModel, 
+            template_name="templates/test.html"), 
+        name='delete'),
     url(r'^$', 
         views.PermissionMixinList.as_view(
             model=models.PermissionModel, 

@@ -53,7 +53,7 @@ class PermissionMixin(base_models_models.OwnerMixin):
         return checker.has_perm(permission, self)
 
     def readable_by(self, target):
-        """Return True if given target has `read`, `edit` or `delete` permission on instance"""
+        """Return True if given target has `read`, `write` or `delete` permission on instance"""
         return self.writable_by(target) or self.permission("read", target)
 
     def writable_by(self, target):

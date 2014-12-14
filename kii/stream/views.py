@@ -3,6 +3,8 @@ from django.http import Http404
 
 from . import models, forms
 from kii.base_models import views
+from kii.permission import views as permission_views
+
 
 class StreamContextMixin(object):
     """pass current requested stream into context"""
@@ -21,7 +23,7 @@ class StreamContextMixin(object):
 
         return context
 
-class Index(StreamContextMixin, views.RequireAuthenticationMixin, views.OwnerMixinDetail):
+class Index(StreamContextMixin, views.RequireAuthenticationMixin, permission_views.PermissionMixinDetail):
 
     template_name = "stream/stream/detail.html"
     streamitem_class = None
@@ -44,26 +46,27 @@ class Create(views.OwnerMixinCreate):
     success_url = reverse_lazy('kii:stream:index')
 
 
-class Update(views.OwnerMixinUpdate):
+class Update(permission_views.PermissionMixinUpdate):
     success_url = reverse_lazy('kii:stream:index')
 
 
-class Detail(views.Detail):
+class Detail(permission_views.PermissionMixinDetail):
     pass
 
 
-class Delete(views.OwnerMixinDelete):
+class Delete(permission_views.PermissionMixinDelete):
     model = models.StreamItem
 
     def get_success_url(self):
         return reverse_lazy("kii:stream:index")
 
-class List(views.OwnerMixinList):
+class List(permission_views.PermissionMixinList):
     pass
 
-class StreamUpdate(StreamContextMixin, Update):
+class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
     model = models.Stream
     form_class = forms.StreamForm
+
     def get_object(self):
 
         return self.get_current_stream()

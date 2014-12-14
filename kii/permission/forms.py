@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from guardian.shortcuts import get_anonymous_user
@@ -37,6 +38,7 @@ class PermissionMixinForm(BaseMixinForm):
             self.instance.assign_perm("read", get_anonymous_user())            
 
         elif readable_by == "owner":
+            # Delete anonymous user perm, if any
             self.instance.remove_perm('read', get_anonymous_user())
 
         return super(PermissionMixinForm, self).save(*args, **kwargs)
