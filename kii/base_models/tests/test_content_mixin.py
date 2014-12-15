@@ -11,6 +11,10 @@ class TestContentMixin(base.BaseTestCase):
         m = self.G(test_base_models.models.ContentModel, content="#hello")
         self.assertEqual(m.content.rendered, "<h1>hello</h1>")
 
+    def test_raw_field(self):
+        m = self.G(test_base_models.models.ContentModel, content="#hello")
+        self.assertEqual(m.content.raw, "#hello")
+
 
 class TestContentMixinForm(base.BaseTestCase):
     

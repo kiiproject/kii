@@ -37,7 +37,7 @@ class Markdown(object):
 
     # allows display via templates to work without safe filter
     def __unicode__(self):
-        return mark_safe(smart_text(self.rendered))
+        return self.raw
 
     __str__ = __unicode__
 
