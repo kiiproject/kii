@@ -3,11 +3,15 @@ from kii.permission.forms import PermissionMixinForm
 from . import models
 
 
-class StreamForm(PermissionMixinForm):
+class StreamForm(
+    PermissionMixinForm, 
+    forms.ContentMixinForm):
 
-    class Meta(PermissionMixinForm):
+    class Meta(
+        PermissionMixinForm
+        forms.ContentMixinForm.Meta):
         model = models.Stream
-        fields = PermissionMixinForm.Meta.fields
+        fields = forms.ContentMixinForm.Meta.fields + PermissionMixinForm.Meta.fields
 
 
 class StreamItemForm(

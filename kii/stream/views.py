@@ -81,6 +81,8 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
 
         return super(StreamFeedAtom, self).__call__(request, *args, **kwargs)
 
+    def title(self):
+        return self.stream.title
     def link(self):
         return self.stream.reverse('detail')
 

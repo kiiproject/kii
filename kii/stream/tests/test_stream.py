@@ -30,11 +30,16 @@ class TestStream(base.StreamTestCase):
         self.assertEqual(response.context['object'].title, "test0")
 
     def test_stream_atom_feed(self):
-        i = self.streams[0]
+        i = stream.models.Stream.objects.get(title=self.users[0].username, owner=self.users[0])
+        si = stream.models.StreamItem(root=i, title="Hello world", status="pub", content="#yolo")
+        si.save()
+
         i.assign_perm('read', self.anonymous_user)
         url = i.reverse_feed()
 
         response = self.client.get(url)
         parsed_content = feedparser.parse(response.content)
+
         self.assertEqual(response.status_code, 200)
         self.assertIn(i.title, parsed_content['feed']['title'])
+        self.assertIn(i.content, parsed_content['feed']['description'])
