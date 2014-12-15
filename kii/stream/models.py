@@ -64,10 +64,10 @@ class StreamItem(
     class Meta(PolymorphicModel.Meta, permission_models.InheritPermissionMixin.Meta):
         pass
 
-    def reverse_delete(self):
+    def reverse_delete(self, **kwargs):
         return reverse("kii:stream:streamitem:delete", kwargs={"pk":self.pk})
 
-    def reverse_detail(self):
+    def reverse_detail(self, **kwargs):
         return reverse("kii:user_area:stream:streamitem:detail", kwargs={"pk":self.pk, "username": self.owner.username})
 
 class StreamItemComment(discussion_models.CommentMixin):
