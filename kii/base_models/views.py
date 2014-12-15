@@ -103,7 +103,6 @@ class OwnerMixin(object):
                 return redirect(login)
         else:
             self.owner = get_object_or_404(get_user_model(), username=owner_name)
-
         return super(OwnerMixin, self).dispatch(request, **kwargs) 
 
     def get_context_data(self, **kwargs):
@@ -118,7 +117,7 @@ class OwnerMixinDetail(OwnerMixin, Detail):
 class OwnerMixinList(OwnerMixin, List):
     pass
 
-class OwnerMixinCreate(RequireAuthenticationMixin, Create, OwnerMixin):
+class OwnerMixinCreate(OwnerMixin, RequireAuthenticationMixin, Create):
     """Automatically set model.owner to request.user"""
 
     def form_valid(self, form):
@@ -142,9 +141,9 @@ class RequireOwnerMixin(RequireAuthenticationMixin):
     def has_required_permission(self, user):      
         return self.object.owned_by(user)
     
-class OwnerMixinUpdate(RequireOwnerMixin, Update, OwnerMixin):
+class OwnerMixinUpdate(OwnerMixin, RequireOwnerMixin, Update):
     pass
 
-class OwnerMixinDelete(RequireOwnerMixin, Delete, OwnerMixin):
+class OwnerMixinDelete(OwnerMixin, RequireOwnerMixin, Delete):
 
     pass
