@@ -134,7 +134,7 @@ class RequireBasePermissionMixin(object):
         if self.required_permission is not None and not self.has_required_permission(request.user):
             return self.permission_denied()
         
-        return super(RequirePermissionMixin, self).get(request, *args, **kwargs)
+        return super(RequireBasePermissionMixin, self).get(request, *args, **kwargs)
 
     def has_required_permission(self, user):      
         return False
@@ -142,9 +142,9 @@ class RequireBasePermissionMixin(object):
     def permission_denied(self):
         raise Http404
 
-class RequireBasePermissionMixin(RequirePermissionMixin):
+class RequireOwnerMixin(RequireBasePermissionMixin):
     def has_required_permission(self, user):  
-        self.object.owned_by(user)
+        return self.object.owned_by(user)
 
 class OwnerMixinDetail(RequireOwnerMixin, OwnerMixin, Detail):
     pass
@@ -154,7 +154,7 @@ class OwnerMixinList(OwnerMixin, List):
     pass
 
 
-class OwnerMixinCreate(RequireOwnerMixin, OwnerMixin, Create):
+class OwnerMixinCreate(OwnerMixin, Create):
     """Automatically set model.owner to request.user"""
 
     def form_valid(self, form):
