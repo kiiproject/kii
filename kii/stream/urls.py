@@ -2,11 +2,12 @@ from django.conf.urls import patterns, url, include
 from . import views
 
 streamitem_patterns = patterns('',
+    url(r'^(?P<pk>\d+)$', views.Detail.as_view(), name='detail'),
     url(r'^(?P<pk>\d+)/delete$', views.Delete.as_view(), name='delete'),
 )
 stream_patterns = patterns('',
     url(r'^update$', views.StreamUpdate.as_view(), name='update'),
-    url(r'^feeds/atom$', views.StreamFeedAtom.as_view(), name='feed.atom'),
+    url(r'^feeds/atom$', views.StreamFeedAtom(), name='feed.atom'),
 )
 
 

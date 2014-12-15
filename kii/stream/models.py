@@ -63,6 +63,9 @@ class StreamItem(
     def reverse_delete(self):
         return reverse("kii:stream:streamitem:delete", kwargs={"pk":self.pk})
 
+    def reverse_detail(self):
+        return reverse("kii:user_area:stream:streamitem:detail", kwargs={"pk":self.pk, "username": self.owner.username})
+
 class StreamItemComment(discussion_models.CommentMixin):
 
     subject = models.ForeignKey(StreamItem, related_name="comments")
