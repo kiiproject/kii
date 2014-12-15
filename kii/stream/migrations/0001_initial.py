@@ -38,9 +38,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=255, verbose_name='base_models.namemixin.title')),
                 ('content', kii.base_models.fields.MarkupField()),
-                ('content_markup_type', models.CharField(default='markdown', max_length=30, choices=[(b'', b'--'), (b'markdown', b'markdown'), (b'none', b'none')])),
+                # monkey patch, fixes https://github.com/jamesturk/django-markupfield/issues/20                
+                #('content_markup_type', models.CharField(default='markdown', max_length=30, choices=[(b'', b'--'), (b'markdown', b'markdown'), (b'none', b'none')])),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('_content_rendered', models.TextField(editable=False)),
+                #('_content_rendered', models.TextField(editable=False)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
                 ('status', models.CharField(default='dra', max_length=5, choices=[('dra', 'base_models.status_mixin.draft'), ('pub', 'base_models.status_mixin.published')])),
                 ('publication_date', models.DateTimeField(default=None, null=True, editable=False, blank=True)),
@@ -61,8 +62,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('content', kii.base_models.fields.MarkupField()),
-                ('content_markup_type', models.CharField(default='markdown', max_length=30, choices=[(b'', b'--'), (b'markdown', b'markdown'), (b'none', b'none')])),
-                ('_content_rendered', models.TextField(editable=False)),
+                #('content_markup_type', models.CharField(default='markdown', max_length=30, choices=[(b'', b'--'), (b'markdown', b'markdown'), (b'none', b'none')])),
+                #('_content_rendered', models.TextField(editable=False)),
                 ('published', models.BooleanField(default=False)),
                 ('junk', models.NullBooleanField(default=None)),
                 ('subject', models.ForeignKey(related_name='comments', to='stream.StreamItem')),
