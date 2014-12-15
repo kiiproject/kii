@@ -50,8 +50,8 @@ class TestViews(base.UserTestCase):
         response = self.client.get(url)
         self.assertEqual(response.context['owner'], self.users[1])
 
-    def test_owner_view_raise_404_for_anonymous_user_without_KII_DEFAULT_USER_SET(self):
+    def test_owner_view_redirect_to_login_for_anonymous_user_without_KII_DEFAULT_USER_SET(self):
         url = reverse('kii:test_base_models:ownermodel:list')
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertRedirects(response, reverse("kii:user:login")+"?next="+url)

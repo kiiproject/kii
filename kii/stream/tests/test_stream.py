@@ -31,6 +31,8 @@ class TestStream(base.StreamTestCase):
 
     def test_stream_atom_feed(self):
         i = stream.models.Stream.objects.get(title=self.users[0].username, owner=self.users[0])
+        i.content = "#hello"
+        i.save()
         si = stream.models.StreamItem(root=i, title="Hello world", status="pub", content="#yolo")
         si.save()
 
@@ -41,5 +43,6 @@ class TestStream(base.StreamTestCase):
         parsed_content = feedparser.parse(response.content)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(i.title, parsed_content['feed']['title'])
-        self.assertIn(i.content.rendered, parsed_content['feed']['description'])
+        self.assertIn(parsed_content['feed']['title'], i.title)
+        self.assertIn(parsed_content['feed']['description'], i.content.rendered)
+        self.assertIn(parsed_content['entries'][0].content, si.content.rendered)

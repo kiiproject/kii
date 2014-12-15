@@ -83,8 +83,12 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
 
     def title(self):
         return self.stream.title
+
     def link(self):
         return self.stream.reverse('detail')
 
     def items(self):
         return self.stream.children.all().readable_by(self.request.user).order_by("-publication_date")
+
+    def item_description(self, item):
+        return item.content.rendered

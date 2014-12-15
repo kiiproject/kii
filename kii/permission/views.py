@@ -18,11 +18,6 @@ class RequirePermissionMixin(views.RequireBasePermissionMixin):
 class PermissionMixinDetail(RequirePermissionMixin, views.OwnerMixinDetail):
     required_permission = "read"
 
-    def dispatch(self, *args, **kwargs):
-        s = super(RequirePermissionMixin, self).dispatch
-        r = s(*args, **kwargs)
-        print(r)
-        return r
 
 class PermissionMixinUpdate(RequirePermissionMixin, views.OwnerMixinUpdate):
     required_permission = "write"
