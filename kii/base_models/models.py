@@ -11,6 +11,7 @@ from . import fields
 from kii.app.models import AppModel
 from kii import user
 
+
 class BaseMixinQuerySet(QuerySet):
     pass
 
@@ -99,7 +100,7 @@ class TitleMixin(BaseMixin):
 
 class ContentMixin(BaseMixin):
 
-    content = fields.MarkupField(default_markup_type="markdown")
+    content = fields.MarkdownField()
     class Meta:
         abstract = True
 

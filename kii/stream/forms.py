@@ -8,7 +8,7 @@ class StreamForm(
     forms.ContentMixinForm):
 
     class Meta(
-        PermissionMixinForm
+        PermissionMixinForm,
         forms.ContentMixinForm.Meta):
         model = models.Stream
         fields = forms.ContentMixinForm.Meta.fields + PermissionMixinForm.Meta.fields
