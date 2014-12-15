@@ -51,7 +51,8 @@ class Update(permission_views.PermissionMixinUpdate):
 
 
 class Detail(permission_views.PermissionMixinDetail):
-    pass
+    
+    model = models.StreamItem
 
 
 class Delete(permission_views.PermissionMixinDelete):
