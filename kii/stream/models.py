@@ -28,6 +28,9 @@ class Stream(
     def reverse_detail(self):
         return reverse("kii:stream:index")
 
+    def reverse_feed(self, feed_type="atom"):
+        return reverse("kii:user_area:stream:stream:feed.atom", kwargs={"username": self.owner.username})
+
 class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissionMixinQueryset):
     def readable_by(self, target):
         """Exclude draft items"""        

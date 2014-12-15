@@ -32,7 +32,7 @@ class TestStream(base.StreamTestCase):
     def test_stream_atom_feed(self):
         i = self.streams[0]
         i.assign_perm('read', self.anonymous_user)
-        url = i.reverse('feed.atom')
+        url = i.reverse_feed()
 
         response = self.client.get(url)
         parsed_content = feedparser.parse(response.content)
