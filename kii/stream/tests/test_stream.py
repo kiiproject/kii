@@ -37,3 +37,4 @@ class TestStream(base.StreamTestCase):
         response = self.client.get(url)
         parsed_content = feedparser.parse(response.content)
         self.assertEqual(response.status_code, 200)
+        self.assertIn(i.title, parsed_content['feed']['title'])
