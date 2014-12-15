@@ -7,36 +7,39 @@ class AppModel(models.Model):
     # If True, any authenticated user will be able to create isntances of this model
     public_model = False
 
-    @property
-    def url_namespace(self):
+    def url_namespace(self, **kwargs):
         """Return the URL namespace of the class, such as `app_label:model_label:`"""       
 
         app_name = self._meta.app_label
         model_name = self.__class__.__name__.lower()
 
-        return "kii:{0}:{1}:".format(app_name, model_name)
+        if kwargs.get('user_area', False):
+            prefix = "kii:user_area:"
+        else:
+            prefix = "kii:"
+        return prefix + "{0}:{1}:".format(app_name, model_name)
 
-    def reverse(self, suffix):
+    def reverse(self, suffix, **kwargs):
         """Return a reversed URL for given suffix (for example: detail, list, edit...)
         you can override per-suffix URLs by defining .reverse_<suffix> methods
         """
 
         if hasattr(self, 'reverse_{0}'.format(suffix)):
-            return getattr(self, 'reverse_{0}'.format(suffix))()  
+            return getattr(self, 'reverse_{0}'.format(suffix))(**kwargs)  
                       
-        return reverse(self.url_namespace + suffix)
+        return reverse(self.url_namespace(**kwargs) + suffix)
         
-    def reverse_detail(self):
-        return reverse(self.url_namespace + "detail", kwargs={"pk":self.pk})
+    def reverse_detail(self, **kwargs):
+        return reverse(self.url_namespace(**kwargs) + "detail", kwargs={"pk":self.pk})
 
-    def reverse_update(self):
-        return reverse(self.url_namespace + "update", kwargs={"pk":self.pk})
+    def reverse_update(self, **kwargs):
+        return reverse(self.url_namespace(**kwargs) + "update", kwargs={"pk":self.pk})
 
-    def reverse_delete(self):
-        return reverse(self.url_namespace + "delete", kwargs={"pk":self.pk})
+    def reverse_delete(self, **kwargs):
+        return reverse(self.url_namespace(**kwargs) + "delete", kwargs={"pk":self.pk})
 
     def get_absolute_url(self):
-        return self.reverse_detail()
+        return self.reverse_detail(user_include=True)
 
     @classmethod
     def class_reverse(cls, suffix):

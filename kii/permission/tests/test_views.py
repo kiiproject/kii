@@ -1,3 +1,6 @@
+from django.core.urlresolvers import resolve
+
+
 from kii.user.tests import base
 from kii.tests import test_permission
 
@@ -13,8 +16,12 @@ class TestViews(base.UserTestCase):
 
     def test_permission_mixin_detail_view_is_not_accessible_by_anonymous(self):
         m = self.G(test_permission.models.PermissionModel, owner=self.users[0])
+        url = m.get_absolute_url()
 
-        response = self.client.get(m.reverse('detail'))
+        self.assertEqual(m.readable_by(self.anonymous_user), False)
+        
+        response = self.client.get(url)
+
         self.assertEqual(response.status_code, 404)
 
     def test_permission_mixin_detail_view_is_accessible_by_authorized_user(self):

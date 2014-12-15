@@ -90,8 +90,9 @@ class OwnerMixin(object):
     """Deduce owner of given page/elements from url or logged in user"""
 
     def dispatch(self, request, **kwargs):
-        owner = self.get_owner(request, **kwargs)
         
+        owner = self.get_owner(request, **kwargs)
+
         if owner is None:
             login = reverse('kii:user:login') + "?next=" + request.path
             return redirect(login)
@@ -120,13 +121,40 @@ class OwnerMixin(object):
         return context
 
 
-class OwnerMixinDetail(OwnerMixin, Detail):
+
+
+class RequireBasePermissionMixin(object):
+    """Implements basic pluggable permission logic on single object views"""
+
+    required_permission = "owner"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.required_permission is not None and not self.has_required_permission(request.user):
+            return self.permission_denied()
+        
+        return super(RequirePermissionMixin, self).get(request, *args, **kwargs)
+
+    def has_required_permission(self, user):      
+        return False
+    
+    def permission_denied(self):
+        raise Http404
+
+class RequireBasePermissionMixin(RequirePermissionMixin):
+    def has_required_permission(self, user):  
+        self.object.owned_by(user)
+
+class OwnerMixinDetail(RequireOwnerMixin, OwnerMixin, Detail):
     pass
+
 
 class OwnerMixinList(OwnerMixin, List):
     pass
 
-class OwnerMixinCreate(OwnerMixin, RequireAuthenticationMixin, Create):
+
+class OwnerMixinCreate(RequireOwnerMixin, OwnerMixin, Create):
     """Automatically set model.owner to request.user"""
 
     def form_valid(self, form):
@@ -134,25 +162,9 @@ class OwnerMixinCreate(OwnerMixin, RequireAuthenticationMixin, Create):
         return super(OwnerMixinCreate, self).form_valid(form)
 
 
-class RequireOwnerMixin(RequireAuthenticationMixin):
-    """Requires request.user to be owner of the model instance"""
-
-    permission_denied = Http404
-    required_permission = "owner"
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.required_permission is not None and not self.has_required_permission(request.user):
-            raise self.permission_denied
-        
-        return super(RequireOwnerMixin, self).get(request, *args, **kwargs)
-
-    def has_required_permission(self, user):      
-        return self.object.owned_by(user)
-    
-class OwnerMixinUpdate(OwnerMixin, RequireOwnerMixin, Update):
+class OwnerMixinUpdate(RequireOwnerMixin, OwnerMixin, Update):
     pass
 
-class OwnerMixinDelete(OwnerMixin, RequireOwnerMixin, Delete):
+class OwnerMixinDelete(RequireOwnerMixin, OwnerMixin, Delete):
 
     pass

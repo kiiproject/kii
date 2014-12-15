@@ -26,10 +26,10 @@ class Stream(
     class Meta(permission_models.PermissionMixin.Meta):
         unique_together = ('owner', 'title')
 
-    def reverse_detail(self):
-        return reverse("kii:stream:index")
+    def reverse_detail(self, **kwargs):
+        return reverse("kii:user_area:stream:index", kwargs={"username": self.owner.username})
 
-    def reverse_feed(self, feed_type="atom"):
+    def reverse_feed(self, **kwargs):
         return reverse("kii:user_area:stream:stream:feed.atom", kwargs={"username": self.owner.username})
 
 class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissionMixinQueryset):
