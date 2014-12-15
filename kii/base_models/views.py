@@ -90,6 +90,15 @@ class OwnerMixin(object):
     """Deduce owner of given page/elements from url or logged in user"""
 
     def dispatch(self, request, **kwargs):
+        owner = self.get_owner(request, **kwargs)
+        
+        if owner is None:
+            login = reverse('kii:user:login') + "?next=" + request.path
+            return redirect(login)
+        
+        return super(OwnerMixin, self).dispatch(request, **kwargs) 
+
+    def get_owner(self, request, **kwargs):
         owner_name = kwargs.get('username', None)
         if owner_name is None:
 
@@ -99,11 +108,11 @@ class OwnerMixin(object):
                 self.owner = get_object_or_404(get_user_model(), username=getattr(settings, "KII_DEFAULT_USER"))
 
             else:
-                login = reverse('kii:user:login') + "?next=" + request.path
-                return redirect(login)
+                return None
         else:
             self.owner = get_object_or_404(get_user_model(), username=owner_name)
-        return super(OwnerMixin, self).dispatch(request, **kwargs) 
+
+        return self.owner
 
     def get_context_data(self, **kwargs):
         context = super(OwnerMixin, self).get_context_data(**kwargs)

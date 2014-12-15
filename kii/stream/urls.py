@@ -6,6 +6,7 @@ streamitem_patterns = patterns('',
 )
 stream_patterns = patterns('',
     url(r'^update$', views.StreamUpdate.as_view(), name='update'),
+    url(r'^feeds/atom$', views.StreamFeedAtom.as_view(), name='feed.atom'),
 )
 
 

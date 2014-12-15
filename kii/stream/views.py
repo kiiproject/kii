@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
+from django.contrib.syndication.views import Feed
 
 from . import models, forms
 from kii.base_models import views
@@ -69,3 +70,7 @@ class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
     def get_object(self):
 
         return self.get_current_stream()
+
+class StreamFeedAtom(StreamContextMixin, Feed):
+
+    pass

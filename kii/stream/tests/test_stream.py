@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+import feedparser 
 
 from . import base
 from kii import stream
@@ -27,3 +28,12 @@ class TestStream(base.StreamTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['object'].title, "test0")
+
+    def test_stream_atom_feed(self):
+        i = self.streams[0]
+        i.assign_perm('read', self.anonymous_user)
+        url = i.reverse('feed.atom')
+
+        response = self.client.get(url)
+        parsed_content = feedparser.parse(response.content)
+        self.assertEqual(response.status_code, 200)
