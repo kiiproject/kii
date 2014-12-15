@@ -2,7 +2,6 @@ django==1.7
 django-guardian
 django-mptt
 six
-https://github.com/radicalbiscuit/django-markupfield/archive/feature-explicit-helper-fields.zip
 markdown
 django-extensions
 django-polymorphic

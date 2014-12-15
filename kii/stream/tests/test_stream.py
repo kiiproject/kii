@@ -42,4 +42,4 @@ class TestStream(base.StreamTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(i.title, parsed_content['feed']['title'])
-        self.assertIn(i.content, parsed_content['feed']['description'])
+        self.assertIn(i.content.rendered, parsed_content['feed']['description'])

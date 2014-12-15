@@ -1,4 +1,4 @@
-from markupfield.fields import MarkupField as MKF
+#from markupfield.fields import MarkupField as MKF
 from django.db import models
 from django.utils.text import slugify
 from django.utils.safestring import mark_safe
@@ -8,6 +8,8 @@ from django.conf import settings
 import markdown
 
 
+# stolen code from https://github.com/Matt3o12/django-markupfield/blob/master/markupfield/fields.py
+# waiting for a fix of https://github.com/jamesturk/django-markupfield/issues/20
 class Markdown(object):
 
     def __init__(self, instance, field_name):
@@ -30,7 +32,7 @@ class Markdown(object):
     # rendered is a read only property
     def _get_rendered(self):
         return getattr(settings, "MARKDOWN_FUNCTION", markdown.markdown)(self.raw)
-        
+
     rendered = property(_get_rendered)
 
     # allows display via templates to work without safe filter

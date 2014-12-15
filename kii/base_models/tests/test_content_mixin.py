@@ -17,5 +17,4 @@ class TestContentMixinForm(base.BaseTestCase):
     def test_form(self):
         form_data = {'content': 'test'}
         form = forms.ContentModelForm(data=form_data)
-        print(form.errors)
         self.assertEqual(form.is_valid(), True)
