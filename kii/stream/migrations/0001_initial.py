@@ -21,8 +21,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=255, verbose_name='base_models.namemixin.title')),
                 ('content', kii.base_models.fields.MarkupField()),
-                ('content_markup_type', models.CharField(default='markdown', max_length=30, choices=[(b'', b'--'), (b'markdown', b'markdown'), (b'none', b'none')])),
-                ('_content_rendered', models.TextField(editable=False)),
+                # monkey patch, fixes https://github.com/jamesturk/django-markupfield/issues/20
+                #('content_markup_type', models.CharField(default='markdown', max_length=30, choices=[(b'', b'--'), (b'markdown', b'markdown'), (b'none', b'none')])),
+                #('_content_rendered', models.TextField(editable=False)),
                 ('owner', models.ForeignKey(related_name='streams', editable=False, to=settings.AUTH_USER_MODEL)),
             ],
             options={
