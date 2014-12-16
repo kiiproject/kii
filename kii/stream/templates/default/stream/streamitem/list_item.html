@@ -10,7 +10,13 @@
     <div class="secondary">
     {% block secondary %}
         {% block info %}
-            <p class="info">
+            <div class="info">              
+                 {% block permission %}
+                    {% if request.user.is_authenticated %}
+                        <p class="read"><i class="fi-lock"></i>{{ item.read_permission }}</p>
+                    {% endif %}
+                {% endblock %}
+
                 {% block status %}<span class="status">{{ item.get_status_display }}</span>{% endblock %}
                 {% block date %}
                     {% with item.created|timesince as created %}
@@ -21,7 +27,7 @@
                     {% endwith %}
                 {% endblock %}
                 {% block owner %}<span class="owner">{{ item.owner.username }}</span>{% endblock %}            
-            </p>
+            </div>
         {% endblock %}
         {% block admin %}
             {% if item.owner == request.user %}
