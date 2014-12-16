@@ -14,3 +14,14 @@ class TestStreamViews(base.StreamTestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.context['current_stream'], stream)
+
+    def test_anonymous_user_can_display_public_stream_item_detail_page(self):
+        stream = models.Stream.objects.get(owner=self.users[0], title=self.users[0].username)
+        si = models.StreamItem(root=stream, title="Hello", content="test", status="pub")
+        si.save()
+        stream.assign_perm('read', self.anonymous_user)
+
+        url = si.reverse_detail()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['object'], si)

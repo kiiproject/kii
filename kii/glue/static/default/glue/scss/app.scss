@@ -40,20 +40,14 @@
 //   "foundation/components/offcanvas",
 //   "foundation/components/visibility";
 
-
+* {
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
 .main-content {
     @include grid-row;
-    padding: 2rem 0.5rem;
-    .stream {
-        @media #{$medium-up} { 
-            @include grid-column(9)
-        }
-    }
-    .widget.tags {
-        @media #{$medium-up} { 
-            @include grid-column(3)
-        }
-    }
+    padding: 2rem 0.5rem;    
 }
 
 code, pre, blockquote {
@@ -85,37 +79,22 @@ textarea {
 }
 // streams 
 
-.stream {
-    > .info {
-        @include panel;
-        .actions, h3 {
-            display: inline-block;
-            margin-bottom: 0;
-        }
-        .actions {
-            float: right;
-        }
-    }
+.stream.info  {
+    max-width: $content-width;
+    margin: 0 auto; 
 }
-.stream-select {
-    display: inline-block;
-    width: auto;
-    margin: 0 1rem;
+article.stream-item {
+    max-width: $content-width;
+    margin: 0 auto; 
+    border-bottom: 1px solid $gainsboro;
+    padding: 4rem 0;
+    
 }
 
-article.stream-item {
-    @include grid-row;
-     
-    border-bottom: 1px solid $gainsboro;
-    padding: 1rem 0;
-    .main {
-        @media #{$medium-up} { 
-            @include grid-column(9, $collapse: true)
-        }
-    }
-    .secondary {
-        @media #{$medium-up} { 
-            @include grid-column(3)
-        }
-    }
+.meta {
+    @include panel; 
+}
+
+.tabs > dd {
+    border: 3px solid $silver;
 }

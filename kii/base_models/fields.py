@@ -31,8 +31,9 @@ class Markdown(object):
 
     # rendered is a read only property
     def _get_rendered(self):
+        print("_get_rendered", self.instance)
         if self.instance.__dict__["{0}_markup_type".format(self.field_name)] ==  "markdown":
-            return getattr(settings, "MARKDOWN_FUNCTION", markdown.markdown)(self.raw)
+            return mark_safe(getattr(settings, "MARKDOWN_FUNCTION", markdown.markdown)(self.raw))
         else: 
             return self.raw
 

@@ -2,6 +2,9 @@
 {% load base_models %}
 
 {% block main_content %}
+     {% block stream %}
+        {% include 'stream/stream/info.html' with stream=object.root %}
+    {% endblock %}
     {% with list_item_template=object|list_item_template %}
         {% include list_item_template with item=object %}
     {% endwith %}

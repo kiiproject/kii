@@ -79,6 +79,11 @@ class PermissionMixin(base_models_models.OwnerMixin):
             remove_perm(permission, get_anonymous_user(), self)
             remove_perm(permission, user_models.get_all_users_group(), self)
 
+    def read_permission(self):
+        if self.readable_by(get_anonymous_user()):
+            return "everybody"
+        return "you"
+
 class InheritPermissionMixinQueryset(PermissionMixinQuerySet):
     
     def filter_permission(self, permissions, target):
