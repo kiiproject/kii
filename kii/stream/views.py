@@ -81,6 +81,9 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
 
         return super(StreamFeedAtom, self).__call__(request, *args, **kwargs)
 
+    def author_name(self):
+        return self.stream.owner.get_full_name()
+
     def title(self):
         return self.stream.title
 
@@ -90,5 +93,14 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
     def items(self):
         return self.stream.children.public()
 
+    def item_title(self, item):
+        return item.title
+
     def item_description(self, item):
         return item.filtered_content
+
+    def item_pubdate(self, item):
+        return item.publication_date
+
+    def item_updateddate(self, item):
+        return item.last_modified

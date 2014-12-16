@@ -161,7 +161,6 @@ class OwnerMixin(BaseMixin):
         abstract = True
 
 
-
 class BaseInheritModel(models.Model):
         """Base class for inheriting model (see below)"""
 
