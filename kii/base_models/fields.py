@@ -31,7 +31,10 @@ class Markdown(object):
 
     # rendered is a read only property
     def _get_rendered(self):
-        return getattr(settings, "MARKDOWN_FUNCTION", markdown.markdown)(self.raw)
+        if self.instance.__dict__["{0}_markup_type".format(self.field_name)] ==  "markdown":
+            return getattr(settings, "MARKDOWN_FUNCTION", markdown.markdown)(self.raw)
+        else: 
+            return self.raw
 
     rendered = property(_get_rendered)
 
