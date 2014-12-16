@@ -57,7 +57,6 @@ class GlueTest(SeleniumTestCase):
 
         expected_items = stream.children.all().order_by('-publication_date')
         items = self.browser.find_elements_by_css_selector('.stream-items > article')
-        time.sleep(55)
         self.assertEqual(len(items), len(expected_items))
 
         for i, item in enumerate(items):

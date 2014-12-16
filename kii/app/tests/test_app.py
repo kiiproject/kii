@@ -46,9 +46,9 @@ class TestApp(base.BaseTestCase):
         reverse('kii:test_app2:third_view')
 
     def test_gathered_urls_also_accept_username_kwarg(self):
-        reverse('kii_user:test_app:index', kwargs={"username": "test0"})
-        reverse('kii_user:test_app1:some_view', kwargs={"username": "test1"})
-        reverse('kii_user:test_app2:third_view', kwargs={"username": "test2"})
+        reverse('kii:user_area:test_app:index', kwargs={"username": "test0"})
+        reverse('kii:user_area:test_app1:some_view', kwargs={"username": "test1"})
+        reverse('kii:user_area:test_app2:third_view', kwargs={"username": "test2"})
 
 
     def test_app_templates_inherit_from_page_template(self):
@@ -80,7 +80,7 @@ class TestApp(base.BaseTestCase):
 
     def test_menu_item_with_user_url(self):
         m = menu.MenuNode(
-            route="kii_user:test_app:user",
+            route="kii:user_area:test_app:user",
             reverse=True,
             reverse_kwargs=["username"],
         )
@@ -88,7 +88,7 @@ class TestApp(base.BaseTestCase):
          
     def test_menu_url_template_tag(self):
         m = menu.MenuNode(
-            route="kii_user:test_app:user",
+            route="kii:user_area:test_app:user",
             reverse=True,
             reverse_kwargs=["username"],
         )

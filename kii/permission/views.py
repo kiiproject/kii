@@ -3,9 +3,7 @@ from django.http import Http404
 
 
 
-class RequirePermissionMixin(object):
-
-    permission_denied = Http404
+class RequirePermissionMixin(views.RequireBasePermissionMixin):
 
     def has_required_permission(self, user):        
         mapping = {
@@ -18,9 +16,8 @@ class RequirePermissionMixin(object):
 
 
 class PermissionMixinDetail(RequirePermissionMixin, views.OwnerMixinDetail):
-    """Raise 404 when unauthorized user try to detail a private model instance"""
-
     required_permission = "read"
+
 
 class PermissionMixinUpdate(RequirePermissionMixin, views.OwnerMixinUpdate):
     required_permission = "write"

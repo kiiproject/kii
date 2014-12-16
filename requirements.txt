@@ -2,7 +2,6 @@ django==1.7
 django-guardian
 django-mptt
 six
-django-markupfield
 markdown
 django-extensions
 django-polymorphic

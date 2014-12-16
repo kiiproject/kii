@@ -9,7 +9,7 @@ class TestBaseMixin(base.BaseTestCase):
         m = test_base_models.models.TitleModel(title="Hello world!")
         m.save()
 
-        self.assertEqual(m.url_namespace, "kii:test_base_models:titlemodel:")
+        self.assertEqual(m.url_namespace(), "kii:test_base_models:titlemodel:")
 
     def test_model_reverse(self):
         m = test_base_models.models.TitleModel(title="Hello world!")

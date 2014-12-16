@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
+from django.contrib.syndication.views import Feed
 
 from . import models, forms
 from kii.base_models import views
@@ -33,7 +34,7 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
 
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
-        items = self.current_stream.children.readable_by(self.request.user).select_related().order_by('-publication_date')
+        items = self.current_stream.children.readable_by(self.request.user).select_related()
         if self.streamitem_class is not None:
             # filter items using given class
             items = items.instance_of(self.streamitem_class)
@@ -50,7 +51,8 @@ class Update(permission_views.PermissionMixinUpdate):
 
 
 class Detail(permission_views.PermissionMixinDetail):
-    pass
+    
+    model = models.StreamItem
 
 
 class Delete(permission_views.PermissionMixinDelete):
@@ -69,3 +71,36 @@ class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
     def get_object(self):
 
         return self.get_current_stream()
+
+class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
+
+    def __call__(self, request, *args, **kwargs):
+        self.request = request
+        self.owner = self.get_owner(request, **kwargs)
+        self.stream = self.get_current_stream()
+
+        return super(StreamFeedAtom, self).__call__(request, *args, **kwargs)
+
+    def author_name(self):
+        return self.stream.owner.get_full_name()
+
+    def title(self):
+        return self.stream.title
+
+    def link(self):
+        return self.stream.reverse('detail')
+
+    def items(self):
+        return self.stream.children.public()
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.filtered_content
+
+    def item_pubdate(self, item):
+        return item.publication_date
+
+    def item_updateddate(self, item):
+        return item.last_modified

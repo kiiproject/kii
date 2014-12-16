@@ -1,8 +1,12 @@
-from kii import permission, utils, base_models
 from django.db import models
+from django.core.urlresolvers import reverse
+
+from kii import permission, utils, base_models
 
 class PermissionModel(permission.models.PermissionMixin):
-    pass
+    
+    def reverse_detail(self, **kwargs):
+        return reverse("kii:user_area:test_permission:permissionmodel:detail", kwargs={"pk":self.pk, "username": self.owner.username})
 
 
 

@@ -1,0 +1,8 @@
+{% extends "base_models/basemixin/detail.html" %}
+{% load base_models %}
+
+{% block main_content %}
+    {% with list_item_template=object|list_item_template %}
+        {% include list_item_template with item=object %}
+    {% endwith %}
+{% endblock %}

@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from polymorphic import PolymorphicModel, PolymorphicManager, PolymorphicQuerySet
+from guardian.shortcuts import get_anonymous_user
 import inspect
 
 from kii.base_models import models as base_models_models
@@ -15,7 +16,8 @@ from kii.hook.models import HookMixin
 
 class Stream(
     permission_models.PermissionMixin,
-    base_models_models.TitleMixin):
+    base_models_models.TitleMixin,    
+    base_models_models.ContentMixin,):
     """
     A place were StreamItem instances will be published.
 
@@ -25,8 +27,11 @@ class Stream(
     class Meta(permission_models.PermissionMixin.Meta):
         unique_together = ('owner', 'title')
 
-    def reverse_detail(self):
-        return reverse("kii:stream:index")
+    def reverse_detail(self, **kwargs):
+        return reverse("kii:user_area:stream:index", kwargs={"username": self.owner.username})
+
+    def reverse_feed(self, **kwargs):
+        return reverse("kii:user_area:stream:stream:feed.atom", kwargs={"username": self.owner.username})
 
 class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissionMixinQueryset):
     def readable_by(self, target):
@@ -34,12 +39,14 @@ class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissio
 
         return super(StreamItemQuerySet, self).readable_by(target).filter(status="pub")
 
+    def public(self):
+        return self.readable_by(get_anonymous_user())
+
 class StreamItemQueryManager(PolymorphicManager, 
     permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
+
     def get_queryset(self):
         return StreamItemQuerySet(self.model, using=self._db)
-
-
 
 class StreamItem(
     PolymorphicModel,    
@@ -58,10 +65,13 @@ class StreamItem(
     objects = StreamItemQueryManager()
 
     class Meta(PolymorphicModel.Meta, permission_models.InheritPermissionMixin.Meta):
-        pass
+        ordering = ['-publication_date']
 
-    def reverse_delete(self):
+    def reverse_delete(self, **kwargs):
         return reverse("kii:stream:streamitem:delete", kwargs={"pk":self.pk})
+
+    def reverse_detail(self, **kwargs):
+        return reverse("kii:user_area:stream:streamitem:detail", kwargs={"pk":self.pk, "username": self.owner.username})
 
 class StreamItemComment(discussion_models.CommentMixin):
 
