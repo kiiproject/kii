@@ -110,10 +110,6 @@ class ContentMixin(BaseMixin):
     class Meta:
         abstract = True
 
-    def save(self, **kwargs):
-
-        super(ContentMixin, self).save(**kwargs)
-        print(self.content.raw, self.content)
 
 class TimestampMixin(BaseMixin):
     """Add two fields that are automatically set"""
