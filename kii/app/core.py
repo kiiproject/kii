@@ -96,5 +96,4 @@ class App(AppConfig):
     @property
     def index(self):
         """Return the index URL for the app"""
-        print("kii:{0}:index".format(self.label))
         return reverse("kii:{0}:index".format(self.label))

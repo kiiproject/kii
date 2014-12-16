@@ -17,9 +17,9 @@ from kii.hook.models import HookMixin
 class Stream(
        
     permission_models.PermissionMixin,
-    HookMixin, 
     base_models_models.TitleMixin,    
-    base_models_models.ContentMixin,):
+    base_models_models.ContentMixin,
+    HookMixin, ):
     """
     A place were StreamItem instances will be published.
 
@@ -52,12 +52,12 @@ class StreamItemQueryManager(PolymorphicManager,
 
 class StreamItem(
     PolymorphicModel,    
-    HookMixin, 
     base_models_models.TitleMixin,
     base_models_models.ContentMixin,
     base_models_models.StatusMixin,
     base_models_models.TimestampMixin,
     discussion_models.DiscussionMixin,
+    HookMixin, 
     permission_models.InheritPermissionMixin,):
 
     """A base class for streamable models"""

@@ -27,9 +27,6 @@ class ContentMixinForm(BaseMixinForm):
         model = models.ContentMixin
         fields = ('content',)
 
-    def __init__(self, *args, **kwargs):
-        super(ContentMixinForm, self).__init__(*args, **kwargs)
-        print(self.instance.content.raw)
 class StatusMixinForm(BaseMixinForm):
     pass
 

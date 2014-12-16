@@ -22,8 +22,10 @@ class ModelFilters(object):
 
     def filter(self, field_name, instance):        
         """Return the filtered value of given field on given instance"""
+        field = getattr(instance, field_name)
 
-        filtered_value = getattr(instance, field_name)
+        # allow usage of markupfield  
+        filtered_value = getattr(field, "rendered", field)
 
         for filter_func in self.get(instance.__class__, field_name):
             filtered_value = filter_func(filtered_value, instance=instance)

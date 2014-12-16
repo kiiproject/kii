@@ -5,7 +5,7 @@
         {% block main %}
             <h2 class="title"><a href="{{ item.reverse_detail }}">{% block title %}{{ item.filtered_title }}{% endblock %}</a></h2>
             <p class="publication">{% blocktrans with stream_link=item.root.reverse_detail date=item.publication_date author=item.owner %}published on {{ date }} by <a href="{{ stream_link }}">{{ author }}</a>{% endblocktrans %}</p>            
-            <div class="content">{% block content %}{{ item.filtered_content|safe }}{% endblock %}</div>
+            <div class="content">{% block content %}{{ item.filtered_content }}{% endblock %}</div>
         {% endblock %}        
     </div>
     {% block secondary %}

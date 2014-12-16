@@ -1,12 +1,13 @@
 from __future__ import unicode_literals
 
-from kii import base_models
-from kii.hook import signals
-
 from django.db import models, IntegrityError
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
+
+from kii import base_models
+from kii.hook import signals
+
 
 
 
