@@ -50,8 +50,20 @@
     padding: 2rem 0.5rem;    
 }
 
-code, pre, blockquote {
+code {
+    border: none;
+    background-color: #EEEEEE;
+    
+}
+code.code {
+    background-color: transparent;
+}
+.code > pre, blockquote {
+    background-color: #EEEEEE;
+    font-size: 1rem;
     padding: 0.5rem;
+    margin: 2rem 0;
+    overflow-x: scroll;
 }
 // icons
 
@@ -88,13 +100,27 @@ article.stream-item {
     margin: 0 auto; 
     border-bottom: 1px solid $gainsboro;
     padding: 4rem 0;
-    
+
+    .title {
+        letter-spacing: -2px;
+        font-size: 3rem;
+        font-weight: bold;
+        line-height: 1;
+        a, a:hover {
+            color: #2E3437;
+        }
+    }
+}
+.content {
+    margin: 2rem 0;
 }
 
 .meta {
     @include panel; 
 }
-
+.publication, .actions, .date,  {
+    font-family: "Open Sans", sans-serif;
+}
 .tabs > dd {
     border: 3px solid $silver;
 }
