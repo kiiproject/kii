@@ -76,6 +76,8 @@ textarea {
 // streams 
 
 .stream {
+    max-width: 50rem;
+    margin: 0 auto;
     > .info {
         @include panel;
         .actions, h3 {
