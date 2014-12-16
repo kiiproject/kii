@@ -1,7 +1,7 @@
 // Foundation by ZURB
 // foundation.zurb.com
 // Licensed under MIT Open Source
-$content-width: 45rem;
+$content-width: 40rem;
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
@@ -221,11 +221,11 @@ $header-bottom-margin: 1.5rem;
 // $header-text-rendering: optimizeLegibility;
 
 // We use these to control header font sizes
-// $h1-font-size: rem-calc(44);
-// $h2-font-size: rem-calc(37);
-// $h3-font-size: rem-calc(27);
-// $h4-font-size: rem-calc(23);
-// $h5-font-size: rem-calc(18);
+$h1-font-size: rem-calc(43);
+$h2-font-size: rem-calc(35);
+$h3-font-size: rem-calc(28);
+$h4-font-size: rem-calc(22);
+$h5-font-size: rem-calc(16);
 // $h6-font-size: 1rem;
 
 // We use these to control header size reduction on small screens

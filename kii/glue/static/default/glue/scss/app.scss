@@ -45,9 +45,9 @@
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
 }
-.main-content {
-    @include grid-row;
-    padding: 2rem 0.5rem;    
+
+.top-bar {
+    margin-bottom: 3rem;
 }
 
 code {
@@ -81,7 +81,7 @@ i[class^="fi-"] {
 }
 
 form {
-    max-width: 30rem;
+    max-width: 50rem;
     display: block;
     margin: 0 auto;
 }
@@ -104,7 +104,7 @@ article.stream-item {
     .title {
         letter-spacing: -2px;
         font-size: 3rem;
-        font-weight: bold;
+        font-weight: bold; 
         line-height: 1;
         a, a:hover {
             color: #2E3437;
@@ -113,6 +113,10 @@ article.stream-item {
 }
 .content {
     margin: 2rem 0;
+    h1 {
+        padding-bottom: 1rem;
+        border-bottom: 1px solid $gainsboro;
+    }
 }
 
 .meta {
