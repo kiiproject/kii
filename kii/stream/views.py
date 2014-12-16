@@ -72,8 +72,11 @@ class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
 
         return self.get_current_stream()
 
+from django.utils.feedgenerator import Atom1Feed
+
 class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
 
+    feed_type = Atom1Feed
     def __call__(self, request, *args, **kwargs):
         self.request = request
         self.owner = self.get_owner(request, **kwargs)

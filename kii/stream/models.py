@@ -39,14 +39,14 @@ class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissio
 
         return super(StreamItemQuerySet, self).readable_by(target).filter(status="pub")
 
-    def public(self):
-        return self.readable_by(get_anonymous_user())
 
 class StreamItemQueryManager(PolymorphicManager, 
     permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
 
     def get_queryset(self):
         return StreamItemQuerySet(self.model, using=self._db)
+    def public(self):
+        return self.readable_by(get_anonymous_user())
 
 class StreamItem(
     PolymorphicModel,    
