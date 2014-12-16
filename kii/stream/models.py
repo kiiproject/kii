@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from polymorphic import PolymorphicModel, PolymorphicManager, PolymorphicQuerySet
+from guardian.shortcuts import get_anonymous_user
 import inspect
 
 from kii.base_models import models as base_models_models
@@ -38,12 +39,14 @@ class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissio
 
         return super(StreamItemQuerySet, self).readable_by(target).filter(status="pub")
 
+    def public(self):
+        return self.readable_by(get_anonymous_user())
+
 class StreamItemQueryManager(PolymorphicManager, 
     permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
+
     def get_queryset(self):
         return StreamItemQuerySet(self.model, using=self._db)
-
-
 
 class StreamItem(
     PolymorphicModel,    

@@ -88,7 +88,7 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
         return self.stream.reverse('detail')
 
     def items(self):
-        return self.stream.children.all().readable_by(self.request.user).order_by("-publication_date")
+        return self.stream.children.public().order_by("-publication_date")
 
     def item_description(self, item):
         return item.filtered_content
