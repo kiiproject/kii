@@ -1,14 +1,10 @@
 {% extends 'glue/base.html' %}
 {% load i18n %}
-{% block main_content %}    
-    
-    
-    {% if owner != request.user %} 
-    <p class="owner-info">{% trans "stream.not_owner" %} <a href="{% url 'kii:stream:index' %}">{% trans "stream.back_to_your_stream" %}</a>
-    {% endif %}
-    <div class="stream" id="stream-{{ current_stream.pk }}">        
+{% block main_content %}        
+    <div class="stream detail" id="stream-{{ current_stream.pk }}">        
         {% block stream %}
-            <h1>{% blocktrans with owner=current_stream.owner %}stream.owner: {{ owner }}{% endblocktrans %}</h1>
+            <h1><a href="{{ current_stream.reverse_detail }}">{{ current_stream.title }}</a></h1>
+            <div class="content">{{ current_stream.filtered_content }}</div>
             <ul class="actions">
                 <li class="subscribe"><a href="{{ current_stream.reverse_feed }}"><i class="fi-rss"></i>{% trans "subscribe" %}</a></li>
             </ul>

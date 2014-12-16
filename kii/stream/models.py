@@ -15,7 +15,9 @@ from kii.hook.models import HookMixin
 
 
 class Stream(
+       
     permission_models.PermissionMixin,
+    HookMixin, 
     base_models_models.TitleMixin,    
     base_models_models.ContentMixin,):
     """

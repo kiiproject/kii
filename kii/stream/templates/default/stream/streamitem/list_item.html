@@ -3,33 +3,29 @@
 <article class="stream-item {{ item.class_name }}">
     <div class="main">
         {% block main %}
-            <h2 class="title">{% block title %}{{ item.filtered_title }}{% endblock %}</h2>
-            <p class="publication">{% blocktrans with date=item.publication_date author=item.owner %}published on {{ date }} by {{ author }}{% endblocktrans %}</p>            
+            <h2 class="title"><a href="{{ item.reverse_detail }}">{% block title %}{{ item.filtered_title }}{% endblock %}</a></h2>
+            <p class="publication">{% blocktrans with stream_link=item.root.reverse_detail date=item.publication_date author=item.owner %}published on {{ date }} by <a href="{{ stream_link }}">{{ author }}</a>{% endblocktrans %}</p>            
             <div class="content">{% block content %}{{ item.filtered_content|safe }}{% endblock %}</div>
         {% endblock %}        
     </div>
-    <div class="secondary">
     {% block secondary %}
-        {% block info %}
-            <div class="info">              
-                 {% block permission %}
-                    {% if request.user.is_authenticated %}
-                        <p class="read"><i class="fi-lock"></i>{{ item.read_permission }}</p>
-                    {% endif %}
+        {% if item.owner == request.user %}
+        <div class="meta">
+            {% block admin %}
+                {% block info %}
+                    <div class="info">              
+                         {% block permission %}
+                            <p class="read"><i class="fi-lock"></i>{{ item.read_permission }}</p>
+                        {% endblock %}
+                        {% block status %}<span class="status">{{ item.get_status_display }}</span>{% endblock %}
+                    </div>
                 {% endblock %}
-                {% if item.owner == request.user %}
-                    {% block status %}<span class="status">{{ item.get_status_display }}</span>{% endblock %}
-                {% endif %}    
-            </div>
-        {% endblock %}
-        {% block admin %}
-            {% if item.owner == request.user %}
-                <ul class="actions admin">
-                    <li class="update"><a href="{{ item.reverse_update }}"><i class="fi-pencil"></i>{% trans "update" %}</a></li>
-                    <li class="delete"><a href="{{ item.reverse_delete }}"><i class="fi-trash"></i>{% trans "delete" %}</a></li>
-                </ul>
-            {% endif %}
-        {% endblock %}
+                    <ul class="actions admin">
+                        <li class="update"><a href="{{ item.reverse_update }}"><i class="fi-pencil"></i>{% trans "update" %}</a></li>
+                        <li class="delete"><a href="{{ item.reverse_delete }}"><i class="fi-trash"></i>{% trans "delete" %}</a></li>
+                    </ul>
+            {% endblock %}
+        </div>
+        {% endif %} 
     {% endblock %}        
-    </div>
 </article>

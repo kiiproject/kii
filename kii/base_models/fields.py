@@ -31,6 +31,7 @@ class Markdown(object):
 
     # rendered is a read only property
     def _get_rendered(self):
+        print("_get_rendered", self.instance)
         if self.instance.__dict__["{0}_markup_type".format(self.field_name)] ==  "markdown":
             return getattr(settings, "MARKDOWN_FUNCTION", markdown.markdown)(self.raw)
         else: 
@@ -40,7 +41,7 @@ class Markdown(object):
 
     # allows display via templates to work without safe filter
     def __unicode__(self):
-        return self.raw
+        return mark_safe(self.rendered)
 
     __str__ = __unicode__
 
