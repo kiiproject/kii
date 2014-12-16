@@ -101,6 +101,12 @@ class TitleMixin(BaseMixin):
 class ContentMixin(BaseMixin):
 
     content = fields.MarkdownField()
+
+    # keep this for Future markupfield compatibility
+    content_markup_type = modles.CharField(max_length=255, default="markdown")
+    _content_rendered = models.TextField()
+
+    
     class Meta:
         abstract = True
 
