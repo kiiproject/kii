@@ -34,7 +34,7 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
 
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
-        items = self.current_stream.children.readable_by(self.request.user).select_related().order_by('-publication_date')
+        items = self.current_stream.children.readable_by(self.request.user).select_related()
         if self.streamitem_class is not None:
             # filter items using given class
             items = items.instance_of(self.streamitem_class)
@@ -88,7 +88,7 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
         return self.stream.reverse('detail')
 
     def items(self):
-        return self.stream.children.public().order_by("-publication_date")
+        return self.stream.children.public()
 
     def item_description(self, item):
         return item.filtered_content

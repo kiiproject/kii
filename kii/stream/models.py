@@ -65,7 +65,7 @@ class StreamItem(
     objects = StreamItemQueryManager()
 
     class Meta(PolymorphicModel.Meta, permission_models.InheritPermissionMixin.Meta):
-        pass
+        ordering = ['-publication_date']
 
     def reverse_delete(self, **kwargs):
         return reverse("kii:stream:streamitem:delete", kwargs={"pk":self.pk})
