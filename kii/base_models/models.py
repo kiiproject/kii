@@ -104,7 +104,7 @@ class ContentMixin(BaseMixin):
 
     # keep this for Future markupfield compatibility
     content_markup_type = models.CharField(max_length=255, default="markdown")
-    _content_rendered = models.TextField()
+    _content_rendered = models.TextField(default="")
 
 
     class Meta:
