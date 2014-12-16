@@ -4,19 +4,14 @@
     
     
     {% if owner != request.user %} 
-    <p class="owner-info">{% trans "stream.now_owner" %} <a href="{% url 'kii:stream:index' %}">{% trans "stream.back_to_your_stream" %}</a>
+    <p class="owner-info">{% trans "stream.not_owner" %} <a href="{% url 'kii:stream:index' %}">{% trans "stream.back_to_your_stream" %}</a>
     {% endif %}
     <div class="stream" id="stream-{{ current_stream.pk }}">        
         {% block stream %}
-            <div class="info">
-                <h3 class="title"><i class="fi-megaphone"></i>{% trans "stream" %}<select class="stream-select">
-                      <option value="{{ current_stream.pk }}"> {{ current_stream.title }} ({% blocktrans with items_count=items.count %}stream.items.count {{ items_count }}{% endblocktrans %})</option>
-                    </select>
-                </h3>
-                <ul class="actions">
-                    <li class="subscribe"><a href="{{ current_stream.reverse_feed }}"><i class="fi-rss"></i>{% trans "subscribe" %}</a></li>
-                </ul>
-            </div>
+            <h1>{% blocktrans with owner=current_stream.owner %}stream.owner: {{ owner }}{% endblocktrans %}</h1>
+            <ul class="actions">
+                <li class="subscribe"><a href="{{ current_stream.reverse_feed }}"><i class="fi-rss"></i>{% trans "subscribe" %}</a></li>
+            </ul>
         {% endblock %}
         {% include 'stream/streamitem/list.html' %}
     </div>
