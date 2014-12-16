@@ -1,13 +1,9 @@
 {% extends 'glue/base.html' %}
 {% load i18n %}
 {% block main_content %}        
-    <div class="stream detail" id="stream-{{ current_stream.pk }}">        
+    <div class="stream detail" id="stream-{{ current_stream.pk }}"> 
         {% block stream %}
-            <h1><a href="{{ current_stream.reverse_detail }}">{{ current_stream.title }}</a></h1>
-            <div class="content">{{ current_stream.filtered_content }}</div>
-            <ul class="actions">
-                <li class="subscribe"><a href="{{ current_stream.reverse_feed }}"><i class="fi-rss"></i>{% trans "subscribe" %}</a></li>
-            </ul>
+            {% include 'stream/stream/info.html' with stream=current_stream %}
         {% endblock %}
         {% include 'stream/streamitem/list.html' %}
     </div>
