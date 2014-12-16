@@ -1,0 +1,8 @@
+{% load i18n %}
+<div class="stream info">
+    <h1><a href="{{ stream.reverse_detail }}">{{ stream.title }}</a></h1>
+    <div class="content">{{ stream.content.rendered }}</div>
+    <ul class="actions">
+        <li class="subscribe"><a href="{{ stream.reverse_feed }}"><i class="fi-rss"></i>{% trans "subscribe" %}</a></li>
+    </ul>
+</div>
