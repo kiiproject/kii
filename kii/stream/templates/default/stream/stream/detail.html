@@ -14,7 +14,7 @@
                     </select>
                 </h3>
                 <ul class="actions">
-                    <li class="subscribe"><i class="fi-rss"></i>{% trans "subscribe" %}</li>
+                    <li class="subscribe"><a href="{{ current_stream.reverse_feed }}"><i class="fi-rss"></i>{% trans "subscribe" %}</a></li>
                 </ul>
             </div>
         {% endblock %}
