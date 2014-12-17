@@ -31,7 +31,7 @@
 
     {% block comments %}
     
-        {% if action == "detail" %}
+        {% if display_comments %}
             <h3>{% trans "comments" %}</h3>
             <ul id="comments">
                 {% for comment in item.comments.public %}

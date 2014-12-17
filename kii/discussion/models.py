@@ -48,7 +48,7 @@ class AnonymousCommenterProfile(models.Model):
 class CommentQuerySet(base_models.models.BaseMixinQuerySet):
     def public(self):
         """Return public comments (not junk or awaiting moderation)"""  
-        return self.filter(status="pub")
+        return self.filter(status="pub").select_related("user", "user_profile")
 
 
 class CommentMixin(
