@@ -1,10 +1,12 @@
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 from django.contrib.syndication.views import Feed
+from django.contrib import messages
 
 from . import models, forms
 from kii.base_models import views
 from kii.permission import views as permission_views
+from kii.discussion import views as discussion_views
 
 
 class StreamContextMixin(object):
@@ -50,8 +52,8 @@ class Update(permission_views.PermissionMixinUpdate):
     success_url = reverse_lazy('kii:stream:index')
 
 
-class Detail(permission_views.PermissionMixinDetail):
-    
+class Detail(discussion_views.CommentFormMixin, permission_views.PermissionMixinDetail):
+    comment_form_class = forms.ItemCommentForm
     model = models.StreamItem
 
 
@@ -107,3 +109,6 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
 
     def item_updateddate(self, item):
         return item.last_modified
+
+class ItemCommentCreate(discussion_views.CommentCreate):
+    form_class = forms.ItemCommentForm

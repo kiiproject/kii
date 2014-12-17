@@ -25,7 +25,9 @@
                 {% endif %}
             {% endblock %}
             {% block header %}
-                {% include "glue/main_navigation.html" %}
+                {% if request.user.is_authenticated %}
+                    {% include "glue/main_navigation.html" %}
+                {% endif %}
             {% endblock %}
             {% block main_content %}{% endblock %}
         </div>

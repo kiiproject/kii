@@ -14,9 +14,7 @@
             {% block admin %}
                 {% block info %}
                     <div class="info">              
-                         {% block permission %}
-                            <p class="read"><i class="fi-lock"></i>{{ item.read_permission }}</p>
-                        {% endblock %}
+                         
                         {% block status %}<span class="status">{{ item.get_status_display }}</span>{% endblock %}
                     </div>
                 {% endblock %}
@@ -27,5 +25,33 @@
             {% endblock %}
         </div>
         {% endif %} 
-    {% endblock %}        
+    {% endblock %}  
+
+    {% block comments %}
+    
+        {% if display_comments %}
+            <h3><i class="fi-comments"></i>{% trans "comments" %}</h3>
+            <ul id="comments">
+                {% for comment in item.comments.public %}
+                    <li class="comment" id="comment-{{ comment.pk }}">
+                        <p class="author">
+                            {% if comment.user == item.owner %}<i class="fi-sheriff-badge" title="{% trans 'author' %}"></i>{% endif %}
+                            {% if comment.profile.url %}
+                            <a href="comment.profile.url">{{ comment.profile.username }}</a>
+                        {% else %}{{ comment.profile.username }}{% endif %} - 
+                        <span class="created date" title="{{ comment.created }}">{% blocktrans with timesince=comment.created|timesince %}{{ timesince }} ago {% endblocktrans %}</span></p>
+                        <div class="content">{{ comment.content.rendered }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if item.discussion_open %}
+                <h3>{% trans "comment.publish" %}</h3>
+                <form action="{{ item.reverse_comment_create }}" class="{{ form.Meta.model.class_name }} {{ action }}" method="POST">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <input type="submit" value="OK" />
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endblock %}      
 </article>

@@ -1,6 +1,10 @@
-from ...user.tests import base
-from kii.tests.test_discussion import models
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+
+from kii.tests.test_discussion import models
+
+from ...user.tests import base
 from ..models import AnonymousCommenterProfile
 
 
@@ -28,9 +32,9 @@ class CommentTestCase(base.UserTestCase):
 
         m = self.G(models.DiscussionModel)
         p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
-        c = models.DiscussionModelComment(subject=m)
+        c = models.DiscussionModelComment(subject=m, content="test")
 
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(ValidationError):
             c.save()
 
         c.user_profile = p
@@ -39,7 +43,7 @@ class CommentTestCase(base.UserTestCase):
     def test_comment_with_both_user_and_user_profile_raise_integrity_error(self):
         m = self.G(models.DiscussionModel)
         p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(ValidationError):
             c1 = models.DiscussionModelComment(user_profile=p, user=self.users[0], subject=m)
             c1.save()
 
@@ -58,21 +62,27 @@ class CommentTestCase(base.UserTestCase):
     def test_cannot_comment_if_dicussion_is_closed(self):
         m = self.G(models.DiscussionModel, discussion_open=False)
         c = models.DiscussionModelComment(subject=m, user=self.users[0])
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
             c.save()
 
-    def test_comment_published_field_default_to_false_for_anonymous_users(self):
+    def test_cannot_comment_with_empty_content(self):
+        m = self.G(models.DiscussionModel)
+        c = models.DiscussionModelComment(user=self.users[0], subject=m, content="")
+        with self.assertRaises(ValidationError):
+            c.save()
+
+    def test_comment_status_default_to_awaiting_moderation_for_anonymous_users(self):
         
         p = self.G(AnonymousCommenterProfile, email="mail@me.com", username="something")
         m = self.G(models.DiscussionModel)
         c = self.G(models.DiscussionModelComment,subject=m, user_profile=p)
 
-        self.assertEqual(c.published, False)
+        self.assertEqual(c.status, "am")
 
-    def test_comment_published_field_default_true_for_authenticated_users(self):
+    def test_comment_status_default_to_published_for_authenticated_users(self):
         
         c = self.G(models.DiscussionModelComment, user=self.users[0])
-        self.assertEqual(c.published, True)
+        self.assertEqual(c.status, "pub")
 
     def test_can_hook_into_detect_junk(self):
 
@@ -80,19 +90,42 @@ class CommentTestCase(base.UserTestCase):
 
         p = self.G(AnonymousCommenterProfile, email="hello@spam", username="something")
         m = self.G(models.DiscussionModel)
-        c = models.DiscussionModelComment(subject=m, user_profile=p)
+        c = models.DiscussionModelComment(subject=m, user_profile=p, content="YOLO")
         c.save()
-        self.assertEqual(c.junk, True)
+        self.assertEqual(c.status, "junk")
         
-    def test_junk_comment_default_to_published_false(self):
 
+    def test_can_post_comment_as_logged_in_user(self):
         m = self.G(models.DiscussionModel)
-        c = self.G(models.DiscussionModelComment,subject=m, junk=True, user=self.users[0])
 
-        self.assertEqual(c.published, False)
+        self.login(self.users[1].username)
 
+        response = self.client.post(m.reverse_comment_create(), {"content": "yolo"})
+        self.assertRedirects(response, m.reverse_detail())
+        self.assertEqual(m.comments.all().first().content.raw, "yolo")
 
+    def test_can_post_comment_as_anonymous_user(self):
+        m = self.G(models.DiscussionModel)
 
+        response = self.client.post(m.reverse_comment_create(), 
+            {"username":"Roger", "email": "test@test.com", "url":"http://example.com", "content": "yolo"})
+        
+        comment = m.comments.all().first()
+        self.assertEqual(comment.profile.username, "Roger")
+        self.assertEqual(comment.profile.email, "test@test.com")
+        self.assertEqual(comment.profile.url, "http://example.com/")
+
+    def test_can_queryset_public_comments(self):
+        profile = AnonymousCommenterProfile(username="test", email="test@test.com")
+        profile.save()
+        m0 = self.G(models.DiscussionModelComment, status="pub", user=self.users[0])
+        m1 = self.G(models.DiscussionModelComment, status="junk", user_profile=profile)
+        m2 = self.G(models.DiscussionModelComment, status="aw", user_profile=profile)
+        m3 = self.G(models.DiscussionModelComment, status="pub", user=self.users[0])
+
+        queryset = models.DiscussionModelComment.objects.public()
+
+        self.assertQuerysetEqualIterable(queryset, [m0, m3])
 
 
 

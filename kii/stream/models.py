@@ -46,7 +46,7 @@ class StreamItemQueryManager(PolymorphicManager,
     permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
 
     def get_queryset(self):
-        return StreamItemQuerySet(self.model, using=self._db)
+        return StreamItemQuerySet(self.model, using=self._db).select_related('owner', 'root')
     def public(self):
         return self.readable_by(get_anonymous_user())
 
@@ -75,9 +75,14 @@ class StreamItem(
     def reverse_detail(self, **kwargs):
         return reverse("kii:user_area:stream:streamitem:detail", kwargs={"pk":self.pk, "username": self.owner.username})
 
-class StreamItemComment(discussion_models.CommentMixin):
+    def reverse_comment_create(self, **kwargs):
+        """Return URL for posting a comment"""
+        return reverse("kii:user_area:stream:streamitem:comment_create", kwargs={"username": self.owner.username, "pk": self.pk})
+
+class ItemComment(discussion_models.CommentMixin):
 
     subject = models.ForeignKey(StreamItem, related_name="comments")
+
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:
