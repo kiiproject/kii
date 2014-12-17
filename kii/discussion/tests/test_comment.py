@@ -64,18 +64,18 @@ class CommentTestCase(base.UserTestCase):
         with self.assertRaises(ValueError):
             c.save()
 
-    def test_comment_published_field_default_to_false_for_anonymous_users(self):
+    def test_comment_status_default_to_awaiting_moderation_for_anonymous_users(self):
         
         p = self.G(AnonymousCommenterProfile, email="mail@me.com", username="something")
         m = self.G(models.DiscussionModel)
         c = self.G(models.DiscussionModelComment,subject=m, user_profile=p)
 
-        self.assertEqual(c.published, False)
+        self.assertEqual(c.status, "am")
 
-    def test_comment_published_field_default_true_for_authenticated_users(self):
+    def test_comment_status_default_to_published_for_authenticated_users(self):
         
         c = self.G(models.DiscussionModelComment, user=self.users[0])
-        self.assertEqual(c.published, True)
+        self.assertEqual(c.status, "pub")
 
     def test_can_hook_into_detect_junk(self):
 
@@ -85,14 +85,8 @@ class CommentTestCase(base.UserTestCase):
         m = self.G(models.DiscussionModel)
         c = models.DiscussionModelComment(subject=m, user_profile=p)
         c.save()
-        self.assertEqual(c.junk, True)
+        self.assertEqual(c.status, "junk")
         
-    def test_junk_comment_default_to_published_false(self):
-
-        m = self.G(models.DiscussionModel)
-        c = self.G(models.DiscussionModelComment,subject=m, junk=True, user=self.users[0])
-
-        self.assertEqual(c.published, False)
 
     def test_can_post_comment_as_logged_in_user(self):
         m = self.G(models.DiscussionModel)

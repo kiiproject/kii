@@ -45,6 +45,8 @@ class AnonymousCommenterProfile(models.Model):
 
 
 class CommentMixin(
+    base_models.models.StatusMixin,
+    base_models.models.TimestampMixin,
     base_models.models.ContentMixin):
 
     """Subclass MUST implement a subject ForeignKey field to the model that is commented"""
@@ -54,15 +56,11 @@ class CommentMixin(
     # for anonymous users
     user_profile = models.ForeignKey(AnonymousCommenterProfile, null=True, default=None, blank=True)
 
-    published = models.BooleanField(default=False)
-
-    # Set this to true for spam comments
-    junk = models.NullBooleanField(default=None)
-
     profile = None
 
     class Meta:
         abstract = True
+        ordering = ['created',]
 
     def __init__(self, *args, **kwargs):
 
@@ -70,8 +68,18 @@ class CommentMixin(
         # create profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
 
-    def save(self, **kwargs):
+        # override default status choices 
 
+        STATUS_CHOICES = (
+            ('pub', _('published')),
+            ('am', _('awaiting moderation')),
+            ('junk', _('junk')),
+        )
+
+        self._meta.get_field('status')._choices = STATUS_CHOICES
+        self._meta.get_field('status').default = "am"
+
+    def save(self, **kwargs):
 
         if self.user is not None and self.user_profile is not None:
             raise IntegrityError(_('You cannot create a comment with both user and user_profile'))
@@ -82,24 +90,25 @@ class CommentMixin(
         if not self.subject.discussion_open:
             raise ValueError(_("You cannot register a comment for model instance that has discussion_open set to False"))
         
-        if self.new and self.junk is None:
+
+        if self.new and self.status == "am":
             results = self.send(comment_detect_junk, instance=self)
             
             # only set junk to True if all receiver think the comment is junk
-            self.junk = all(junk for receiver, junk in results)
+            junk = all(junk for receiver, junk in results)
+            if junk:
+                self.status = "junk"
 
         if self.user is not None:
-            self.published = True
-
-        if self.junk:
-            self.published = False
-
+            self.status = "pub"
 
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
 
         return super(CommentMixin, self).save(**kwargs)
 
+    def is_junk(self):
+        return self.status == "junk"
 
 # signals
 

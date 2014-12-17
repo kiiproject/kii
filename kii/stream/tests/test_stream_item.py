@@ -48,15 +48,6 @@ class TestStreamItem(base.StreamTestCase):
         m2.save()
         self.assertQuerysetEqualIterable(self.streams[0].children.all(), [m1, m2], ordered=False)
 
-
-    def test_comments(self):
-        m = stream.models.StreamItem(title="test", root=self.streams[0])
-        m.save()
-        c = self.G(stream.models.StreamItemComment, subject=m, user=m.owner)
-
-        self.assertEqual(c.published, True)
-        self.assertEqual(c.junk, False)
-
     def test_form_select_user_stream_as_default_stream(self):
         form = forms.StreamItemForm(user=self.users[0])
         self.assertEqual(form.initial['root'], models.Stream.objects.get(title=self.users[0].username))
