@@ -73,20 +73,21 @@ class CommentMixin(
 
     def __init__(self, *args, **kwargs):
 
-        super(CommentMixin, self).__init__(*args, **kwargs)
-        # create profile wrapper for easier attribute accesss
-        self.profile = ProfileWrapper(self)
-
         # override default status choices 
-
         STATUS_CHOICES = (
             ('pub', _('published')),
             ('am', _('awaiting moderation')),
             ('junk', _('junk')),
         )
-
         self._meta.get_field('status')._choices = STATUS_CHOICES
         self._meta.get_field('status').default = "am"
+        
+        super(CommentMixin, self).__init__(*args, **kwargs)
+        # create profile wrapper for easier attribute accesss
+        self.profile = ProfileWrapper(self)
+
+
+
 
         
     def save(self, **kwargs):         
@@ -104,11 +105,12 @@ class CommentMixin(
 
         if self.new and self.status == "am":
             results = self.send(comment_detect_junk, instance=self)
-            
             # only set junk to True if all receiver think the comment is junk
-            junk = all(junk for receiver, junk in results)
-            if junk:
-                self.status = "junk"
+            if results:
+                junk = all(junk for receiver, junk in results)
+                if junk:
+                    self.status = "junk"
+
 
         if self.user is not None:
             self.status = "pub"

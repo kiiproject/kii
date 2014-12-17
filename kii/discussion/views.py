@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 
 from kii.base_models import views
 from . import forms
@@ -21,11 +22,23 @@ class CommentCreate(views.Create):
     def get_success_url(self):
         return self.get_subject().get_absolute_url()
 
+    def form_valid(self, *args, **kwargs):        
+        r = super(CommentCreate, self).form_valid(*args, **kwargs)
+        print(self.object.status)
+        if self.object.status == "pub":
+            message = "comment.publish.success"
+
+        else:
+            message = "comment.publish.success.awaiting_moderation"
+        messages.success(self.request, message)
+        return r
+
+
 class CommentFormMixin(object):
     """pass a comment form for the object to context"""
 
     form_class = forms.CommentForm
-    
+
     def get_context_data(self, **kwargs):
         context = super(CommentFormMixin, self).get_context_data(**kwargs)
 

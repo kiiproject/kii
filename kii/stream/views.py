@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 from django.contrib.syndication.views import Feed
+from django.contrib import messages
 
 from . import models, forms
 from kii.base_models import views
