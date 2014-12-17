@@ -75,9 +75,15 @@ class StreamItem(
     def reverse_detail(self, **kwargs):
         return reverse("kii:user_area:stream:streamitem:detail", kwargs={"pk":self.pk, "username": self.owner.username})
 
+
+    def reverse_post_comment(self, **kwargs):
+        """Return URL for posting a comment"""
+        return reverse("kii:user_area:stream:streamitem:post_comment", kwargs={"username": self.owner.username, "pk": self.pk})
+
 class ItemComment(discussion_models.CommentMixin):
 
     subject = models.ForeignKey(StreamItem, related_name="comments")
+
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:

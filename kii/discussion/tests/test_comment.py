@@ -1,6 +1,9 @@
-from ...user.tests import base
-from kii.tests.test_discussion import models
 from django.db import IntegrityError
+from django.core.urlresolvers import reverse
+
+from kii.tests.test_discussion import models
+
+from ...user.tests import base
 from ..models import AnonymousCommenterProfile
 
 
@@ -91,7 +94,14 @@ class CommentTestCase(base.UserTestCase):
 
         self.assertEqual(c.published, False)
 
+    def test_can_post_comment_as_logged_in_user(self):
+        m = self.G(models.DiscussionModel)
 
+        self.login(self.users[1].username)
+
+        response = self.client.post(m.reverse_comment_create(), {"content": "yolo"})
+        self.assertRedirects(response, m.reverse_detail())
+        self.assertEqual(m.comments.all().first().content.raw, "yolo")
 
 
 

@@ -17,3 +17,14 @@ class TestDiscussion(base.StreamTestCase):
 
         self.assertEqual(si.comments.all().first(), c)
 
+    def test_can_post_comment_as_logged_in_user(self):
+        self.streams[0].assign_perm('read', self.anonymous_user)
+        si = models.StreamItem(root=self.streams[0], title="test", status="pub")
+        si.save()
+
+        url = si.reverse_post_comment()
+
+        self.login(self.users[0].username)
+        response = self.client.post(url, {"content": "yolo"})
+
+        self.assertEqual(si.comments.all().first().content, "yolo")

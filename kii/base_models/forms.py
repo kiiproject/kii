@@ -9,6 +9,7 @@ class BaseMixinForm(ModelForm):
     success_url = "kii:glue:home"
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        self.request = kwargs.pop('request', None)
         super(BaseMixinForm, self).__init__(*args, **kwargs)
 
 

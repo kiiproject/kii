@@ -59,6 +59,7 @@ class ModelFormMixin(ModelTemplateMixin):
         kwargs = super(ModelFormMixin, self).get_form_kwargs(**kwargs)
         if self.form_class is not None and issubclass(self.form_class, forms.BaseMixinForm):
             kwargs['user'] = self.request.user
+            kwargs['request'] = self.request
         return kwargs
 
 class Create(ModelFormMixin, CreateView):
