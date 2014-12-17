@@ -75,7 +75,7 @@ class StreamItem(
     def reverse_detail(self, **kwargs):
         return reverse("kii:user_area:stream:streamitem:detail", kwargs={"pk":self.pk, "username": self.owner.username})
 
-class StreamItemComment(discussion_models.CommentMixin):
+class ItemComment(discussion_models.CommentMixin):
 
     subject = models.ForeignKey(StreamItem, related_name="comments")
 
