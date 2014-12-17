@@ -44,6 +44,12 @@ class AnonymousCommenterProfile(models.Model):
     url = models.URLField()
 
 
+class CommentQuerySet(base_models.models.BaseMixinQuerySet):
+    def public(self):
+        """Return public comments (not junk or awaiting moderation)"""  
+        return self.filter(status="pub")
+
+
 class CommentMixin(
     base_models.models.StatusMixin,
     base_models.models.TimestampMixin,
@@ -58,6 +64,7 @@ class CommentMixin(
 
     profile = None
 
+    objects = CommentQuerySet.as_manager()
     class Meta:
         abstract = True
         ordering = ['created',]
@@ -104,7 +111,6 @@ class CommentMixin(
 
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
-
         return super(CommentMixin, self).save(**kwargs)
 
     def is_junk(self):

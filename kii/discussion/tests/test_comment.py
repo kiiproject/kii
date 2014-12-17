@@ -108,7 +108,17 @@ class CommentTestCase(base.UserTestCase):
         self.assertEqual(comment.profile.email, "test@test.com")
         self.assertEqual(comment.profile.url, "http://example.com/")
 
+    def test_can_queryset_public_comments(self):
+        profile = AnonymousCommenterProfile(username="test", email="test@test.com")
+        profile.save()
+        m0 = self.G(models.DiscussionModelComment, status="pub", user=self.users[0])
+        m1 = self.G(models.DiscussionModelComment, status="junk", user_profile=profile)
+        m2 = self.G(models.DiscussionModelComment, status="aw", user_profile=profile)
+        m3 = self.G(models.DiscussionModelComment, status="pub", user=self.users[0])
 
+        queryset = models.DiscussionModelComment.objects.public()
+
+        self.assertQuerysetEqualIterable(queryset, [m0, m3])
 
 
 
