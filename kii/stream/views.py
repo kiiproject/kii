@@ -51,8 +51,8 @@ class Update(permission_views.PermissionMixinUpdate):
     success_url = reverse_lazy('kii:stream:index')
 
 
-class Detail(permission_views.PermissionMixinDetail):
-    
+class Detail(discussion_views.CommentFormMixin, permission_views.PermissionMixinDetail):
+    comment_form_class = forms.ItemCommentForm
     model = models.StreamItem
 
 

@@ -99,7 +99,6 @@ class CommentMixin(
         if not self.subject.discussion_open:
             raise ValidationError(_("You cannot register a comment for model instance that has discussion_open set to False"))
        
-        print(self.content)
         if not self.content.raw:
             raise ValidationError(_("You cannot post an empty comment"))
 

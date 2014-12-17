@@ -20,3 +20,14 @@ class CommentCreate(views.Create):
 
     def get_success_url(self):
         return self.get_subject().get_absolute_url()
+
+class CommentFormMixin(object):
+    """pass a comment form for the object to context"""
+
+    form_class = forms.CommentForm
+    
+    def get_context_data(self, **kwargs):
+        context = super(CommentFormMixin, self).get_context_data(**kwargs)
+
+        context['comment_form'] = self.comment_form_class(request=self.request, user=self.request.user)
+        return context
