@@ -85,10 +85,6 @@ class CommentMixin(
         super(CommentMixin, self).__init__(*args, **kwargs)
         # create profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
-
-
-
-
         
     def save(self, **kwargs):         
         if self.user is not None and self.user_profile is not None:
@@ -110,7 +106,6 @@ class CommentMixin(
                 junk = all(junk for receiver, junk in results)
                 if junk:
                     self.status = "junk"
-
 
         if self.user is not None:
             self.status = "pub"
