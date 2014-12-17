@@ -30,13 +30,16 @@
     {% block comments %}
     
         {% if display_comments %}
-            <h3>{% trans "comments" %}</h3>
+            <h3><i class="fi-comments"></i>{% trans "comments" %}</h3>
             <ul id="comments">
                 {% for comment in item.comments.public %}
                     <li class="comment" id="comment-{{ comment.pk }}">
-                        <p class="author">{% if comment.profile.url %}
+                        <p class="author">
+                            {% if comment.user == item.owner %}<i class="fi-sheriff-badge" title="{% trans 'author' %}"></i>{% endif %}
+                            {% if comment.profile.url %}
                             <a href="comment.profile.url">{{ comment.profile.username }}</a>
-                        {% else %}{{ comment.profile.username }}{% endif %} - <span class="created date" title="{{ comment.created }}">{% blocktrans with timesince=comment.created|timesince %}{{ timesince }} ago {% endblocktrans %}</span></p>
+                        {% else %}{{ comment.profile.username }}{% endif %} - 
+                        <span class="created date" title="{{ comment.created }}">{% blocktrans with timesince=comment.created|timesince %}{{ timesince }} ago {% endblocktrans %}</span></p>
                         <div class="content">{{ comment.content.rendered }}</div>
                     </li>
                 {% endfor %}
