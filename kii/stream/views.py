@@ -5,7 +5,7 @@ from django.contrib.syndication.views import Feed
 from . import models, forms
 from kii.base_models import views
 from kii.permission import views as permission_views
-# from kii.discussion import views as discussion_views
+from kii.discussion import views as discussion_views
 
 
 class StreamContextMixin(object):
@@ -109,3 +109,5 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
     def item_updateddate(self, item):
         return item.last_modified
 
+class ItemCommentCreate(discussion_views.CommentCreate):
+    form_class = forms.ItemCommentForm

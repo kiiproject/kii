@@ -1,5 +1,7 @@
 from kii.base_models import forms
 from kii.permission.forms import PermissionMixinForm
+from kii.discussion.forms import CommentForm
+
 from . import models
 
 
@@ -42,3 +44,8 @@ class StreamItemForm(
         self.fields['root'].queryset = queryset
         self.initial['root'] = queryset.first()
         self.fields['root'].empty_label = None
+
+class ItemCommentForm(CommentForm):
+
+    class Meta(CommentForm.Meta):
+        model = models.ItemComment
