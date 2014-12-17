@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
 from kii.tests.test_discussion import models
@@ -31,9 +32,9 @@ class CommentTestCase(base.UserTestCase):
 
         m = self.G(models.DiscussionModel)
         p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
-        c = models.DiscussionModelComment(subject=m)
+        c = models.DiscussionModelComment(subject=m, content="test")
 
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(ValidationError):
             c.save()
 
         c.user_profile = p
@@ -42,7 +43,7 @@ class CommentTestCase(base.UserTestCase):
     def test_comment_with_both_user_and_user_profile_raise_integrity_error(self):
         m = self.G(models.DiscussionModel)
         p = self.G(AnonymousCommenterProfile, email="hello@me.com", username="something")
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(ValidationError):
             c1 = models.DiscussionModelComment(user_profile=p, user=self.users[0], subject=m)
             c1.save()
 
@@ -61,7 +62,13 @@ class CommentTestCase(base.UserTestCase):
     def test_cannot_comment_if_dicussion_is_closed(self):
         m = self.G(models.DiscussionModel, discussion_open=False)
         c = models.DiscussionModelComment(subject=m, user=self.users[0])
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValidationError):
+            c.save()
+
+    def test_cannot_comment_with_empty_content(self):
+        m = self.G(models.DiscussionModel)
+        c = models.DiscussionModelComment(user=self.users[0], subject=m, content="")
+        with self.assertRaises(ValidationError):
             c.save()
 
     def test_comment_status_default_to_awaiting_moderation_for_anonymous_users(self):
@@ -83,7 +90,7 @@ class CommentTestCase(base.UserTestCase):
 
         p = self.G(AnonymousCommenterProfile, email="hello@spam", username="something")
         m = self.G(models.DiscussionModel)
-        c = models.DiscussionModelComment(subject=m, user_profile=p)
+        c = models.DiscussionModelComment(subject=m, user_profile=p, content="YOLO")
         c.save()
         self.assertEqual(c.status, "junk")
         

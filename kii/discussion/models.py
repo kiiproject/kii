@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, IntegrityError
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
@@ -65,6 +66,7 @@ class CommentMixin(
     profile = None
 
     objects = CommentQuerySet.as_manager()
+
     class Meta:
         abstract = True
         ordering = ['created',]
@@ -86,17 +88,20 @@ class CommentMixin(
         self._meta.get_field('status')._choices = STATUS_CHOICES
         self._meta.get_field('status').default = "am"
 
-    def save(self, **kwargs):
-
+        
+    def save(self, **kwargs):         
         if self.user is not None and self.user_profile is not None:
-            raise IntegrityError(_('You cannot create a comment with both user and user_profile'))
+            raise ValidationError(_('You cannot create a comment with both user and user_profile'))
             
         if self.user is None and self.user_profile is None:
-            raise IntegrityError(_('Comments require either an authenticated user, either an AnonymousCommenterProfile'))
+            raise ValidationError(_('Comments require either an authenticated user, either an AnonymousCommenterProfile'))
 
         if not self.subject.discussion_open:
-            raise ValueError(_("You cannot register a comment for model instance that has discussion_open set to False"))
-        
+            raise ValidationError(_("You cannot register a comment for model instance that has discussion_open set to False"))
+       
+        print(self.content)
+        if not self.content.raw:
+            raise ValidationError(_("You cannot post an empty comment"))
 
         if self.new and self.status == "am":
             results = self.send(comment_detect_junk, instance=self)
