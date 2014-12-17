@@ -14,9 +14,7 @@
             {% block admin %}
                 {% block info %}
                     <div class="info">              
-                         {% block permission %}
-                            <p class="read"><i class="fi-lock"></i>{{ item.read_permission }}</p>
-                        {% endblock %}
+                         
                         {% block status %}<span class="status">{{ item.get_status_display }}</span>{% endblock %}
                     </div>
                 {% endblock %}
