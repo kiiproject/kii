@@ -46,10 +46,41 @@
     -webkit-box-sizing:border-box;
 }
 
-.top-bar {
-    margin-bottom: 3rem;
+body {
+    @include grid-row;
+    padding: 1rem;
+
+    .main-navigation {
+        @media #{$medium-up} { 
+            padding: 1rem;
+            @include grid-column(2);
+        }
+    }
+    .main-content {
+        @media #{$medium-up} { 
+            padding: 1rem;
+            @include grid-column(10);
+        }
+    }
 }
 
+.main-navigation {
+    section {
+        > h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        > ul {
+            ul {
+                margin: 0.5rem 0;
+                list-style-type: none;
+            }
+            .active {
+                background-color: #EEE;
+            }
+        }
+    }
+}
 code {
     border: none;
     background-color: #EEEEEE;

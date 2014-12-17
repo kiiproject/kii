@@ -1,37 +1,29 @@
 {% load i18n %}
 {% block main_navigation %}
-    <nav class="top-bar" data-topbar role="navigation">
-        <ul class="title-area">
-            <li class="name">
-                <h1><a href="{% url 'kii:stream:index' %}">Kii</a></h1>
-            </li>
-            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-        </ul>
-        <section class="top-bar-section">
-            {% if request.user.is_authenticated %}
-                <ul>
-                    <li class="has-dropdown"><a href="#"><i class="fi-thumbnails"></i>{% trans 'kii.apps' %}</a>
-                        <ul class="dropdown">
-                            {% for app in user_apps %}
-                                {% if app.menu %}
-                                    {% include "glue/menu_node.html" with node=app.menu %}
-                                {% endif %}
-                            {% endfor %}                                
-                        </ul>
-                    </li>
+    <nav class="main-navigation" role="navigation">
+        
+        <h1><a href="{% url 'kii:stream:index' %}">Kii</a></h1>
+        {% if request.user.is_authenticated %}
+            <section class="apps">
+                <h3>{% trans 'kii.apps' %}</h3>                    
+                <ul class="side-nav">
+                    {% for app in user_apps %}
+                        {% if app.menu %}
+                            {% include "glue/menu_node.html" with node=app.menu %}
+                        {% endif %}
+                    {% endfor %}                                
                 </ul>
+            </section>
+        {% endif %}
+        <section class="user-area">
+            <h3>{% trans 'kii.user.menu' %}</h3>
+            <ul class="side-nav">
+            {% if not request.user.is_authenticated %}
+                <li><a href="{% url 'kii:user:login' %}" class="login">{% trans 'login' %}</a></li>
+            {% else %}
+                <li class="logout"><a href="{% url 'kii:user:logout' %}"><i class="fi-x"></i>{% trans 'logout' %}</a></li>
             {% endif %}
-            <ul class="right">
-                {% if not request.user.is_authenticated %}
-                    <li><a href="{% url 'kii:user:login' %}" class="login">{% trans 'login' %}</a></li>
-                {% else %}
-                    <li class="has-dropdown"><a href="#"><i class="fi-torso"></i>{% trans 'kii.user.menu' %}</a>
-                        <ul class="dropdown">
-                            <li class="logout"><a href="{% url 'kii:user:logout' %}"><i class="fi-x"></i>{% trans 'logout' %}</a></li>
-                        </ul>
-                    </li>                        
-                {% endif %}
-            </ul>
+        </ul>
         </section>
     </nav>
 {% endblock %}
