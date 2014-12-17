@@ -9,15 +9,18 @@ from kii import base_models
 from kii.hook import signals
 
 
-
-
-
-
 class ProfileWrapper(object):
     """Utility class to return either user or user_profile attributes on comments"""
 
     def __init__(self, instance):
         self.instance = instance
+
+    @property
+    def url(self):
+
+        if self.instance.user is not None:
+            return None
+        return self.instance.user_profile.url
 
     @property
     def username(self):

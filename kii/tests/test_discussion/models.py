@@ -5,7 +5,6 @@ from kii.discussion import models
 
 
 class DiscussionModel(models.DiscussionMixin):
-    pass
     def reverse_comment_create(self, **kwargs):
         """Return URL for posting a comment"""
         return reverse("kii:test_discussion:discussionmodel:comment_create", kwargs={"pk": self.pk})

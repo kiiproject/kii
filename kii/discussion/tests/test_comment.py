@@ -103,6 +103,18 @@ class CommentTestCase(base.UserTestCase):
         self.assertRedirects(response, m.reverse_detail())
         self.assertEqual(m.comments.all().first().content.raw, "yolo")
 
+    def test_can_post_comment_as_anonymous_user(self):
+        m = self.G(models.DiscussionModel)
+
+        response = self.client.post(m.reverse_comment_create(), 
+            {"username":"Roger", "email": "test@test.com", "url":"http://example.com", "content": "yolo"})
+        
+        comment = m.comments.all().first()
+        self.assertEqual(comment.profile.username, "Roger")
+        self.assertEqual(comment.profile.email, "test@test.com")
+        self.assertEqual(comment.profile.url, "http://example.com/")
+
+
 
 
 
