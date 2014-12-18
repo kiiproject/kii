@@ -3,7 +3,7 @@ from django.http import Http404
 from django.contrib.syndication.views import Feed
 from django.contrib import messages
 
-from . import models, forms
+from .. import models, forms
 from kii.base_models import views
 from kii.permission import views as permission_views
 from kii.discussion import views as discussion_views

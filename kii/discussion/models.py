@@ -87,29 +87,30 @@ class CommentMixin(
         # create profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
         
-    def save(self, **kwargs):         
-        if self.user is not None and self.user_profile is not None:
-            raise ValidationError(_('You cannot create a comment with both user and user_profile'))
-            
-        if self.user is None and self.user_profile is None:
-            raise ValidationError(_('Comments require either an authenticated user, either an AnonymousCommenterProfile'))
+    def save(self, **kwargs): 
+        if self.new:       
+            if self.user is not None and self.user_profile is not None:
+                raise ValidationError(_('You cannot create a comment with both user and user_profile'))
+                
+            if self.user is None and self.user_profile is None:
+                raise ValidationError(_('Comments require either an authenticated user, either an AnonymousCommenterProfile'))
 
-        if not self.subject.discussion_open:
-            raise ValidationError(_("You cannot register a comment for model instance that has discussion_open set to False"))
-       
-        if not self.content.raw:
-            raise ValidationError(_("You cannot post an empty comment"))
+            if not self.subject.discussion_open:
+                raise ValidationError(_("You cannot register a comment for model instance that has discussion_open set to False"))
+           
+            if not self.content.raw:
+                raise ValidationError(_("You cannot post an empty comment"))
 
-        if self.new and self.status == "am":
-            results = self.send(comment_detect_junk, instance=self)
-            # only set junk to True if all receiver think the comment is junk
-            if results:
-                junk = all(junk for receiver, junk in results)
-                if junk:
-                    self.status = "junk"
+            if self.status == "am":
+                results = self.send(comment_detect_junk, instance=self)
+                # only set junk to True if all receiver think the comment is junk
+                if results:
+                    junk = all(junk for receiver, junk in results)
+                    if junk:
+                        self.status = "junk"
 
-        if self.user is not None:
-            self.status = "pub"
+            if self.user is not None:
+                self.status = "pub"
 
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)

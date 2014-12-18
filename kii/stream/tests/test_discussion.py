@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+import json
 
 from kii.discussion.models import AnonymousCommenterProfile
 from . import base
@@ -78,19 +79,17 @@ class TestDiscussion(base.StreamTestCase):
         self.assertQuerysetEqualIterable(response.context['object_list'], [c0, c1])
         self.assertEqual(response.context['can_moderate'], True)
 
-    def test_set_status_view_require_stream_owner(self):
+    def test_patch_comment_view_require_stream_owner(self):
         s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
         si0 = self.G(models.StreamItem, root=s)
-        c0 = self.G(models.ItemComment, subject=si0, user=self.users[0])
-
-        url = reverse('kii:user_area:stream:itemcomment:set_status', 
-            kwargs={"username": s.owner.username, "pk": c0.pk})+"?status=pub"
-
-        response = self.client.get(url)
+        c0 = self.G(models.ItemComment, subject=si0, user=self.users[0], content="Hello")
+        url = reverse('kii:api:stream:itemcomment:update', kwargs={"pk": c0.pk})
+        response = self.client.patch(url)
         self.assertEqual(response.status_code, 403)
 
         self.login(self.users[1].username)
-        response = self.client.get(url)
+        response = self.client.patch(url, json.dumps({"status": "dis"}), content_type='application/json')
 
+        self.assertEqual(response.status_code, 200)
         c = models.ItemComment.objects.get(pk=c0.pk)
-        self.assertEqual(c.status, "pub")
+        self.assertEqual(c.status, "dis")
