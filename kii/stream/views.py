@@ -17,6 +17,7 @@ class StreamContextMixin(views.OwnerMixin):
     def get_current_stream(self):
         if self.current_stream is None:
             try:
+                self.owner = self.get_owner(self.request, **self.kwargs)
                 self.current_stream = models.Stream.objects.get(owner=self.owner.pk, title=self.owner.username)
                 return self.current_stream
             except models.Stream.DoesNotExist:
@@ -84,7 +85,8 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
 
     feed_type = Atom1Feed
     def __call__(self, request, *args, **kwargs):
-        self.request = request
+        self.setup(request, *args, **kwargs)
+        self.pre_dispatch(request, *args, **kwargs)
         self.owner = self.get_owner(request, **kwargs)
         self.stream = self.get_current_stream()
 
