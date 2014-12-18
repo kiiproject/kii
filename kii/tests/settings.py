@@ -5,6 +5,7 @@ import kii
 TEST_APPS = (
     'kii.tests.test_base_models',
     'kii.tests.test_user',
+    'kii.tests.test_api0',
     'kii.tests.test_app',
     'kii.tests.test_app1',
     'kii.tests.test_app2',
