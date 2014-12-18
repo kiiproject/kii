@@ -4,18 +4,16 @@
     <nav class="main-navigation" role="navigation">
         
         <h1><a href="{% url 'kii:stream:index' %}">Kii</a></h1>
-        {% if request.user.is_authenticated %}
-            <section class="apps">
-                <h3>{% trans 'kii.apps' %}</h3>                    
-                <ul class="side-nav">
-                    {% for app in user_apps %}
-                        {% if app.menu %}
-                            {% include "glue/menu_node.html" with node=app.menu %}
-                        {% endif %}
-                    {% endfor %}                                
-                </ul>
-            </section>
-        {% endif %}
+        <section class="apps">
+            <h3>{% trans 'kii.apps' %}</h3>                    
+            <ul class="side-nav">
+                {% for app in user_apps %}
+                    {% if app.menu %}
+                        {% include "glue/menu_node.html" with node=app.menu %}
+                    {% endif %}
+                {% endfor %}                                
+            </ul>
+        </section>
         <section class="user-area">
             <h3>{% trans 'kii.user.menu' %}</h3>
             <ul class="side-nav">
