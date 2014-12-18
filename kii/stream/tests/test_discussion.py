@@ -42,3 +42,36 @@ class TestDiscussion(base.StreamTestCase):
         comment = si.comments.all().first()
         self.assertEqual(comment.profile.username, "Edgar")
         self.assertEqual(comment.profile.email, "contact@edgar.com")
+
+    def test_moderation_page_require_to_be_stream_owner(self):
+
+        s = models.Stream.objects.get(title=self.users[0].username, owner=self.users[0])
+        url = reverse('kii:user_area:stream:itemcomment:moderation', kwargs={"username": self.users[0].username})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 404)
+
+        self.login(self.users[0].username)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_moderation_return_correct_queryset(self):
+        s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
+        si0 = self.G(models.StreamItem, root=s)
+        si1 = self.G(models.StreamItem)
+
+        # comments 
+        c0 = self.G(models.ItemComment, subject=si0, user=self.users[0])
+        c1 = self.G(models.ItemComment, subject=si0, user=self.users[0])
+        c2 = self.G(models.ItemComment, subject=si1, user=self.users[0])
+        c3 = self.G(models.ItemComment, subject=si1, user=self.users[0])
+
+        url = reverse('kii:user_area:stream:itemcomment:moderation', kwargs={"username": self.users[1].username})
+        self.login(self.users[1].username)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertQuerysetEqualIterable(response.context['object_list'], [c0, c1])
+        self.assertEqual(response.context['can_moderate'], True)
