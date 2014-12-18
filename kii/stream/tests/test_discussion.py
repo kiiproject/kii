@@ -33,7 +33,7 @@ class TestDiscussion(base.StreamTestCase):
 
     def test_can_post_comment_as_anonymous_user(self):
         self.streams[0].assign_perm('read', self.anonymous_user)
-        si = models.StreamItem(root=self.streams[0], title="test", status="pub")
+        si = models.StreamItem(root=self.streams[0], title="test", status="published")
         si.save()
 
         url = si.reverse_comment_create()
@@ -88,8 +88,8 @@ class TestDiscussion(base.StreamTestCase):
         self.assertEqual(response.status_code, 403)
 
         self.login(self.users[1].username)
-        response = self.client.patch(url, json.dumps({"status": "dis"}), content_type='application/json')
+        response = self.client.patch(url, json.dumps({"status": "disapproved"}), content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
         c = models.ItemComment.objects.get(pk=c0.pk)
-        self.assertEqual(c.status, "dis")
+        self.assertEqual(c.status, "disapproved")

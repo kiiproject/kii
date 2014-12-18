@@ -143,7 +143,7 @@ class ItemCommentModeration(ItemCommentList):
     def get_queryset(self, **kwargs):
         queryset = self.model.objects
 
-        return queryset.filter(subject__root=self.current_stream).filter(status="am")
+        return queryset.filter(subject__root=self.current_stream).filter(status="awaiting_moderation")
 
     def get_context_data(self, **kwargs):
         context = super(ItemCommentModeration, self).get_context_data(**kwargs)

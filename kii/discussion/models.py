@@ -48,7 +48,7 @@ class AnonymousCommenterProfile(models.Model):
 class CommentQuerySet(base_models.models.BaseMixinQuerySet):
     def public(self):
         """Return public comments (not junk or awaiting moderation)"""  
-        return self.filter(status="pub").select_related("user", "user_profile")
+        return self.filter(status="published").select_related("user", "user_profile")
 
 
 class CommentMixin(
@@ -75,13 +75,13 @@ class CommentMixin(
 
         # override default status choices 
         STATUS_CHOICES = (
-            ('pub', _('published')),
-            ('am', _('awaiting moderation')),
-            ('dis', _('disapproved')),
+            ('published', _('published')),
+            ('awaiting_moderation', _('awaiting moderation')),
+            ('disapproved', _('disapproved')),
             ('junk', _('junk')),
         )
         self._meta.get_field('status')._choices = STATUS_CHOICES
-        self._meta.get_field('status').default = "am"
+        self._meta.get_field('status').default = "awaiting_moderation"
         
         super(CommentMixin, self).__init__(*args, **kwargs)
         # create profile wrapper for easier attribute accesss
@@ -101,7 +101,7 @@ class CommentMixin(
             if not self.content.raw:
                 raise ValidationError(_("You cannot post an empty comment"))
 
-            if self.status == "am":
+            if self.status == "awaiting_moderation":
                 results = self.send(comment_detect_junk, instance=self)
                 # only set junk to True if all receiver think the comment is junk
                 if results:
@@ -110,7 +110,7 @@ class CommentMixin(
                         self.status = "junk"
 
             if self.user is not None:
-                self.status = "pub"
+                self.status = "published"
 
         # update profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
