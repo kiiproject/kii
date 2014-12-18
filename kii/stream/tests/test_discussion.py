@@ -11,7 +11,7 @@ class TestDiscussion(base.StreamTestCase):
     
     def test_can_attach_comments_to_stream_items(self):
 
-        si = models.StreamItem(root=self.streams[0], title="test", status="pub")
+        si = models.StreamItem(root=self.streams[0], title="test", status="published")
         si.save()
 
         c = models.ItemComment(subject=si, user=self.users[1], content="Hello world")
@@ -21,7 +21,7 @@ class TestDiscussion(base.StreamTestCase):
 
     def test_can_post_comment_as_logged_in_user(self):
         self.streams[0].assign_perm('read', self.anonymous_user)
-        si = models.StreamItem(root=self.streams[0], title="test", status="pub")
+        si = models.StreamItem(root=self.streams[0], title="test", status="published")
         si.save()
 
         url = si.reverse_comment_create()

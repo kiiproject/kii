@@ -133,7 +133,8 @@ class ItemCommentList(StreamContextMixin, views.MultipleObjectPermissionMixin, v
 class ItemCommentModeration(ItemCommentList):
 
     required_permission = True
-
+    template_name = "stream/itemcomment/moderation.html"
+    
     def has_required_permission(self, request, *args, **kwargs):
         owner = self.get_owner(request, *args, **kwargs)
         stream = self.get_current_stream()

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>{% load i18n static %}
+<html {% block html_attributes %}{% endblock %}>{% load i18n static %}
     <head>
         <title>{% block title %}{{ title }}{% endblock %}</title>
         <meta charset="utf-8" />
