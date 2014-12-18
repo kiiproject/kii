@@ -1,0 +1,19 @@
+{% load i18n %}
+<li class="comment" id="comment-{{ comment.pk }}">
+    <p class="author">
+        {% if comment.user and comment.user == subject.owner %}<i class="fi-crown" title="{% trans 'author' %}"></i>{% endif %}
+        {% if comment.profile.url %}
+        <a href="{{ comment.profile.url }}">{{ comment.profile.username }}</a>
+    {% else %}{{ comment.profile.username }}{% endif %} - 
+    <span class="created date" title="{{ comment.created }}">{% blocktrans with timesince=comment.created|timesince %}{{ timesince }} ago {% endblocktrans %}</span></p>
+    {% if can_moderate and comment.status != "pub" %}
+        <p class="status">{{ comment.get_status_display }}</p>
+    {% endif %}
+    <div class="content">{{ comment.content.rendered }}</div>
+
+    {% if can_moderate %}
+        <ul class="actions">
+            
+        </ul>
+    {% endif %}
+</li>

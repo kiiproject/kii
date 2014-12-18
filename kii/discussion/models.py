@@ -77,6 +77,7 @@ class CommentMixin(
         STATUS_CHOICES = (
             ('pub', _('published')),
             ('am', _('awaiting moderation')),
+            ('dis', _('disapproved')),
             ('junk', _('junk')),
         )
         self._meta.get_field('status')._choices = STATUS_CHOICES
