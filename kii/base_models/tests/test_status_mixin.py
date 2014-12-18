@@ -9,7 +9,7 @@ class TestStatusMixin(base.BaseTestCase):
     
     def test_setting_status_to_published_set_publication_date(self):
 
-        m = self.G(test_base_models.models.StatusModel)
+        m = self.G(test_base_models.models.StatusModel, status="dra")
 
         self.assertEqual(m.publication_date, None)
 
