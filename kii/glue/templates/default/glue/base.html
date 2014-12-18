@@ -13,11 +13,9 @@
             <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/foundation/foundation.alert.js' %}"></script>
         {% endblock %}
     </head>
-    <body class="{% if request.user.is_authenticated %}logged-in{% endif %} "> 
+    <body class="{% if request.user.is_authenticated %}logged-in show-nav{% endif %} "> 
         {% block header %}
-            {% if request.user.is_authenticated %}
-                {% include "glue/main_navigation.html" %}
-            {% endif %}
+            {% include "glue/main_navigation.html" %}
         {% endblock %}
         <div class="main-content">
             {% block messages %}       
