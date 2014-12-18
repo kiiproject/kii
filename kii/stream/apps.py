@@ -13,6 +13,7 @@ class App(core.App):
             route="kii:stream:index", 
             label=_("stream"),
             icon="fi-list",
+            require_authentication=False,
             children = [
                 menu.MenuNode(
                     route="kii:stream:stream:update",
