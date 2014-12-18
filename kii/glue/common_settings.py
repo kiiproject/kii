@@ -21,7 +21,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'kii.glue.middleware.SpacelessMiddleware',
+    #'kii.glue.middleware.SpacelessMiddleware',
 )
 
 INSTALLED_APPS = (
