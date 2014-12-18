@@ -11,3 +11,6 @@ class ItemCommentUpdate(generics.UpdateAPIView):
 
     permission_classes = (permissions.IsCommentModerator,)
 
+    def dispatch(self, *args, **kwargs):
+        print(args, kwargs)
+        return super(ItemCommentUpdate, self).dispatch(*args, **kwargs)

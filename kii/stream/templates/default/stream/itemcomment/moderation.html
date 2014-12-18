@@ -2,7 +2,7 @@
 {% load base_models static %}
 
 {% block html_attributes %}
-    {{ block.super }} ng-app="tuto"
+    {{ block.super }} ng-app="moderationApp"
 {% endblock %}
 
 {% block head_js %}
@@ -16,15 +16,10 @@
 {% endblock %}
 
 {% block main_content %}
-    <div ng-controller="HelloCtrl">test
-        <h1>[[ hello ]]</h1>
-    </div>
-    <ul class="comments">
+    <ul class="comments" ng-controller="commentCtrl">
         
     {% for comment in object_list %}
-        {% with list_item_template=comment|list_item_template %}
-            {% include list_item_template with comment=comment %}
-        {% endwith %}
+        {% include "stream/itemcomment/list_item_moderation.html" with comment=comment %}
     {% endfor %}
     </ul>
 {% endblock %}
