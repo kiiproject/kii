@@ -13,6 +13,7 @@ stream_patterns = patterns('',
 )
 
 itemcomment_patterns = patterns('',
+    url(r'^$', views.ItemCommentList.as_view(), name='list'),
     url(r'^moderation$', views.ItemCommentModeration.as_view(), name='moderation'),
 )
 
