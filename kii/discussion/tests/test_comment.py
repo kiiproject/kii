@@ -127,6 +127,3 @@ class CommentTestCase(base.UserTestCase):
 
         self.assertQuerysetEqualIterable(queryset, [m0, m3])
 
-
-
-

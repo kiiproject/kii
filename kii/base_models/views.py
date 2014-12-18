@@ -90,17 +90,17 @@ class List(ModelTemplateMixin, ListView):
 class OwnerMixin(object):
     """Deduce owner of given page/elements from url or logged in user"""
 
-    def dispatch(self, request, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         
-        owner = self.get_owner(request, **kwargs)
+        owner = self.get_owner(request, *args, **kwargs)
 
         if owner is None:
             login = reverse('kii:user:login') + "?next=" + request.path
             return redirect(login)
         
-        return super(OwnerMixin, self).dispatch(request, **kwargs) 
+        return super(OwnerMixin, self).dispatch(request, *args, **kwargs) 
 
-    def get_owner(self, request, **kwargs):
+    def get_owner(self, request, *args, **kwargs):
         owner_name = kwargs.get('username', None)
         if owner_name is None:
 
@@ -122,30 +122,41 @@ class OwnerMixin(object):
         return context
 
 
+class PermissionMixin(object):
 
+    required_permission = None
 
-class RequireBasePermissionMixin(object):
-    """Implements basic pluggable permission logic on single object views"""
-
-    required_permission = "owner"
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        if self.required_permission is not None and not self.has_required_permission(request.user):
+    def dispatch(self, request, *args, **kwargs):
+        if self.required_permission is not None and not self.has_required_permission(request, *args, **kwargs):
             return self.permission_denied()
-        
-        return super(RequireBasePermissionMixin, self).get(request, *args, **kwargs)
 
-    def has_required_permission(self, user):      
+        return super(PermissionMixin, self).dispatch(request, *args, **kwargs)        
+
+    def has_required_permission(self, request, *args, **kwargs):      
         return False
     
     def permission_denied(self):
         raise Http404
 
-class RequireOwnerMixin(RequireBasePermissionMixin):
-    def has_required_permission(self, user):  
-        return self.object.owned_by(user)
+
+class SingleObjectPermissionMixin(PermissionMixin):
+    """Implements basic pluggable permission logic on single object views"""
+    
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        
+        return super(SingleObjectPermissionMixin, self).get(request, *args, **kwargs)
+
+
+class MultipleObjectPermissionMixin(PermissionMixin):
+
+    pass
+
+class RequireOwnerMixin(SingleObjectPermissionMixin):
+    required_permission = "owner"
+
+    def has_required_permission(self, request, *args, **kwargs):  
+        return self.object.owned_by(request.user)
 
 class OwnerMixinDetail(RequireOwnerMixin, OwnerMixin, Detail):
     pass
