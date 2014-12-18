@@ -120,10 +120,19 @@ class ItemCommentCreate(discussion_views.CommentCreate):
     form_class = forms.ItemCommentForm
 
 
-class ItemCommentModeration(StreamContextMixin, views.MultipleObjectPermissionMixin, views.List):
+class ItemCommentList(StreamContextMixin, views.MultipleObjectPermissionMixin, views.List):
+    
+    required_permission = None
+    model = models.ItemComment
+
+    def get_queryset(self, **kwargs):
+        queryset = self.model.objects
+        stream = self.get_current_stream()
+        return queryset.filter(subject__root=stream).public()
+        
+class ItemCommentModeration(ItemCommentList):
 
     required_permission = True
-    model = models.ItemComment
 
     def has_required_permission(self, request, *args, **kwargs):
         owner = self.get_owner(request, *args, **kwargs)
@@ -132,9 +141,9 @@ class ItemCommentModeration(StreamContextMixin, views.MultipleObjectPermissionMi
         return stream.owner.pk == request.user.pk
 
     def get_queryset(self, **kwargs):
-        queryset = super(ItemCommentModeration, self).get_queryset(**kwargs)
+        queryset = self.model.objects
 
-        return queryset.filter(subject__root=self.current_stream)
+        return queryset.filter(subject__root=self.current_stream).exclude(status="pub")
 
     def get_context_data(self, **kwargs):
         context = super(ItemCommentModeration, self).get_context_data(**kwargs)
