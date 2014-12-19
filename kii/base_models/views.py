@@ -1,6 +1,7 @@
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.conf import settings
@@ -8,7 +9,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django_filters.views import FilterMixin
-
 from kii.app.views import AppMixin
 from . import forms
 
@@ -31,6 +31,19 @@ class ModelTemplateMixin(AppMixin):
 
         return self.model.get_template_names(self.action)
 
+    def get_model(self):
+        return self.model
+
+    def get_title_components(self):
+        components = super(ModelTemplateMixin, self).get_title_components()
+        return (self.get_action_title(), self.get_model_title(),) + components
+
+    def get_model_title(self):
+        return self.get_model()._meta.verbose_name_plural
+
+    def get_action_title(self):
+        return ""
+
     def get_context_data(self, **kwargs):
 
         context = super(ModelTemplateMixin, self).get_context_data(**kwargs)
@@ -40,6 +53,9 @@ class ModelTemplateMixin(AppMixin):
 
 
 class ModelFormMixin(ModelTemplateMixin):
+
+    def get_page_title(self):
+        return super(ModelFormMixin, self).get_page_title() or self.get_action_title()
 
     form_template = "base_models/modelform.html"
     @classmethod
@@ -62,12 +78,18 @@ class ModelFormMixin(ModelTemplateMixin):
             kwargs['request'] = self.request
         return kwargs
 
+
 class Create(ModelFormMixin, CreateView):
     action = "create"
 
+    def get_action_title(self):
+        return _('model.create') + " - " + self.get_model()._meta.verbose_name
 
 class Update(ModelFormMixin, UpdateView):
     action = "update"
+
+    def get_action_title(self):
+        return _('model.update') + " - " + self.get_model()._meta.verbose_name
 
 class Delete(ModelTemplateMixin, DeleteView):
     action = "delete"
@@ -76,9 +98,14 @@ class Delete(ModelTemplateMixin, DeleteView):
     def get_success_url(self):
         return reverse("kii:glue:home")
 
+    def get_action_title(self):
+        return _('model.delete') + " - " + self.get_model()._meta.verbose_name
 
 class Detail(ModelTemplateMixin, DetailView):
     action = "detail"
+
+    def get_model(self):
+        return self.object.__class__
 
     def get_context_object_name(self, obj):
         return "object"

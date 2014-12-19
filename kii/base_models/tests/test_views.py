@@ -74,3 +74,9 @@ class TestViews(base.UserTestCase):
         response = self.client.get(url+"?status=pub")
 
         self.assertQuerysetEqualIterable(response.context['object_list'], [i0, i2], ordered=False)
+
+    def test_model_template_view_suffix_with_model_name(self):
+        url = reverse('kii:test_base_models:statusmodel:list')
+
+        response = self.client.get(url)
+        self.assertIn("status model", response.context['page_title'])

@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
 from django.contrib.syndication.views import Feed
 from django.contrib import messages
+from django.utils.translation import ugettext_lazy as _
 
 from .. import models, forms, filterset
 from kii.base_models import views
@@ -35,6 +36,12 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
 
     template_name = "stream/stream/detail.html"
     streamitem_class = None
+    
+    def get_page_title(self):
+        return self.object.title
+
+    def get_model_title(self):
+        return ""
 
     def get_object(self):
         return self.get_current_stream()
@@ -74,7 +81,7 @@ class List(permission_views.PermissionMixinList):
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
     model = models.Stream
     form_class = forms.StreamForm
-
+    
     def get_object(self):
 
         return self.get_current_stream()
@@ -124,7 +131,7 @@ class ItemCommentList(StreamContextMixin, views.MultipleObjectPermissionMixin, v
     
     required_permission = None
     model = models.ItemComment
-
+    page_title = _("comment.list")
     def get_queryset(self, **kwargs):
         queryset = super(ItemCommentList, self).get_queryset()
         stream = self.get_current_stream()
@@ -135,7 +142,7 @@ class ItemCommentModeration(StreamContextMixin, views.MultipleObjectPermissionMi
     model = models.ItemComment
     required_permission = True
     template_name = "stream/itemcomment/moderation.html"
-    
+    page_title = _("comment.moderation")
     filterset_class = filterset.CommentFilterSet
 
     def get_filterset_kwargs(self):

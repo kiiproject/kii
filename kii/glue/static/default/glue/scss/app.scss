@@ -83,6 +83,12 @@ body {
     right: 1rem;
     padding: 0.5rem 1rem;
 }
+
+.main-content {
+    > header {
+        margin-bottom: 2rem;
+    }
+}
 .main-navigation {
     section {
         > h3 {
