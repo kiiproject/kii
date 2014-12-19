@@ -1,10 +1,11 @@
 {% load base_models i18n %}
 
+{% with comments=item.comments.public %}
 <article class="stream-item {{ item.class_name }}">
     <div class="main">
         {% block main %}
             <h2 class="title"><a href="{{ item.reverse_detail }}">{% block title %}{{ item.filtered_title }}{% endblock %}</a></h2>
-            <p class="publication">{% blocktrans with stream_link=item.root.reverse_detail date=item.publication_date author=item.owner %}published on {{ date }} by <a href="{{ stream_link }}">{{ author }}</a>{% endblocktrans %}</p>            
+            <p class="publication">{% blocktrans with stream_link=item.root.reverse_detail date=item.publication_date author=item.owner %}published on {{ date }} by <a href="{{ stream_link }}">{{ author }}</a>{% endblocktrans %}</p>{% if display_comments %}<a href="{{ item.reverse_detail }}#comments"><i class="fi-comment"></i>{{ comments|length }}</a>{% endif %}          
             <div class="content">{% block content %}{{ item.filtered_content }}{% endblock %}</div>
         {% endblock %}        
     </div>
@@ -30,22 +31,23 @@
     {% block comments %}
     
         {% if display_comments %}
-            <h3><i class="fi-comments"></i>{% trans "comments" %}</h3>
-            <ul id="comments">
-                {% for comment in item.comments.public %}
-                    {% with comment_item_template=comment|list_item_template %}
-                        {% include comment_item_template with comment=comment subject=item %}
-                    {% endwith %}                    
-                {% endfor %}
-            </ul>
             {% if item.discussion_open %}
-                <h3>{% trans "comment.publish" %}</h3>
-                <form action="{{ item.reverse_comment_create }}" class="{{ form.Meta.model.class_name }} {{ action }}" method="POST">
+                <h3 id="comment-post">{% trans "comment.publish" %}</h3>
+                <form action="{{ item.reverse_comment_create }}" class="{{ comment_form.Meta.model.class_name }}" method="POST">
                     {% csrf_token %}
                     {{ comment_form.as_p }}
                     <input type="submit" value="OK" />
                 </form>
             {% endif %}
+            <h3><i class="fi-comments"></i>{% trans "comments" %}</h3>
+            <ul id="comments">
+                {% for comment in comments %}
+                    {% with comment_item_template=comment|list_item_template %}
+                        {% include comment_item_template with comment=comment subject=item %}
+                    {% endwith %}                    
+                {% endfor %}
+            </ul>
         {% endif %}
     {% endblock %}      
 </article>
+{% endwith %}

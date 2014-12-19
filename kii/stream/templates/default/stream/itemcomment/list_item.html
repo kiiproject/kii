@@ -3,7 +3,7 @@
     <p class="author">
         {% if comment.user and comment.user == subject.owner %}<i class="fi-crown" title="{% trans 'author' %}"></i>{% endif %}
         {% if comment.profile.url %}
-        <a href="{{ comment.profile.url }}">{{ comment.profile.username }}</a>
+        <a target="_blank" href="{{ comment.profile.url }}">{{ comment.profile.username }}</a>
     {% else %}{{ comment.profile.username }}{% endif %} - 
     <span class="created date" title="{{ comment.created }}">{% blocktrans with timesince=comment.created|timesince %}{{ timesince }} ago {% endblocktrans %}</span></p>
 

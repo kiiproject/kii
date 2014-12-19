@@ -145,8 +145,7 @@ i[class^="fi-"] {
 }
 
 .actions {
-    list-style-type: none;
-    margin-left: 0
+    @include inline-list;
 }
 
 .date {
@@ -210,7 +209,7 @@ article.stream-item {
 
 // comments 
 
-.comments {
+.comments, #comments {
     list-style-type: none;
     margin-left: 0;
 }

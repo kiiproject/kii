@@ -26,7 +26,6 @@ class CommentCreate(views.Create):
         r = super(CommentCreate, self).form_valid(*args, **kwargs)
         if self.object.status == "published":
             message = "comment.publish.success"
-
         else:
             message = "comment.publish.success.awaiting_moderation"
         messages.success(self.request, message)
