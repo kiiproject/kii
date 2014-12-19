@@ -94,10 +94,10 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
             filterset_kwargs = self.get_filterset_kwargs()
             filterset_kwargs['queryset'] = queryset
             self.filterset = self.filterset_class(**filterset_kwargs)
-            print(filterset_kwargs, queryset, queryset.filter(status="awaiting_moderation"), self.filterset.qs)
             queryset = self.filterset.qs
 
         return queryset
+        
     def get_filterset_kwargs(self):
         return {'data': self.request.GET or {}}
 
