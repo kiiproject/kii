@@ -1,5 +1,5 @@
 {% load i18n %}
-<li class="comment" id="comment-{{ comment.pk }}">
+<li class="comment" id="comment-{{ comment.pk }}" >
     <p class="author">        
         {% if comment.profile.url %}
         <a href="{{ comment.profile.url }}">{{ comment.profile.username }}</a>

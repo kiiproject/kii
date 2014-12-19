@@ -15,7 +15,7 @@
     <script type="text/javascript" src="{% static 'default/stream/js/moderation.js' %}"></script>
 {% endblock %}
 
-{% block main_content %}
+{% block objects %}
     <ul class="comments" ng-controller="commentCtrl">
         
     {% for comment in object_list %}

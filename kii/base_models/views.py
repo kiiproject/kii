@@ -87,7 +87,7 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
     action = "list"
 
     filterset_class = None
-
+    filterset = None
     def get_queryset(self):
         queryset = super(List, self).get_queryset()
         if self.filterset_class is not None:
@@ -97,9 +97,17 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
             queryset = self.filterset.qs
 
         return queryset
-        
+
     def get_filterset_kwargs(self):
         return {'data': self.request.GET or {}}
+
+    def get_context_data(self, **kwargs):
+        context = super(List, self).get_context_data(**kwargs)
+        if self.filterset is not None:
+            context['filterset'] = self.filterset
+            context['show_filters'] = True
+        return context
+
 
 class OwnerMixin(AppMixin):
     """Deduce owner of given page/elements from url or logged in user"""

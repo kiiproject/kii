@@ -20,6 +20,7 @@ app.config(['$httpProvider', '$interpolateProvider',
 // Création d'un controller, et attachement d'une variable au scope.
 app.controller('commentCtrl', function($scope, $http){
     // Attachement d'une donnée au scope
+
     $scope.setStatus = function(event, status) {
         event.preventDefault();
         var url = event.target.attributes.href.value;
@@ -31,7 +32,7 @@ app.controller('commentCtrl', function($scope, $http){
           success(function(data, status, headers, config) {
             // this callback will be called asynchronously
             // when the response is available
-            console.log(data);
+            angular.element(event.target).closest('.comment').hide();
           }).
           error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
