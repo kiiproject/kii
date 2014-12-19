@@ -146,6 +146,10 @@ i[class^="fi-"] {
 
 .actions {
     @include inline-list;
+    margin: 1rem 0 0;
+    li {
+        margin:0 1rem 0 0;
+    }
 }
 
 .date {
