@@ -34,8 +34,8 @@ class PermissionMixin(base_models_models.OwnerMixin):
     class Meta:
         abstract = True
         permissions = (
-            ('read', _('permissions.view')),
-            ('write', _('permissions.edit')),
+            ('read', _('permissions.read')),
+            ('write', _('permissions.write')),
             ('delete', _('permissions.delete')),
         )
 

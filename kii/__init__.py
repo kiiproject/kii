@@ -5,6 +5,7 @@ __version__ = "0.1"
 APPS = (
     'kii.base_models',
     'kii.theme',
+    'kii.locale',
     'kii.hook',
     'kii.permission',
     'kii.user',
