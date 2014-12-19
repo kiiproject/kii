@@ -33,6 +33,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'guardian',
     'polymorphic',
+    'django_filters',
     'mptt',
     'rest_framework',
 ) + kii.APPS_CONFIGS

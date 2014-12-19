@@ -79,6 +79,24 @@ class TestDiscussion(base.StreamTestCase):
         self.assertQuerysetEqualIterable(response.context['object_list'], [c0, c1])
         self.assertEqual(response.context['can_moderate'], True)
 
+    def test_moderation_can_filter_by_status(self):
+        s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
+        si0 = self.G(models.StreamItem, root=s)
+        si1 = self.G(models.StreamItem)
+
+        profile = self.G(AnonymousCommenterProfile)
+        # comments 
+        c0 = self.G(models.ItemComment, subject=si0, user_profile=profile, status="junk")
+        c1 = self.G(models.ItemComment, subject=si0, user_profile=profile)
+
+        url = reverse('kii:user_area:stream:itemcomment:moderation', kwargs={"username": self.users[1].username})
+        self.login(self.users[1].username)
+        response = self.client.get(url+"?status=junk")
+
+
+        self.assertQuerysetEqualIterable(response.context['object_list'], [c0])
+
+
     def test_set_status_view_require_stream_owner(self):
         s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
         si0 = self.G(models.StreamItem, root=s)
@@ -110,4 +128,4 @@ class TestDiscussion(base.StreamTestCase):
         self.assertEqual(response.status_code, 200)
         c = models.ItemComment.objects.get(pk=c0.pk)
         self.assertEqual(c.status, "disapproved")
-        
+

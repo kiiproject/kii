@@ -9,3 +9,4 @@ django-compressor
 lxml
 django-bower
 djangorestframework
+django-filter

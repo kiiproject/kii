@@ -7,7 +7,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-
+from django_filters.views import FilterMixin
 
 from kii.app.views import AppMixin
 from . import forms
@@ -83,9 +83,24 @@ class Detail(ModelTemplateMixin, DetailView):
     def get_context_object_name(self, obj):
         return "object"
 
-class List(ModelTemplateMixin, ListView):
+class List(FilterMixin, ModelTemplateMixin, ListView):
     action = "list"
 
+    filterset_class = None
+
+    def get_queryset(self):
+        queryset = super(List, self).get_queryset()
+
+        if self.filterset_class is not None:
+            filterset_kwargs = self.get_filterset_kwargs()
+            filterset_kwargs['queryset'] = queryset
+            self.filterset = self.filterset_class(**filterset_kwargs)
+            print(queryset, self.filterset.qs)
+            queryset = self.filterset.qs
+
+        return queryset
+    def get_filterset_kwargs(self):
+        return {'data': self.request.GET or None}
 
 class OwnerMixin(AppMixin):
     """Deduce owner of given page/elements from url or logged in user"""
