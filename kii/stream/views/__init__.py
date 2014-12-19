@@ -3,7 +3,7 @@ from django.http import Http404
 from django.contrib.syndication.views import Feed
 from django.contrib import messages
 
-from .. import models, forms
+from .. import models, forms, filterset
 from kii.base_models import views
 from kii.permission import views as permission_views
 from kii.discussion import views as discussion_views
@@ -126,15 +126,25 @@ class ItemCommentList(StreamContextMixin, views.MultipleObjectPermissionMixin, v
     model = models.ItemComment
 
     def get_queryset(self, **kwargs):
-        queryset = self.model.objects
+        queryset = super(ItemCommentList, self).get_queryset()
         stream = self.get_current_stream()
         return queryset.filter(subject__root=stream).public()
         
-class ItemCommentModeration(ItemCommentList):
+class ItemCommentModeration(StreamContextMixin, views.MultipleObjectPermissionMixin, views.List):
 
+    model = models.ItemComment
     required_permission = True
     template_name = "stream/itemcomment/moderation.html"
     
+    filterset_class = filterset.CommentFilterSet
+
+    def get_filterset_kwargs(self):
+        kwargs = super(ItemCommentModeration, self).get_filterset_kwargs()
+
+        if kwargs['data'].get('status') is None:
+            kwargs['data']['status'] = "awaiting_moderation"
+        return kwargs
+
     def has_required_permission(self, request, *args, **kwargs):
         owner = self.get_owner(request, *args, **kwargs)
         stream = self.get_current_stream()
@@ -142,9 +152,9 @@ class ItemCommentModeration(ItemCommentList):
         return stream.owner.pk == request.user.pk
 
     def get_queryset(self, **kwargs):
-        queryset = self.model.objects
-
-        return queryset.filter(subject__root=self.current_stream).filter(status="awaiting_moderation")
+        queryset = super(ItemCommentModeration, self).get_queryset()
+        stream = self.get_current_stream()
+        return queryset.filter(subject__root=stream)
 
     def get_context_data(self, **kwargs):
         context = super(ItemCommentModeration, self).get_context_data(**kwargs)

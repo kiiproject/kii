@@ -1,5 +1,5 @@
 from kii.base_models import views
-from . import models, filtersets
+from . import models, filterset
 
 class OwnerModelList(views.OwnerMixin, views.List):
     model = models.OwnerModel
@@ -7,4 +7,4 @@ class OwnerModelList(views.OwnerMixin, views.List):
 
 class StatusModelList(views.List):
     model = models.StatusModel
-    filterset_class = filtersets.StatusFilterSet
+    filterset_class = filterset.StatusFilterSet

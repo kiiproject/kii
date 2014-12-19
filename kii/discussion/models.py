@@ -52,7 +52,6 @@ class CommentQuerySet(base_models.models.BaseMixinQuerySet):
 
 
 class CommentMixin(
-    base_models.models.StatusMixin,
     base_models.models.TimestampMixin,
     base_models.models.ContentMixin):
 
@@ -67,22 +66,18 @@ class CommentMixin(
 
     objects = CommentQuerySet.as_manager()
 
+    STATUS_CHOICES = (
+        ('published', _('published')),
+        ('awaiting_moderation', _('awaiting moderation')),
+        ('disapproved', _('disapproved')),
+        ('junk', _('junk')),
+    )
+    status = models.CharField(max_length=255, choices=STATUS_CHOICES, default="awaiting_moderation")
     class Meta:
         abstract = True
         ordering = ['created',]
 
-    def __init__(self, *args, **kwargs):
-
-        # override default status choices 
-        STATUS_CHOICES = (
-            ('published', _('published')),
-            ('awaiting_moderation', _('awaiting moderation')),
-            ('disapproved', _('disapproved')),
-            ('junk', _('junk')),
-        )
-        self._meta.get_field('status')._choices = STATUS_CHOICES
-        self._meta.get_field('status').default = "awaiting_moderation"
-        
+    def __init__(self, *args, **kwargs):        
         super(CommentMixin, self).__init__(*args, **kwargs)
         # create profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)

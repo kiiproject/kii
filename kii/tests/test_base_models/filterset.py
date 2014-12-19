@@ -1,8 +1,8 @@
-import django_filters
+from kii.base_models import filterset
 
 from . import models
 
-class StatusFilterSet(django_filters.FilterSet):
+class StatusFilterSet(filterset.BaseFilterSet):
     class Meta:
         model = models.StatusModel
         fields = {

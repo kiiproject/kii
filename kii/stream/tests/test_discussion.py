@@ -58,7 +58,7 @@ class TestDiscussion(base.StreamTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_moderation_return_correct_queryset(self):
+    def test_moderation_return_awaiting_moderation_comments_by_default(self):
         s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
         si0 = self.G(models.StreamItem, root=s)
         si1 = self.G(models.StreamItem)
@@ -93,26 +93,8 @@ class TestDiscussion(base.StreamTestCase):
         self.login(self.users[1].username)
         response = self.client.get(url+"?status=junk")
 
-
         self.assertQuerysetEqualIterable(response.context['object_list'], [c0])
 
-
-    def test_set_status_view_require_stream_owner(self):
-        s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
-        si0 = self.G(models.StreamItem, root=s)
-        c0 = self.G(models.ItemComment, subject=si0, user=self.users[0])
-
-        url = reverse('kii:user_area:stream:itemcomment:set_status', 
-            kwargs={"username": s.owner.username, "pk": c0.pk})+"?status=pub"
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 403)
-
-        self.login(self.users[1].username)
-        response = self.client.get(url)
-
-        c = models.ItemComment.objects.get(pk=c0.pk)
-        self.assertEqual(c.status, "pub")
 
     def test_patch_comment_view_require_stream_owner(self):
         s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
