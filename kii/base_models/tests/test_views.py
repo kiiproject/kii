@@ -46,7 +46,6 @@ class TestViews(base.UserTestCase):
 
         # authenticated user should see his own page
         re = self.login(self.users[1].username)
-        print(re.content)
         response = self.client.get(url)
         self.assertEqual(response.context['owner'], self.users[1])
 
@@ -55,3 +54,23 @@ class TestViews(base.UserTestCase):
 
         response = self.client.get(url)
         self.assertRedirects(response, reverse("kii:user:login")+"?next="+url)
+
+    
+    def test_filters(self):
+
+        i0 = self.G(test_base_models.models.StatusModel, status="pub")
+        i1 = self.G(test_base_models.models.StatusModel, status="dra")
+        i2 = self.G(test_base_models.models.StatusModel, status="pub")
+
+        url = reverse('kii:test_base_models:statusmodel:list')
+        response = self.client.get(url)
+
+        self.assertQuerysetEqualIterable(response.context['object_list'], [i0, i1, i2], ordered=False)
+
+        response = self.client.get(url+"?status=dra")
+
+        self.assertQuerysetEqualIterable(response.context['object_list'], [i1], ordered=False)
+
+        response = self.client.get(url+"?status=pub")
+
+        self.assertQuerysetEqualIterable(response.context['object_list'], [i0, i2], ordered=False)

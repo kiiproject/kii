@@ -24,10 +24,8 @@ class CommentCreate(views.Create):
 
     def form_valid(self, *args, **kwargs):        
         r = super(CommentCreate, self).form_valid(*args, **kwargs)
-        print(self.object.status)
-        if self.object.status == "pub":
+        if self.object.status == "published":
             message = "comment.publish.success"
-
         else:
             message = "comment.publish.success.awaiting_moderation"
         messages.success(self.request, message)

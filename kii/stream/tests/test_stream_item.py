@@ -9,10 +9,10 @@ from ...tests import test_stream
 
 class TestStreamItem(base.StreamTestCase):
     
-    def test_status_default_to_draft(self):
+    def test_status_default_to_pub(self):
 
         m = self.G(stream.models.StreamItem)
-        self.assertEqual(m.status, "dra")
+        self.assertEqual(m.status, "pub")
 
     def test_creation_and_modification_date(self):
         now = timezone.now()

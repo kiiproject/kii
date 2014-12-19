@@ -1,0 +1,11 @@
+{% extends "base_models/basemixin/list.html" %}
+{% load base_models %}
+{% block objects %}
+    <ul class="comments">
+    {% for comment in object_list %}
+        {% with list_item_template=comment|list_item_template %}
+            {% include list_item_template with comment=comment %}
+        {% endwith %}
+    {% endfor %}
+    </ul>
+{% endblock %}

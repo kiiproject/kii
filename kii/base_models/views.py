@@ -7,13 +7,13 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-
+from django_filters.views import FilterMixin
 
 from kii.app.views import AppMixin
 from . import forms
 
 
-class RequireAuthenticationMixin(object):
+class RequireAuthenticationMixin(AppMixin):
     """Force user authentication before accessing view"""
 
     @method_decorator(login_required)
@@ -69,7 +69,7 @@ class Create(ModelFormMixin, CreateView):
 class Update(ModelFormMixin, UpdateView):
     action = "update"
 
-class Delete(DeleteView):
+class Delete(ModelTemplateMixin, DeleteView):
     action = "delete"
     template_name = "base_models/basemixin/delete.html"
 
@@ -83,24 +83,46 @@ class Detail(ModelTemplateMixin, DetailView):
     def get_context_object_name(self, obj):
         return "object"
 
-class List(ModelTemplateMixin, ListView):
+class List(FilterMixin, ModelTemplateMixin, ListView):
     action = "list"
 
+    filterset_class = None
+    filterset = None
+    def get_queryset(self):
+        queryset = super(List, self).get_queryset()
+        if self.filterset_class is not None:
+            filterset_kwargs = self.get_filterset_kwargs()
+            filterset_kwargs['queryset'] = queryset
+            self.filterset = self.filterset_class(**filterset_kwargs)
+            queryset = self.filterset.qs
 
-class OwnerMixin(object):
+        return queryset
+
+    def get_filterset_kwargs(self):
+        return {'data': self.request.GET or {}}
+
+    def get_context_data(self, **kwargs):
+        context = super(List, self).get_context_data(**kwargs)
+        if self.filterset is not None:
+            context['filterset'] = self.filterset
+            context['show_filters'] = True
+        return context
+
+
+class OwnerMixin(AppMixin):
     """Deduce owner of given page/elements from url or logged in user"""
 
-    def dispatch(self, request, **kwargs):
+    def pre_dispatch(self, request, *args, **kwargs):
         
-        owner = self.get_owner(request, **kwargs)
+        owner = self.get_owner(request, *args, **kwargs)
 
         if owner is None:
             login = reverse('kii:user:login') + "?next=" + request.path
             return redirect(login)
         
-        return super(OwnerMixin, self).dispatch(request, **kwargs) 
+        return super(OwnerMixin, self).pre_dispatch(request, *args, **kwargs) 
 
-    def get_owner(self, request, **kwargs):
+    def get_owner(self, request, *args, **kwargs):
         owner_name = kwargs.get('username', None)
         if owner_name is None:
 
@@ -122,30 +144,42 @@ class OwnerMixin(object):
         return context
 
 
+class PermissionMixin(AppMixin):
 
+    required_permission = None
 
-class RequireBasePermissionMixin(object):
-    """Implements basic pluggable permission logic on single object views"""
-
-    required_permission = "owner"
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-
-        if self.required_permission is not None and not self.has_required_permission(request.user):
+    def pre_dispatch(self, request, *args, **kwargs):
+        r = super(PermissionMixin, self).pre_dispatch(request, *args, **kwargs)        
+        if self.required_permission is not None and not self.has_required_permission(request, *args, **kwargs):
             return self.permission_denied()
-        
-        return super(RequireBasePermissionMixin, self).get(request, *args, **kwargs)
 
-    def has_required_permission(self, user):      
+        return r
+
+    def has_required_permission(self, request, *args, **kwargs):      
         return False
     
     def permission_denied(self):
         raise Http404
 
-class RequireOwnerMixin(RequireBasePermissionMixin):
-    def has_required_permission(self, user):  
-        return self.object.owned_by(user)
+
+class SingleObjectPermissionMixin(PermissionMixin):
+    """Implements basic pluggable permission logic on single object views"""
+    
+    def pre_dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        
+        return super(SingleObjectPermissionMixin, self).pre_dispatch(request, *args, **kwargs)
+
+
+class MultipleObjectPermissionMixin(PermissionMixin):
+
+    pass
+
+class RequireOwnerMixin(SingleObjectPermissionMixin):
+    required_permission = "owner"
+
+    def has_required_permission(self, request, *args, **kwargs):  
+        return self.object.owned_by(request.user)
 
 class OwnerMixinDetail(RequireOwnerMixin, OwnerMixin, Detail):
     pass
@@ -163,9 +197,9 @@ class OwnerMixinCreate(OwnerMixin, Create):
         return super(OwnerMixinCreate, self).form_valid(form)
 
 
-class OwnerMixinUpdate(RequireOwnerMixin, OwnerMixin, Update):
+class OwnerMixinUpdate(OwnerMixin, RequireOwnerMixin, Update):
     pass
 
-class OwnerMixinDelete(RequireOwnerMixin, OwnerMixin, Delete):
+class OwnerMixinDelete(OwnerMixin, RequireOwnerMixin, Delete):
 
     pass

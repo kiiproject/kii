@@ -54,6 +54,12 @@ body {
         display: none;
     }
 
+    .main-content {
+        > * {
+            max-width: $content-width;
+            margin: 0 auto;
+        }
+    }
     &.show-nav {        
         .main-navigation {
             display: block;
@@ -139,8 +145,11 @@ i[class^="fi-"] {
 }
 
 .actions {
-    list-style-type: none;
-    margin-left: 0
+    @include inline-list;
+    margin: 1rem 0 0;
+    li {
+        margin:0 1rem 0 0;
+    }
 }
 
 .date {
@@ -204,7 +213,7 @@ article.stream-item {
 
 // comments 
 
-#comments {
+.comments, #comments {
     list-style-type: none;
     margin-left: 0;
 }

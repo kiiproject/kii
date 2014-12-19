@@ -3,31 +3,31 @@ from django.http import Http404
 
 
 
-class RequirePermissionMixin(views.RequireBasePermissionMixin):
+class SingleObjectRequirePermissionMixin(views.SingleObjectPermissionMixin):
 
-    def has_required_permission(self, user):        
+    def has_required_permission(self, request, *args, **kwargs):        
         mapping = {
             "read": "readable_by",
             "write": "writable_by",
             "delete": "deletable_by",
         } 
         checker = getattr(self.object, mapping[self.required_permission])
-        return checker(user)
+        return checker(request.user)
 
 
-class PermissionMixinDetail(RequirePermissionMixin, views.OwnerMixinDetail):
+class PermissionMixinDetail(SingleObjectRequirePermissionMixin, views.OwnerMixinDetail):
     required_permission = "read"
 
 
-class PermissionMixinUpdate(RequirePermissionMixin, views.OwnerMixinUpdate):
+class PermissionMixinUpdate(SingleObjectRequirePermissionMixin, views.OwnerMixinUpdate):
     required_permission = "write"
 
 
-class PermissionMixinDelete(RequirePermissionMixin, views.OwnerMixinDelete):
+class PermissionMixinDelete(SingleObjectRequirePermissionMixin, views.OwnerMixinDelete):
     required_permission = "delete"
        
 
-class PermissionMixinList(RequirePermissionMixin, views.OwnerMixinList):
+class PermissionMixinList(views.MultipleObjectPermissionMixin, views.OwnerMixinList):
     """Filter model instances depending on user and permissions"""
 
     def get_queryset(self):

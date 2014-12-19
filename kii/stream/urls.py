@@ -12,9 +12,15 @@ stream_patterns = patterns('',
     url(r'^feed/atom$', views.StreamFeedAtom(), name='feed.atom'),
 )
 
+itemcomment_patterns = patterns('',
+    url(r'^$', views.ItemCommentList.as_view(), name='list'),
+    url(r'^moderation$', views.ItemCommentModeration.as_view(), name='moderation'),
+)
+
 
 urlpatterns = patterns('',
     url(r'^$', views.Index.as_view(), name='index'),
     url(r'^stream/', include(stream_patterns, namespace="stream")),
     url(r'^items/', include(streamitem_patterns, namespace="streamitem")),
+    url(r'^comments/', include(itemcomment_patterns, namespace="itemcomment")),
 )

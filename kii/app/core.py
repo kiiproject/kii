@@ -37,17 +37,17 @@ class AppManager(object):
     def kii_apps(self):
         return self.filter(kii_app=True)
 
-    def get_apps_urls(self):
+    def get_apps_urls(self, urlconf="urls"):
         """Gather all URLs for kii apps and return them as a list, so they can easily be included
         in a root URLConf, for example"""
 
         urls = []
 
         for app in self.kii_apps():
-            if app.urls is not None:
-                included_url = url(app.get_url_prefix(), include(app.urlconf, namespace=app.label, app_name=app.label))
+            if getattr(app, urlconf, None) is not None:
+                app_urls = include(app.urlconf(getattr(app, urlconf, None)), namespace=app.label, app_name=app.label)
+                included_url = url(app.get_url_prefix(), app_urls)
                 urls.append(included_url)
-
         return urls
 
 apps = AppManager()
@@ -77,15 +77,14 @@ class App(AppConfig):
         By default, uses the app label as a prefix"""
         return r'^{0}/'.format(self.label)
 
-    @property
-    def urlconf(self):
+    def urlconf(self, target):
         """Return the full path to the app URLconf"""
 
         # it's a realative URLconf, append it to app.name
-        if self.urls.startswith('.'):
-            return self.name + self.urls
+        if target.startswith('.'):
+            return self.name + target
 
-        return self.urls
+        return target
 
     def public_models(self):
         """return a list of models from this app that can be created by any user
