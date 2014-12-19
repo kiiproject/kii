@@ -1,20 +1,18 @@
 {% load i18n %}
 <li class="comment" id="comment-{{ comment.pk }}">
-    <p class="author">
-        {% if comment.user and comment.user == subject.owner %}<i class="fi-crown" title="{% trans 'author' %}"></i>{% endif %}
+    <p class="author">        
         {% if comment.profile.url %}
         <a href="{{ comment.profile.url }}">{{ comment.profile.username }}</a>
     {% else %}{{ comment.profile.username }}{% endif %} - 
     <span class="created date" title="{{ comment.created }}">{% blocktrans with timesince=comment.created|timesince %}{{ timesince }} ago {% endblocktrans %}</span></p>
-
     {% if can_moderate and comment.status != "published" %}
         <p class="status">{{ comment.get_status_display }}</p>
     {% endif %}
     <div class="content">{{ comment.content.rendered }}</div>
 
-    {% if can_moderate %}
-        <ul class="actions">
-            
-        </ul>
-    {% endif %}
+    <ul class="actions">
+        <li><a ng-click="setStatus($event, 'disapproved')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% trans "comment.update.disapproved" %}</a></li>
+        <li><a ng-click="setStatus($event, 'junk')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% trans "comment.update.junk" %}</a></li>
+        <li><a ng-click="setStatus($event, 'published')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% trans "comment.update.published" %}</a></li>
+    </ul>
 </li>

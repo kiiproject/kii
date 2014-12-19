@@ -22,6 +22,7 @@ setup(
         'markdown',
         'six',
         'django-guardian',
+        'djangorestframework',
         'django-mptt',
         'django-polymorphic',
         'django-markupfield',

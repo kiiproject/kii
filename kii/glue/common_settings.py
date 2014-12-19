@@ -34,6 +34,7 @@ INSTALLED_APPS = (
     'guardian',
     'polymorphic',
     'mptt',
+    'rest_framework',
 ) + kii.APPS_CONFIGS
 
 # kii settings

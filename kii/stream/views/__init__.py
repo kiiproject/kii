@@ -3,7 +3,7 @@ from django.http import Http404
 from django.contrib.syndication.views import Feed
 from django.contrib import messages
 
-from . import models, forms
+from .. import models, forms
 from kii.base_models import views
 from kii.permission import views as permission_views
 from kii.discussion import views as discussion_views
@@ -133,7 +133,8 @@ class ItemCommentList(StreamContextMixin, views.MultipleObjectPermissionMixin, v
 class ItemCommentModeration(ItemCommentList):
 
     required_permission = True
-
+    template_name = "stream/itemcomment/moderation.html"
+    
     def has_required_permission(self, request, *args, **kwargs):
         owner = self.get_owner(request, *args, **kwargs)
         stream = self.get_current_stream()
@@ -143,7 +144,7 @@ class ItemCommentModeration(ItemCommentList):
     def get_queryset(self, **kwargs):
         queryset = self.model.objects
 
-        return queryset.filter(subject__root=self.current_stream).filter(status="am")
+        return queryset.filter(subject__root=self.current_stream).filter(status="awaiting_moderation")
 
     def get_context_data(self, **kwargs):
         context = super(ItemCommentModeration, self).get_context_data(**kwargs)

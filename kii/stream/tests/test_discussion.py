@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+import json
 
 from kii.discussion.models import AnonymousCommenterProfile
 from . import base
@@ -10,7 +11,7 @@ class TestDiscussion(base.StreamTestCase):
     
     def test_can_attach_comments_to_stream_items(self):
 
-        si = models.StreamItem(root=self.streams[0], title="test", status="pub")
+        si = models.StreamItem(root=self.streams[0], title="test", status="published")
         si.save()
 
         c = models.ItemComment(subject=si, user=self.users[1], content="Hello world")
@@ -20,7 +21,7 @@ class TestDiscussion(base.StreamTestCase):
 
     def test_can_post_comment_as_logged_in_user(self):
         self.streams[0].assign_perm('read', self.anonymous_user)
-        si = models.StreamItem(root=self.streams[0], title="test", status="pub")
+        si = models.StreamItem(root=self.streams[0], title="test", status="published")
         si.save()
 
         url = si.reverse_comment_create()
@@ -32,7 +33,7 @@ class TestDiscussion(base.StreamTestCase):
 
     def test_can_post_comment_as_anonymous_user(self):
         self.streams[0].assign_perm('read', self.anonymous_user)
-        si = models.StreamItem(root=self.streams[0], title="test", status="pub")
+        si = models.StreamItem(root=self.streams[0], title="test", status="published")
         si.save()
 
         url = si.reverse_comment_create()
@@ -94,3 +95,19 @@ class TestDiscussion(base.StreamTestCase):
 
         c = models.ItemComment.objects.get(pk=c0.pk)
         self.assertEqual(c.status, "pub")
+
+    def test_patch_comment_view_require_stream_owner(self):
+        s = models.Stream.objects.get(title=self.users[1].username, owner=self.users[1])
+        si0 = self.G(models.StreamItem, root=s)
+        c0 = self.G(models.ItemComment, subject=si0, user=self.users[0], content="Hello")
+        url = reverse('kii:api:stream:itemcomment:update', kwargs={"pk": c0.pk})
+        response = self.client.patch(url)
+        self.assertEqual(response.status_code, 403)
+
+        self.login(self.users[1].username)
+        response = self.client.patch(url, json.dumps({"status": "disapproved"}), content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+        c = models.ItemComment.objects.get(pk=c0.pk)
+        self.assertEqual(c.status, "disapproved")
+        

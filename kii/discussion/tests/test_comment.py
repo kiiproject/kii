@@ -77,12 +77,12 @@ class CommentTestCase(base.UserTestCase):
         m = self.G(models.DiscussionModel)
         c = self.G(models.DiscussionModelComment,subject=m, user_profile=p)
 
-        self.assertEqual(c.status, "am")
+        self.assertEqual(c.status, "awaiting_moderation")
 
     def test_comment_status_default_to_published_for_authenticated_users(self):
         
         c = self.G(models.DiscussionModelComment, user=self.users[0])
-        self.assertEqual(c.status, "pub")
+        self.assertEqual(c.status, "published")
 
     def test_can_hook_into_detect_junk(self):
 
@@ -118,10 +118,10 @@ class CommentTestCase(base.UserTestCase):
     def test_can_queryset_public_comments(self):
         profile = AnonymousCommenterProfile(username="test", email="test@test.com")
         profile.save()
-        m0 = self.G(models.DiscussionModelComment, status="pub", user=self.users[0])
+        m0 = self.G(models.DiscussionModelComment, status="published", user=self.users[0])
         m1 = self.G(models.DiscussionModelComment, status="junk", user_profile=profile)
-        m2 = self.G(models.DiscussionModelComment, status="aw", user_profile=profile)
-        m3 = self.G(models.DiscussionModelComment, status="pub", user=self.users[0])
+        m2 = self.G(models.DiscussionModelComment, status="awaiting_moderation", user_profile=profile)
+        m3 = self.G(models.DiscussionModelComment, status="published", user=self.users[0])
 
         queryset = models.DiscussionModelComment.objects.public()
 
