@@ -3,7 +3,12 @@ from django.core.urlresolvers import reverse
 
 
 class MenuNode(object):
-    """Used to describe menu elements"""
+    """
+    Describe a menu element, and may be attached to a :py:class:`App <kii.app.core.App>` instance
+    (via the :py:attr:`menu <kii.app.core.App.menu>`) for automatic inclusion in templates.
+
+    Nodes can be nested without limitation (a 42-levels menu seems pointless, though), using
+    ``children`` attribute"""
 
     reverse_kwargs = []
     route = "#"

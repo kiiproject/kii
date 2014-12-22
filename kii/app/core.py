@@ -1,3 +1,9 @@
+"""
+This module provides two core components for kii:
+
+- :py:data:`apps`, an instance of :py:class:`AppManager`, used especialy for automatic URL inclusion of kii apps.
+- :py:class:`App`, a class that extends django regular :py:class:`django.apps.AppConfig` and you should use for building your own kii apps.
+"""
 from django.apps import AppConfig, apps as django_app_registry
 from django.conf.urls import include, url
 from django.core.urlresolvers import reverse
