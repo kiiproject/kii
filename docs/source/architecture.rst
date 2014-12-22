@@ -3,7 +3,7 @@ Architecture
 
 Here is a quick overview of kii architecture, so you can quickly understand what are kii built-in components and their role.
 
-Kii functionalities are splitted accross several Python packages, called apps. They are indeed regular django apps.
+Kii functionalities are splitted accross several Python packages, called :term:`apps <app>`. They are indeed regular django apps.
 
 Kii apps references
 *******************

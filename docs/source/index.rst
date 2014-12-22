@@ -41,6 +41,7 @@ Contents
    :maxdepth: 1
 
    philosophy
+   glossary
    installation
    architecture
    credits

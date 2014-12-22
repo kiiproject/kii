@@ -4,7 +4,7 @@ Philosophy
 Stream and items
 ****************
 
-Kii is written with the notion of `stream` in mind. It's dead-simple: a stream belongs to a user, who can publish `items` in it. An item could be, for example, a blog entry, a picture, a link to a web page, or any type of content provided by third-party apps.
+Kii is written with the notion of stream in mind. It's dead-simple: a :term:`stream` belongs to a user, who can publish :term:`items` in it. An item could be, for example, a blog entry, a picture, a link to a web page, or any type of content provided by third-party apps.
 
 All items share a common behaviour:
 
