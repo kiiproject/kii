@@ -36,6 +36,14 @@ Kii runs on top of Django_, the web framework for perfectionnists with deadlines
 .. _REST framework: http://www.django-rest-framework.org/
 .. _Filter: https://github.com/alex/django-filter
 
+Testing
+*******
+
+Testing is done via Nose_ and Tox_.
+
+.. _Nose: http://nose.readthedocs.org/en/latest/
+.. _Tox: http://tox.readthedocs.org
+
 Client-side
 ###########
 
