@@ -44,6 +44,7 @@ Contents
    glossary
    installation
    architecture
+   apps/index
    credits
 
 

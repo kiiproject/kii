@@ -1,0 +1,7 @@
+Apps
+====
+
+.. toctree::
+   :glob:
+
+   *
