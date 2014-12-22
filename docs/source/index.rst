@@ -41,8 +41,9 @@ Contents
    :maxdepth: 1
 
    philosophy
-   under_the_hood
    installation
+   architecture
+   credits
 
 
 Indices and tables

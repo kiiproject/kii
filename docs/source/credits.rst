@@ -1,7 +1,7 @@
-Under the hood
-==============
+Credits
+=======
 
-You'll find here some technical informations about kii.
+Kii relies on different third-party components, which are listed below.
 
 Server-side
 ###########
@@ -21,7 +21,7 @@ Kii is written in Python_, and should work under both Python 2 and 3. The test s
 Framework
 *********
 
-Kii runs on top of Django_, the web framework for perfectionnists with deadlines. This choice has been made because, by nature, Django is very extensible, and many great django apps are useful in the scope ofo the project, such as:
+Kii runs on top of Django_, the web framework for perfectionnists with deadlines. This choice has been made because, by nature, Django is very extensible, and many great django apps are useful in the scope of the project, such as:
 
 - Polymorphic_, used for convenient inheritance of stream items behaviour, at a database level
 - Guardian_, for per-object permissions
