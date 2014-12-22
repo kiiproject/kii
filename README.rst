@@ -1,4 +1,6 @@
-Read the docs at ``docs/source/index.rst``
+Please `read the docs`_ ;)
+
+.. _read the docs: http://kii.readthedocs.org/
 
 
 
