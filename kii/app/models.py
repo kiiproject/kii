@@ -3,12 +3,26 @@ from django.core.urlresolvers import reverse
 
 
 class AppModel(models.Model):
+    """
+    A base class for all apps related models. It implements URL reversing
+    for model instances, so one can do::
 
-    # If True, any authenticated user will be able to create isntances of this model
+    .. code:: python
+
+        instance = MyModel.objects.get(pk=42)
+        assert instance.reverse_update() == "/kii/myapp/mymodel/42/update"
+    """
+    #: If True, any authenticated user will be able to create isntances of this model
+    # TODO : is it useful ?
     public_model = False
 
+    class Meta:
+        abstract = True
+
     def url_namespace(self, **kwargs):
-        """Return the URL namespace of the class, such as `app_label:model_label:`"""       
+        """
+        :param bool user_area: whether the URL namespace should include the username part
+        :return: a string representing the URL namespace of the model, such as ``kii:myapp:mymodel:``"""       
 
         app_name = self._meta.app_label
         model_name = self.__class__.__name__.lower()
@@ -20,8 +34,13 @@ class AppModel(models.Model):
         return prefix + "{0}:{1}:".format(app_name, model_name)
 
     def reverse(self, suffix, **kwargs):
-        """Return a reversed URL for given suffix (for example: detail, list, edit...)
-        you can override per-suffix URLs by defining .reverse_<suffix> methods
+        """        
+        Get a model-instance relative URL, such as a detail, delete or update URL.
+        You can override per-suffix URLs by defining ``reverse_<suffix>`` methods on the model class.
+
+        :param str suffix: a string that will be used to find the corresponding reverse method on the model class (if any)
+        :param dict kwargs: optional URL kwargs that will be passed to the reverse function
+        :return: a reversed URL 
         """
 
         if hasattr(self, 'reverse_{0}'.format(suffix)):
@@ -48,6 +67,3 @@ class AppModel(models.Model):
 
     def __repr__(self):
         return "<{0}: {1}>".format(self.__class__.__name__, self.pk)
-
-    class Meta:
-        abstract = True
