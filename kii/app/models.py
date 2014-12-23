@@ -49,20 +49,26 @@ class AppModel(models.Model):
         return reverse(self.url_namespace(**kwargs) + suffix)
         
     def reverse_detail(self, **kwargs):
+        """:return: The detail URL of the instance"""
         return reverse(self.url_namespace(**kwargs) + "detail", kwargs={"pk":self.pk})
 
     def reverse_update(self, **kwargs):
+        """:return: The update URL of the instance"""
         return reverse(self.url_namespace(**kwargs) + "update", kwargs={"pk":self.pk})
 
     def reverse_delete(self, **kwargs):
+        """:return: The delete URL of the instance"""
         return reverse(self.url_namespace(**kwargs) + "delete", kwargs={"pk":self.pk})
 
     def get_absolute_url(self):
+        """:return: The absolute URL of the instance, which is equal to ``self.reverse_detail()`` by default"""
+        # TODO : user_include should be replaced with user_area
         return self.reverse_detail(user_include=True)
 
     @classmethod
     def class_reverse(cls, suffix):
-        """Call reverse with an actual instance of the class. Used for reversing if you don't have a class instance"""
+        """Same as ``reverse`` but callable from class instead of instances.
+        :return: a reversed URL for the model"""
         return cls.reverse(cls(), suffix)
 
     def __repr__(self):
