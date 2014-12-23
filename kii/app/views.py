@@ -45,8 +45,10 @@ class AppMixin(object):
         return super(AppMixin, self).dispatch(request, *args, **kwargs)
 
     def get_title_components(self):
-        """:return: an iterable of title elements , such as ``('Delete', 'My model', 'My app')``
-        for use in templates. By default, returns only the app name."""
+        """
+        :return: an iterable of title elements , such as ``('Delete', 'My model', 'My app')`` \
+        for use in templates. By default, returns only the app name.
+        """
         return (self.app.verbose_name,)
 
     def get_context_data(self, **kwargs):

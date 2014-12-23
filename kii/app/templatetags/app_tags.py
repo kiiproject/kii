@@ -27,7 +27,7 @@ def node_url(node, **kwargs):
         {% endwith %}
 
     :param node: a :py:class:`kii.app.menu.MenuNode` instance
-    :param kwargs: kwargs that will be passed to the :py:funct:`reverse` function
+    :param kwargs: kwargs that will be passed to the :py:func:`reverse` function
     :return: the target URL of the menu node
     """
 

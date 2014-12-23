@@ -18,3 +18,22 @@ Menu
 .. automodule:: kii.app.menu
     :members:
     :special-members:
+
+
+Models
+******
+
+.. automodule:: kii.app.models
+    :members:
+
+Template tags
+*************
+
+.. automodule:: kii.app.templatetags.app_tags
+    :members:
+
+Views
+*****
+
+.. automodule:: kii.app.views
+    :members:

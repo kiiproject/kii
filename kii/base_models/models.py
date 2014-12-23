@@ -1,3 +1,11 @@
+"""
+Model-related features of kii are splitted accross several mixins, each implementing 
+a single or a couple of fields. This allow us to compose our final models with great 
+flexibility. 
+
+
+"""
+
 from __future__ import unicode_literals
 from django.db import models
 import inspect

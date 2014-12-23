@@ -5,12 +5,13 @@ from django.core.urlresolvers import reverse
 class AppModel(models.Model):
     """
     A base class for all apps related models. It implements URL reversing
-    for model instances, so one can do::
+    for model instances, so one can do:
 
-    .. code:: python
+    .. code-block:: python
 
         instance = MyModel.objects.get(pk=42)
         assert instance.reverse_update() == "/kii/myapp/mymodel/42/update"
+
     """
     #: If True, any authenticated user will be able to create isntances of this model
     # TODO : is it useful ?
@@ -68,6 +69,7 @@ class AppModel(models.Model):
     @classmethod
     def class_reverse(cls, suffix):
         """Same as ``reverse`` but callable from class instead of instances.
+        
         :return: a reversed URL for the model"""
         return cls.reverse(cls(), suffix)
 
