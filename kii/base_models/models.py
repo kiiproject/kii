@@ -1,19 +1,29 @@
 """
 Model-related features of kii are splitted accross several mixins, each implementing 
 a single or a couple of fields. This allow us to compose our final models with great 
-flexibility. 
+flexibility:
 
+.. code-block:: python
 
+    from kii.base_models import models
+
+    class TitleAndStatusModel(models.TitleMixin, models.StatusMixin):
+        pass
+
+    class ContentAndOwnerModel(models.ContentMixin, models.OwnerMixin):
+        pass
+
+All these mixins inherit from :py:class:`BaseMixin`, which provide useful methods and attributes.
 """
 
 from __future__ import unicode_literals
 from django.db import models
-import inspect
 from django.db.models.base import ModelBase
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db.models.query import QuerySet
 from django.utils import timezone
+import inspect
 
 from . import fields
 from kii.app.models import AppModel
@@ -25,12 +35,15 @@ class BaseMixinQuerySet(QuerySet):
 
 
 class BaseMixin(AppModel):
-    """Add some common behaviour to all mixins"""
+    """
+    All kii models should inherit from this one, because it provides important features.
+    """
 
     objects = BaseMixinQuerySet.as_manager()
 
     queryset = BaseMixinQuerySet
 
+    # TODO: is it useful, since we have get_template_names ?
     list_item_template = "base_models/basemixin/list_item.html"
     
     class Meta:
@@ -38,6 +51,7 @@ class BaseMixin(AppModel):
 
     @classmethod
     def class_name(cls):
+        """:return: The model class name as a string"""
         try:
             return cls.__name__.lower()
         except: 
@@ -45,7 +59,8 @@ class BaseMixin(AppModel):
             return cls.__class__.__name__.lower()
 
     def meta(self):
-        """For metadata access in template (underscored attributes are forbidden in django templates)"""
+        """Use this method to access model metadata in templates 
+        (underscored attributes are forbidden in django templates)"""
         return self._meta
 
     def save(self, **kwargs):
@@ -55,17 +70,94 @@ class BaseMixin(AppModel):
 
     @property
     def new(self):
-        """Shortcut to check if instance is already saved or not"""
+        """Shortcut to check if instance is already saved or not
+    
+        .. code-block: python
+
+            instance = MyModel()
+            assert instance.new == True
+
+            instance.save()
+            assert instance.new == False
+        """
         return self.pk is None
 
     def send(self, signal, instance, **kwargs):
-        """Send the given signal"""
+        """
+        Send a model signal with ``self`` as the instance.
+
+        Other apps can then subscribe to signals in order to execute some arbitrary code at key moments:
+
+        .. code-block:: python
+
+            from kii.base_models.models import StatusMixin
+            from kii.hook.signals import InstanceSignal
+
+            # our signal
+            instance_published = InstanceSignal()
+
+            # our model
+            class MyModel(StatusMixin):
+
+                def mark_as_published(self, **kwargs):
+                    self.status = "pub"
+                    self.save()
+                    self.send(instance_published)
+
+            # our hooked function
+            def print_something(**kwargs):
+                instance = kwargs.get('instance')
+                print('Instance {0} was marked as published'.format(instance.pk))
+
+            # binding of our function to our signal
+            instance_published.connect(print_something)
+
+        If you create some model instances of the previously defined model, you would get this kind of output:
+
+        .. code-block:: python
+
+            >>> from myapp.models improt MyModel
+            >>> instance = MyModel(status="draft")
+            >>> instance.save()
+            >>> instance.mark_as_published()
+            Instance 1 was marked as published
+
+        :param signal: a single instance as returned by :py:func:`kii.hook.signals.IntanceSignal`
+        :pram instance: TODO: useless, should be deleted
+
+
+        """
         return signal.send(sender=instance.__class__, instance=instance)
 
     @classmethod
     def get_template_names(cls, suffix):
-        """Return a list of templates name corresponding to the given suffix (detail, list, etc.). Will include templates 
-        from parent classes, if any"""
+        """
+        :py:class:`base_models.views.ModelTemplateMixin` uses this method to automatically
+        discover model templates.
+
+        Considering the following model:
+
+        .. code-block:: python    
+
+            # myapp/models.py
+            from kii.base_models.models import BaseMixin
+
+            class MyModel(BaseMixin):
+                pass
+
+        This method will return a list of possible templates for the given
+        suffix, following the inheritance tree:
+
+        .. code-block:: python
+
+            >>> from myapp.models import MyModel
+            >>> MyModel.get_template_names('detail')
+            ['myapp/mymodel/detail.html', 'base_models/basemixin/detail.html']
+            >>> MyModel.get_template_names('update')
+            ['myapp/mymodel/update.html', 'base_models/basemixin/update.html']
+
+        :return: A list of templates name corresponding to the given suffix (detail, list, etc.).  \
+        Will include templates from parent classes, if any"""
 
         def get_template(model, suffix):
             try:
@@ -95,6 +187,7 @@ class TitleMixin(BaseMixin):
         abstract = True
 
     def clean(self):
+        # TODO: is it useful ?
         from django.core.exceptions import ValidationError
         if self.title == '':
             raise ValidationError('Empty title is not allowed')
@@ -107,20 +200,26 @@ class TitleMixin(BaseMixin):
 
 class ContentMixin(BaseMixin):
 
+    """A mixin with a ``content`` field \
+    that accepts different markup (defaults to markdown)"""
+
     content = fields.MarkdownField()
 
     # keep this for Future markupfield compatibility
     content_markup_type = models.CharField(max_length=255, default="markdown")
     _content_rendered = models.TextField(default="")
 
-
     class Meta:
         abstract = True
 
 
 class TimestampMixin(BaseMixin):
-    """Add two fields that are automatically set"""
+    """A mixin with two datetime-fields that are automatically set"""
+
+    #: the creation datetime of the instance, set on the first save
     created = models.DateTimeField(auto_now_add=True, editable=False)
+
+    #: the last modification datetime of the instance updated on each save
     last_modified = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
@@ -128,15 +227,20 @@ class TimestampMixin(BaseMixin):
 
 
 class StatusMixin(BaseMixin):
-    """Add a status and a publication_date field"""
+    """A mixin with a status and a publication_date field"""
+
     STATUS_CHOICES = (
         ('dra', _('base_models.status_mixin.draft')),
         ('pub', _('base_models.status_mixin.published')),
     )
 
+    #: a choice field that defaults to ``pub``
     status = models.CharField(choices=STATUS_CHOICES, default="pub", max_length=5)
+
+    #: a datetime field which is set automatically when status is marked as ``pub`` for the first time
     publication_date = models.DateTimeField(editable=False, default=None, blank=True, null=True)
 
+    # todo: rename publicatino_date to published ?
     class Meta:
         abstract = True
 
@@ -150,6 +254,9 @@ class StatusMixin(BaseMixin):
 
 class OwnerMixinQuerySet(BaseMixinQuerySet):
     def owned_by(self, user):
+        """:param user: a :py:class:`User` instance
+        :return: a new queryset of instances owned by the given user
+        """
         return self.filter(owner=user.pk)
 
 
@@ -157,17 +264,18 @@ class OwnerMixin(BaseMixin):
     """A mixin for model instance that have an owner"""
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss", editable=False)
-    objects = OwnerMixinQuerySet.as_manager()
-    
+    objects = OwnerMixinQuerySet.as_manager()    
 
     def owned_by(self, user):
-        """return True if instance is owned by given user"""
+        """:return: a boolean indicating if the instance owner is the given user"""
         return user.pk == self.owner.pk
         
     class Meta:
         abstract = True
 
 
+
+# TODO: remove this
 class BaseInheritModel(models.Model):
         """Base class for inheriting model (see below)"""
 

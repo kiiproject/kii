@@ -9,12 +9,13 @@ from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django_filters.views import FilterMixin
+
 from kii.app.views import AppMixin
 from . import forms
 
 
 class RequireAuthenticationMixin(AppMixin):
-    """Force user authentication before accessing view"""
+    """Force user authentication before calling :py:meth:`dispatch`"""
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
@@ -22,8 +23,20 @@ class RequireAuthenticationMixin(AppMixin):
 
 
 class ModelTemplateMixin(AppMixin):
+    """Implements some convenient logic for:
+
+    - deducing the correct template to use, from :py:attr:`model` and :py:attr:`action`
+    - building the page title
+    """
+
+
+    #: a string representing an action performed by the view, like update, delete, detail, list...
+    action = None
+
     def get_template_names(self):
-        """Deduce template_name from model name, app name and action"""
+        """
+        :return: an iterable of possible template names, deduced from :py:attr:`action` and :py:attr:`model`
+        """
 
         if self.template_name:
             # use given template name
@@ -32,9 +45,11 @@ class ModelTemplateMixin(AppMixin):
         return self.model.get_template_names(self.action)
 
     def get_model(self):
+        # todo : seems pointless
         return self.model
 
     def get_title_components(self):
+        """Prepend action and model label to the page title"""
         components = super(ModelTemplateMixin, self).get_title_components()
         return (self.get_action_title(), self.get_model_title(),) + components
 
@@ -45,7 +60,6 @@ class ModelTemplateMixin(AppMixin):
         return ""
 
     def get_context_data(self, **kwargs):
-
         context = super(ModelTemplateMixin, self).get_context_data(**kwargs)
         context["model"] = self.model
         context["action"] = self.action
@@ -54,10 +68,13 @@ class ModelTemplateMixin(AppMixin):
 
 class ModelFormMixin(ModelTemplateMixin):
 
+    """Implements some common modelform view logic"""
+
+    form_template = "base_models/modelform.html"
+
     def get_page_title(self):
         return super(ModelFormMixin, self).get_page_title() or self.get_action_title()
 
-    form_template = "base_models/modelform.html"
     @classmethod
     def as_view(cls, *args, **kwargs):
         """Deduce model from form class if needed"""
@@ -80,18 +97,24 @@ class ModelFormMixin(ModelTemplateMixin):
 
 
 class Create(ModelFormMixin, CreateView):
+    """A generic view for creating a new instance of a model"""
     action = "create"
 
     def get_action_title(self):
         return _('model.create') + " - " + self.get_model()._meta.verbose_name
 
+
 class Update(ModelFormMixin, UpdateView):
+    """A generic view for updating an existing instance of a model"""
     action = "update"
 
     def get_action_title(self):
         return _('model.update') + " - " + self.get_model()._meta.verbose_name
 
+
 class Delete(ModelTemplateMixin, DeleteView):
+    """A generic view for deleting an existing instance of a model"""
+    
     action = "delete"
     template_name = "base_models/basemixin/delete.html"
 
@@ -101,7 +124,10 @@ class Delete(ModelTemplateMixin, DeleteView):
     def get_action_title(self):
         return _('model.delete') + " - " + self.get_model()._meta.verbose_name
 
+
 class Detail(ModelTemplateMixin, DetailView):
+    """A generic view for detailing an existing instance of a model"""
+
     action = "detail"
 
     def get_model(self):
@@ -110,12 +136,21 @@ class Detail(ModelTemplateMixin, DetailView):
     def get_context_object_name(self, obj):
         return "object"
 
+
 class List(FilterMixin, ModelTemplateMixin, ListView):
+    """A generic view for listing many instances of a model"""
+
     action = "list"
 
     filterset_class = None
+
     filterset = None
+    """:the filterset will be built automatically by the view from :py:attr:`filterset_class`,
+    and used for advanced queryset filtering via GET parameters"""
+
     def get_queryset(self):
+        """Filter the queryset using GET parameters, if needed"""
+
         queryset = super(List, self).get_queryset()
         if self.filterset_class is not None:
             filterset_kwargs = self.get_filterset_kwargs()
@@ -126,6 +161,7 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
         return queryset
 
     def get_filterset_kwargs(self):
+        """:return: required arguments for building the filterset"""
         return {'data': self.request.GET or {}}
 
     def get_context_data(self, **kwargs):
@@ -137,7 +173,10 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
 
 
 class OwnerMixin(AppMixin):
-    """Deduce owner of given page/elements from url or logged in user"""
+    """Deduce the owner of the data located at the requested URL:
+
+    1. from the URL, if there is a `<username>` placeholder
+    2. from the request user, """
 
     def pre_dispatch(self, request, *args, **kwargs):
         
