@@ -4,12 +4,15 @@ from django.contrib import messages
 from kii.base_models import views
 from . import forms
 
+
 class CommentCreate(views.Create):
-    
+    """View for posting comments, the URL should include a ``pk`` argument,
+    so checking on ``discussion_open`` can be run on the comment subject."""
+
     form_class = forms.CommentForm
 
     def get_subject(self):
-        # pass comment subject to form
+        # deduce the subject model class from the form model
         subject_model = self.form_class.Meta.model._meta.get_field('subject').rel.to
         self.subject = get_object_or_404(subject_model, pk=self.kwargs['pk'], discussion_open=True)
         return self.subject
@@ -20,6 +23,7 @@ class CommentCreate(views.Create):
         return kwargs
 
     def get_success_url(self):
+        """Redirect the user to the subject absolute URL"""
         return self.get_subject().get_absolute_url()
 
     def form_valid(self, *args, **kwargs):        
@@ -35,7 +39,7 @@ class CommentCreate(views.Create):
 class CommentFormMixin(object):
     """pass a comment form for the object to context"""
 
-    form_class = forms.CommentForm
+    comment_form_class = forms.CommentForm
 
     def get_context_data(self, **kwargs):
         context = super(CommentFormMixin, self).get_context_data(**kwargs)

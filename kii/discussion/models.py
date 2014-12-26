@@ -6,12 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
 
-from kii import base_models
+from kii.base_models import models as bm
 from kii.hook import signals
 
 
 class ProfileWrapper(object):
-    """Utility class to return either user or user_profile attributes on comments"""
+    """Utility class to access comment user data the same way for anonymous and
+    authenticated users."""
 
     def __init__(self, instance):
         self.instance = instance
@@ -39,29 +40,41 @@ class ProfileWrapper(object):
 
 
 class AnonymousCommenterProfile(models.Model):
+    """Store informations about anonymous user who leave comments."""
 
+    #TODO: ad an ip_adress field
     username = models.CharField(max_length=50)
     email = models.EmailField()
     url = models.URLField()
 
 
-class CommentQuerySet(base_models.models.BaseMixinQuerySet):
+class CommentQuerySet(bm.BaseMixinQuerySet):
     def public(self):
         """Return public comments (not junk or awaiting moderation)"""  
         return self.filter(status="published").select_related("user", "user_profile")
 
 
 class CommentMixin(
-    base_models.models.TimestampMixin,
-    base_models.models.ContentMixin):
+    bm.TimestampMixin,
+    bm.ContentMixin):
 
-    """Subclass MUST implement a subject ForeignKey field to the model that is commented"""
+    """
+    A base class for comment models.
 
+    Must be linked to either an authenticated user via the :py:attr:`user` attribute or
+    an anonymous user via :py:attr:`user_profile`.
+
+    Subclasses MUST implement a ``subject`` ForeignKey field to the model that should accept comments.
+
+    """
+
+    #: relationship to an authenticated user
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss", editable=False, null=True, blank=True, default=None)
     
-    # for anonymous users
+    #: relationship to an anonymous user
     user_profile = models.ForeignKey(AnonymousCommenterProfile, null=True, default=None, blank=True)
 
+    #: reference to a :py:class:`ProfileWrapper` instance. Will be set automatically on init
     profile = None
 
     objects = CommentQuerySet.as_manager()
@@ -72,7 +85,9 @@ class CommentMixin(
         ('disapproved', _('disapproved')),
         ('junk', _('junk')),
     )
+
     status = models.CharField(max_length=255, choices=STATUS_CHOICES, default="awaiting_moderation")
+    
     class Meta:
         abstract = True
         ordering = ['created',]
@@ -118,8 +133,10 @@ class CommentMixin(
 
 comment_detect_junk = signals.InstanceSignal()
 
-class DiscussionMixin(base_models.models.BaseMixin):
+class DiscussionMixin(bm.BaseMixin):
+    """A mixin for models that accept comments"""
 
+    #: whether the model instance is open to discussion or not
     discussion_open = models.BooleanField(default=True)
     
     class Meta:

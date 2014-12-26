@@ -18,7 +18,10 @@ import os
 KII_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "kii")
 
 from django.conf import settings
-settings.configure()
+
+from kii.tests import settings as test_settings
+# Inline settings file
+settings.configure(test_settings)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
