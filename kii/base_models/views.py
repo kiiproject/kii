@@ -173,15 +173,19 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
 
 
 class OwnerMixin(AppMixin):
-    """Deduce the owner of the data located at the requested URL:
+    """Deduce the owner of the data located at the requested URL (by order of priority):
 
     1. from the URL, if there is a `<username>` placeholder
-    2. from the request user, """
+    2. from the request user, if he is authenticated
+    3. from the username in ``settings.KII_DEFAULT_USER``, if any
+
+    If owner cannot be deduced, a user is redirected to login page"""
 
     def pre_dispatch(self, request, *args, **kwargs):
         
         owner = self.get_owner(request, *args, **kwargs)
 
+        # TODO : replace 404 with login
         if owner is None:
             login = reverse('kii:user:login') + "?next=" + request.path
             return redirect(login)
@@ -211,8 +215,15 @@ class OwnerMixin(AppMixin):
 
 
 class PermissionMixin(AppMixin):
+    """A mixin that implements permission checks on single object related views.
+
+    No check will be performed if :py:attr:`required_permission` is set to ``None``
+    """
 
     required_permission = None
+    """: a string indicating what kind of permission is required for displaying the view \
+    The actuel check will be done via :py:meth:`has_required_permission`.
+    """
 
     def pre_dispatch(self, request, *args, **kwargs):
         r = super(PermissionMixin, self).pre_dispatch(request, *args, **kwargs)        
@@ -221,10 +232,12 @@ class PermissionMixin(AppMixin):
 
         return r
 
-    def has_required_permission(self, request, *args, **kwargs):      
+    def has_required_permission(self, request, *args, **kwargs):   
+        """:return: A boolean indicating if the request user can access the view"""   
         return False
     
     def permission_denied(self):
+        """:return: a response for the case where user has not the required permission"""
         raise Http404
 
 
@@ -242,6 +255,10 @@ class MultipleObjectPermissionMixin(PermissionMixin):
     pass
 
 class RequireOwnerMixin(SingleObjectPermissionMixin):
+    
+    """Permission mixin that checks the requested object is owned by ``request.user``
+    before granting access"""
+
     required_permission = "owner"
 
     def has_required_permission(self, request, *args, **kwargs):  
@@ -256,7 +273,7 @@ class OwnerMixinList(OwnerMixin, List):
 
 
 class OwnerMixinCreate(OwnerMixin, Create):
-    """Automatically set model.owner to request.user"""
+    """A create view that set the newly created instance ``owner`` attribute to ``request.user``"""
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
