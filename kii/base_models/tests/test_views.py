@@ -80,3 +80,27 @@ class TestViews(base.UserTestCase):
 
         response = self.client.get(url)
         self.assertIn("status model", response.context['page_title'])
+
+    def test_owner_middleware_with_kwarg(self):
+        url = reverse('kii:user_area:test_base_models:ownermodel:list', kwargs={"username": self.users[0]})
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['request'].owner, self.users[0])
+        self.assertEqual(response.status_code, 200)
+
+    def test_owner_middleware_with_logger_in_user(self):
+        url = reverse('kii:test_base_models:ownermodel:list')
+        self.login(self.users[1])
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['request'].owner, self.users[1])
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(KII_DEFAULT_USER='test0')
+    def test_owner_middleware_with_default_user(self):
+        url = reverse('kii:test_base_models:ownermodel:list')
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['request'].owner, self.user_model.objects.get(username='test0'))
+        self.assertEqual(response.status_code, 200)

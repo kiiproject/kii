@@ -173,44 +173,20 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
 
 
 class OwnerMixin(AppMixin):
-    """Deduce the owner of the data located at the requested URL (by order of priority):
-
-    1. from the URL, if there is a `<username>` placeholder
-    2. from the request user, if he is authenticated
-    3. from the username in ``settings.KII_DEFAULT_USER``, if any
-
-    If owner cannot be deduced, a user is redirected to login page"""
+    
 
     def pre_dispatch(self, request, *args, **kwargs):
         
-        owner = self.get_owner(request, *args, **kwargs)
-
-        # TODO : replace 404 with login
-        if owner is None:
+        if request.owner is None:
             login = reverse('kii:user:login') + "?next=" + request.path
             return redirect(login)
         
         return super(OwnerMixin, self).pre_dispatch(request, *args, **kwargs) 
 
-    def get_owner(self, request, *args, **kwargs):
-        owner_name = kwargs.get('username', None)
-        if owner_name is None:
-
-            if request.user.is_authenticated():
-                self.owner = request.user
-            elif getattr(settings, "KII_DEFAULT_USER", None) is not None:
-                self.owner = get_object_or_404(get_user_model(), username=getattr(settings, "KII_DEFAULT_USER"))
-
-            else:
-                return None
-        else:
-            self.owner = get_object_or_404(get_user_model(), username=owner_name)
-
-        return self.owner
 
     def get_context_data(self, **kwargs):
         context = super(OwnerMixin, self).get_context_data(**kwargs)
-        context['owner'] = self.owner
+        context['owner'] = self.request.owner
         return context
 
 
