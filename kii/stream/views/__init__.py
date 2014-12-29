@@ -27,7 +27,7 @@ class StreamContextMixin(views.OwnerMixin):
 
     def get_context_data(self, **kwargs):
         context = super(StreamContextMixin, self).get_context_data(**kwargs)
-        context['current_stream'] = self.current_stream
+        context['current_stream'] = self.get_current_stream()
 
         return context
 
@@ -55,26 +55,26 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
         return context
         
 
-class Create(views.OwnerMixinCreate):
+class Create(StreamContextMixin, views.OwnerMixinCreate):
     success_url = reverse_lazy('kii:stream:index')
 
 
-class Update(permission_views.PermissionMixinUpdate):
+class Update(StreamContextMixin, permission_views.PermissionMixinUpdate):
     success_url = reverse_lazy('kii:stream:index')
 
 
-class Detail(discussion_views.CommentFormMixin, permission_views.PermissionMixinDetail):
+class Detail(StreamContextMixin, discussion_views.CommentFormMixin, permission_views.PermissionMixinDetail):
     comment_form_class = forms.ItemCommentForm
     model = models.StreamItem
 
 
-class Delete(permission_views.PermissionMixinDelete):
+class Delete(StreamContextMixin, permission_views.PermissionMixinDelete):
     model = models.StreamItem
 
     def get_success_url(self):
         return reverse_lazy("kii:stream:index")
 
-class List(permission_views.PermissionMixinList):
+class List(StreamContextMixin, permission_views.PermissionMixinList):
     pass
 
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):

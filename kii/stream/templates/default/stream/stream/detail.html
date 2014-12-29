@@ -1,10 +1,10 @@
-{% extends 'glue/base.html' %}
+{% extends 'app/app_model_page.html' %}
 {% load i18n %}
 
 {% block page_title %}{% endblock %}
 
+
 {% block main_content %}        
-    {% include 'stream/stream/info.html' with stream=current_stream %}
     <div class="stream detail" id="stream-{{ current_stream.pk }}">         
         {% include 'stream/streamitem/list.html' %}
     </div>

@@ -233,7 +233,7 @@ article.stream-item {
 }
 .comment {
     padding: 1rem;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    border: 1px solid $secondary-color;
     margin-bottom: 2rem;
     .author {
         font-weight: bold;

@@ -1,0 +1,7 @@
+{% extends "app/app_page.html" %}
+
+
+{% block header %}
+    {% include 'stream/stream/info.html' with stream=current_stream %}
+    {{ block.super }}
+{% endblock %}
