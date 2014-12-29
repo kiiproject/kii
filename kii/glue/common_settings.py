@@ -1,6 +1,6 @@
 """Base settings shared by all environments"""
 # Import global settings to make it easier to extend settings.
-from django.conf.global_settings import *   # pylint: disable=W0614,W0401
+from django.conf.global_settings import *  
 from django.core.urlresolvers import reverse_lazy
 #from https://github.com/lincolnloop/django-layout/blob/master/project_name/settings/base.py
 
@@ -21,6 +21,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'kii.base_models.middleware.OwnerMiddleware',
     #'kii.glue.middleware.SpacelessMiddleware',
 )
 

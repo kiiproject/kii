@@ -80,3 +80,11 @@ class TestViews(base.UserTestCase):
 
         response = self.client.get(url)
         self.assertIn("status model", response.context['page_title'])
+
+    def test_owner_middleware(self):
+        url = reverse('kii:user_area:test_base_models:ownermodel:list', kwargs={"username": self.users[0]})
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.context['request'].owner, self.users[0])
+        self.assertEqual(response.status_code, 200)
