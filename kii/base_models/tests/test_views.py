@@ -22,12 +22,6 @@ class TestViews(base.UserTestCase):
         response = self.client.get(url)
         self.assertTemplateUsed(response, "test_base_models/titlemodel/detail.html")
     
-    def test_app_model_page_contains_model_verbose_name(self):
-
-        response = self.client.get(reverse('kii:test_base_models:titlemodel:list'))
-        parsed = self.parse_html(response.content)
-        self.assertIn("Title Model", parsed.title.string)
-
     def test_model_template_mixin_pass_context(self):
         response = self.client.get(reverse('kii:test_base_models:titlemodel2:list'))
 
@@ -79,7 +73,7 @@ class TestViews(base.UserTestCase):
         url = reverse('kii:test_base_models:statusmodel:list')
 
         response = self.client.get(url)
-        self.assertIn("status model", response.context['page_title'])
+        self.assertIn("status model", response.context['full_title'])
 
     def test_owner_middleware_with_kwarg(self):
         url = reverse('kii:user_area:test_base_models:ownermodel:list', kwargs={"username": self.users[0]})

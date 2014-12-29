@@ -100,4 +100,4 @@ class TestApp(base.BaseTestCase):
         url = reverse('kii:test_app:home')
 
         response = self.client.get(url)
-        self.assertEqual(response.context['page_title'].endswith("Test app"), True)
+        self.assertEqual(response.context['full_title'].endswith("Test app"), True)
