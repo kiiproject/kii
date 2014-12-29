@@ -1,5 +1,7 @@
 from django import forms as django_forms
 
+import collections
+
 from kii.base_models import forms
 from . import models
 
@@ -18,10 +20,25 @@ class CommentForm(forms.ContentMixinForm):
             self.build_anonymous_comment_fields()
 
     def build_anonymous_comment_fields(self):
-            # build fields for anonymous comment
-            self.fields['username'] = django_forms.CharField(max_length=255)
-            self.fields['email'] = django_forms.EmailField()
-            self.fields['url'] = django_forms.URLField(required=False)
+        # build fields for anonymous comment
+        username = django_forms.CharField(max_length=255)
+        email = django_forms.EmailField()
+        url = django_forms.URLField(required=False)
+
+        anonymous_fields = collections.OrderedDict([
+            ('username', username),
+            ('email', email),
+            ('url', url),
+        ])
+
+        # add them at the beginning of the form
+        try:
+            # python 3
+            self.fields = collections.OrderedDict(anonymous_fields.items() | self.fields.items())
+        except TypeError:
+            # python 2 
+            self.fields = collections.OrderedDict(anonymous_fields.items() + self.fields.items())
+
 
     def build_anonymous_profile(self):
         profile = models.AnonymousCommenterProfile()

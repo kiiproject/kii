@@ -31,14 +31,6 @@
     {% block comments %}
     
         {% if display_comments %}
-            {% if item.discussion_open %}
-                <h3 id="comment-post">{% trans "comment.publish" %}</h3>
-                <form action="{{ item.reverse_comment_create }}" class="{{ comment_form.Meta.model.class_name }}" method="POST">
-                    {% csrf_token %}
-                    {{ comment_form.as_p }}
-                    <input type="submit" value="OK" />
-                </form>
-            {% endif %}
             <h3><i class="fi-comments"></i>{% blocktrans count comment_count=comments|length %}
                 {{ comment_count }} comment{% plural %}{{ comment_count }} comments{% endblocktrans %}</h3>
             <ul id="comments">
@@ -48,6 +40,14 @@
                     {% endwith %}                    
                 {% endfor %}
             </ul>
+            {% if item.discussion_open %}
+                <h3 id="comment-post">{% trans "comment.publish" %}</h3>
+                <form action="{{ item.reverse_comment_create }}" class="{{ comment_form.Meta.model.class_name }}" method="POST">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <input type="submit" value="OK" />
+                </form>
+            {% endif %}
         {% endif %}
     {% endblock %}      
 </article>
