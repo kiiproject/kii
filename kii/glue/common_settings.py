@@ -4,8 +4,10 @@ from django.conf.global_settings import *
 from django.core.urlresolvers import reverse_lazy
 #from https://github.com/lincolnloop/django-layout/blob/master/project_name/settings/base.py
 
-
+import os
 import kii
+
+KII_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -47,6 +49,10 @@ KII_APPS = kii.APPS
 # group where all users will be registered. Used for permissions
 ALL_USERS_GROUP = "all_users"
 
+
+LOCALE_PATHS += (
+    os.path.join(KII_DIR, "locale"),
+)
 
 SITE_ID = 1    
 STATIC_URL = "/static/"
