@@ -1,10 +1,12 @@
 {% extends "base_models/basemixin/detail.html" %}
 {% load base_models %}
 
+{% block header %}
+    {% include 'stream/stream/info.html' with stream=object.root %}
+    {{ block.super }}
+{% endblock %}
+
 {% block main_content %}
-     {% block stream %}
-        {% include 'stream/stream/info.html' with stream=object.root %}
-    {% endblock %}
     {% with list_item_template=object|list_item_template %}
         {% include list_item_template with item=object display_comments="true"%}
         

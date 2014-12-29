@@ -175,13 +175,13 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
 class OwnerMixin(AppMixin):
     
 
-    def pre_dispatch(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         
         if request.owner is None:
             login = reverse('kii:user:login') + "?next=" + request.path
             return redirect(login)
         
-        return super(OwnerMixin, self).pre_dispatch(request, *args, **kwargs) 
+        return super(OwnerMixin, self).dispatch(request, *args, **kwargs) 
 
 
     def get_context_data(self, **kwargs):

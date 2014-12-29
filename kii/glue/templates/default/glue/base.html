@@ -13,10 +13,14 @@
             <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/foundation/foundation.alert.js' %}"></script>
         {% endblock %}
     </head>
-    <body class="{% if request.user.is_authenticated %}logged-in show-nav{% endif %} "> 
-        {% block header %}
-            {% include "glue/main_navigation.html" %}
-        {% endblock %}
+    <body class="show-nav"> 
+
+        <nav class="main-navigation" role="navigation">
+            <h1><a href="{% url 'kii:stream:index' %}">Kii</a></h1>
+            {% block header %}
+                {% include "glue/main_navigation.html" %}
+            {% endblock %}
+        </nav>
         <div class="main-content">
             {% block page_title %}
                 <header>

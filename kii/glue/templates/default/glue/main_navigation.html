@@ -1,28 +1,23 @@
 {% load i18n %}
-{% block main_navigation %}
-    <a href="#" id="show-nav" class="button">Menu</a>
-    <nav class="main-navigation" role="navigation">
-        
-        <h1><a href="{% url 'kii:stream:index' %}">Kii</a></h1>
-        <section class="apps">
-            <h3>{% trans 'kii.apps' %}</h3>                    
-            <ul class="side-nav">
-                {% for app in user_apps %}
-                    {% if app.menu %}
-                        {% include "glue/menu_node.html" with node=app.menu %}
-                    {% endif %}
-                {% endfor %}                                
-            </ul>
-        </section>
-        <section class="user-area">
-            <h3>{% trans 'kii.user.menu' %}</h3>
-            <ul class="side-nav">
-            {% if not request.user.is_authenticated %}
-                <li><a href="{% url 'kii:user:login' %}" class="login">{% trans 'login' %}</a></li>
-            {% else %}
-                <li class="logout"><a href="{% url 'kii:user:logout' %}"><i class="fi-x"></i>{% trans 'logout' %}</a></li>
-            {% endif %}
+{% block main_navigation %}        
+    <section class="apps">
+        <h3>{% trans 'kii.apps' %}</h3>                    
+        <ul class="side-nav">
+            {% for app in user_apps %}
+                {% if app.menu %}
+                    {% include "glue/menu_node.html" with node=app.menu %}
+                {% endif %}
+            {% endfor %}                                
         </ul>
-        </section>
-    </nav>
+    </section>
+    <section class="user-area">
+        <h3>{% trans 'kii.user.menu' %}</h3>
+        <ul class="side-nav">
+        {% if not request.user.is_authenticated %}
+            <li><a href="{% url 'kii:user:login' %}" class="login">{% trans 'login' %}</a></li>
+        {% else %}
+            <li class="logout"><a href="{% url 'kii:user:logout' %}"><i class="fi-x"></i>{% trans 'logout' %}</a></li>
+        {% endif %}
+    </ul>
+    </section>
 {% endblock %}
