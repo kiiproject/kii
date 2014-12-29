@@ -6,6 +6,14 @@ User = get_user_model()
 
 
 class OwnerMiddleware(object):
+    """Deduce the owner of the data located at the requested URL (by order of priority):
+
+    1. from the URL, if there is a `<username>` placeholder
+    2. from the request user, if he is authenticated
+    3. from the username in ``settings.KII_DEFAULT_USER``, if any
+    
+    Deduced owner can be later retrieved via ``request.owner``.
+    """
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         request.owner = self.get_owner(request, view_kwargs)

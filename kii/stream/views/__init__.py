@@ -18,8 +18,7 @@ class StreamContextMixin(views.OwnerMixin):
     def get_current_stream(self):
         if self.current_stream is None:
             try:
-                self.owner = self.get_owner(self.request, **self.kwargs)
-                self.current_stream = models.Stream.objects.get(owner=self.owner.pk, title=self.owner.username)
+                self.current_stream = models.Stream.objects.get(owner=self.request.owner.pk, title=self.request.owner.username)
                 return self.current_stream
             except models.Stream.DoesNotExist:
                 raise Http404
@@ -94,7 +93,7 @@ class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
     def __call__(self, request, *args, **kwargs):
         self.setup(request, *args, **kwargs)
         self.pre_dispatch(request, *args, **kwargs)
-        self.owner = self.get_owner(request, **kwargs)
+        self.owner = request.owner
         self.stream = self.get_current_stream()
 
         return super(StreamFeedAtom, self).__call__(request, *args, **kwargs)
@@ -153,7 +152,6 @@ class ItemCommentModeration(StreamContextMixin, views.MultipleObjectPermissionMi
         return kwargs
 
     def has_required_permission(self, request, *args, **kwargs):
-        owner = self.get_owner(request, *args, **kwargs)
         stream = self.get_current_stream()
 
         return stream.owner.pk == request.user.pk
