@@ -44,27 +44,29 @@ class AppMixin(object):
 
         return super(AppMixin, self).dispatch(request, *args, **kwargs)
 
-    def get_title_components(self):
+    def get_breadcrumbs(self):
         """
-        :return: an iterable of title elements , such as ``('Delete', 'My model', 'My app')`` \
-        for use in templates. By default, returns only the app name.
+        :return: an tuple of breadcrumb elements , such as 
+        ``(('Delete' '/delete'), ('My model', None), ('My app', None))`` \
+        for use in templates. The first item of each tuple is the title of the element,
+        the second is the URL. URL can be None.
         """
-        return (self.app.verbose_name,)
+        return ((self.app.verbose_name, None),)
 
     def get_context_data(self, **kwargs):
-        """Add the current app, the page title, the title components and the root URL of kii to context"""
+        """Add the current app, the page title, the breadcrumbs and the root URL of kii to context"""
         context = super(AppMixin, self).get_context_data(**kwargs)
 
         context['app'] = self.app
         
-        title_components = [force_text(component) for component in self.get_title_components() if force_text(component)]
+        breadcrumbs = [(force_text(title, ), url) for title, url in self.get_breadcrumbs() if force_text(title)]
         page_title = self.get_page_title()
         if page_title:
-            title_components.insert(0, force_text(page_title))
+            breadcrumbs += ((force_text(page_title), None),)
             context['page_title'] = page_title
 
-        context['title_components'] = title_components        
-        context['full_title'] = " | ".join(title_components)
+        context['breadcrumbs'] = breadcrumbs   
+        context['full_title'] = " | ".join(reversed([title for title, url in breadcrumbs]))
 
         context['kii_root'] = self.request.build_absolute_uri(reverse('kii:glue:home'))
 

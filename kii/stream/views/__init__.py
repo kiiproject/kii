@@ -34,10 +34,7 @@ class StreamContextMixin(views.OwnerMixin):
 class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
 
     template_name = "stream/stream/detail.html"
-    streamitem_class = None
-    
-    def get_page_title(self):
-        return self.object.title
+    streamitem_class = None    
 
     def get_model_title(self):
         return ""

@@ -48,10 +48,10 @@ class ModelTemplateMixin(AppMixin):
         # todo : seems pointless
         return self.model
 
-    def get_title_components(self):
+    def get_breadcrumbs(self):
         """Prepend action and model label to the page title"""
-        components = super(ModelTemplateMixin, self).get_title_components()
-        return (self.get_action_title(), self.get_model_title(),) + components
+        breadcrumbs = super(ModelTemplateMixin, self).get_breadcrumbs()
+        return breadcrumbs + ((self.get_model_title(), None), (self.get_action_title(), None))
 
     def get_model_title(self):
         return self.get_model()._meta.verbose_name_plural
@@ -71,9 +71,6 @@ class ModelFormMixin(ModelTemplateMixin):
     """Implements some common modelform view logic"""
 
     form_template = "base_models/modelform.html"
-
-    def get_page_title(self):
-        return super(ModelFormMixin, self).get_page_title() or self.get_action_title()
 
     @classmethod
     def as_view(cls, *args, **kwargs):
@@ -95,24 +92,28 @@ class ModelFormMixin(ModelTemplateMixin):
             kwargs['request'] = self.request
         return kwargs
 
+class SingleObjectMixin(object):
+    def get_breadcrumbs(self):
+        return super(SingleObjectMixin, self).get_breadcrumbs() + ((self.object.get_title(), None),)
+
 
 class Create(ModelFormMixin, CreateView):
     """A generic view for creating a new instance of a model"""
     action = "create"
 
     def get_action_title(self):
-        return _('model.create') + " - " + self.get_model()._meta.verbose_name
+        return _('model.create')
 
 
-class Update(ModelFormMixin, UpdateView):
+class Update(SingleObjectMixin, ModelFormMixin, UpdateView):
     """A generic view for updating an existing instance of a model"""
     action = "update"
 
     def get_action_title(self):
-        return _('model.update') + " - " + self.get_model()._meta.verbose_name
+        return _('model.update')
 
 
-class Delete(ModelTemplateMixin, DeleteView):
+class Delete(SingleObjectMixin, ModelTemplateMixin, DeleteView):
     """A generic view for deleting an existing instance of a model"""
     
     action = "delete"
@@ -122,10 +123,10 @@ class Delete(ModelTemplateMixin, DeleteView):
         return reverse("kii:glue:home")
 
     def get_action_title(self):
-        return _('model.delete') + " - " + self.get_model()._meta.verbose_name
+        return _('model.delete')
 
 
-class Detail(ModelTemplateMixin, DetailView):
+class Detail(SingleObjectMixin, ModelTemplateMixin, DetailView):
     """A generic view for detailing an existing instance of a model"""
 
     action = "detail"
@@ -135,6 +136,8 @@ class Detail(ModelTemplateMixin, DetailView):
 
     def get_context_object_name(self, obj):
         return "object"
+
+
 
 
 class List(FilterMixin, ModelTemplateMixin, ListView):

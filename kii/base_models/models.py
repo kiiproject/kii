@@ -176,6 +176,9 @@ class BaseMixin(AppModel):
 
         return template_names
         
+    def get_title(self):
+        """:return: a string representing the object, for usage in templates"""
+        return "{0}".format(self.pk)
 
 class TitleMixin(BaseMixin):
 
@@ -186,6 +189,9 @@ class TitleMixin(BaseMixin):
     class Meta:
         abstract = True
 
+    def get_title(self):
+        return self.title
+        
     def clean(self):
         # TODO: is it useful ?
         from django.core.exceptions import ValidationError
