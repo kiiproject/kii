@@ -43,7 +43,6 @@ INSTALLED_APPS = (
 
 # kii settings
 
-KII_THEME = "default"
 KII_APPS = kii.APPS
 
 # group where all users will be registered. Used for permissions
@@ -57,7 +56,6 @@ LOCALE_PATHS += (
 SITE_ID = 1    
 STATIC_URL = "/static/"
 TEMPLATE_LOADERS = (
-    'kii.theme.loaders.ThemeLoader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 

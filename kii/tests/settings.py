@@ -10,7 +10,6 @@ TEST_APPS = (
     'kii.tests.test_app',
     'kii.tests.test_app1',
     'kii.tests.test_app2',
-    'kii.tests.test_theme',
     'kii.tests.test_permission',
     'kii.tests.templates',
     'kii.tests.test_stream',
