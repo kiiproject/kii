@@ -2,10 +2,10 @@
 
 {% if node.require_authentication and request.user.is_authenticated or not node.require_authentication %}
 {% node_url node=node as url %}
-    <li class="{{ node.label }}">
+    <li class="{{ node.label }} {% if node.children %}has-dropdown{% endif %}">
         <a href="{{ url }}" class="{% if request.path == url %}active{% endif %} {% if url in request.path%}parent-active{% endif %}">{% if node.icon %}<i class="{{ node.icon }}"></i>{% endif %}{{ node.label }}</a>
         {% if node.children %}
-            <ul>
+            <ul class="dropdown">
                 {% for children_node in node.children %}
                     {% include "glue/menu_node.html" with node=children_node %}
                 {% endfor %}

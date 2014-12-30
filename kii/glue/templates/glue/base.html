@@ -13,21 +13,12 @@
             <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/foundation/foundation.alert.js' %}"></script>
         {% endblock %}
     </head>
-    <body class="show-nav"> 
-
-        <nav class="main-navigation" role="navigation">
-            <h1><a href="{% url 'kii:stream:index' %}">Kii</a></h1>
-            {% block header %}
-                {% include "glue/main_navigation.html" %}
-            {% endblock %}
-        </nav>
+    <body class="{% block body_class %}{% endblock %}"> 
+        {% include "glue/main_navigation.html" %}
         <div class="main-content">
-            {% block page_title %}
-                <header>
-                {% if page_title %}
+            {% block page_title %}<header>{% if page_title %}
                     <h1>{{ page_title }}</h1>
-                {% endif %}
-                </header>
+                {% endif %}</header>
             {% endblock %}
             {% block messages %}       
                 {% if messages %}
@@ -40,6 +31,12 @@
             {% endblock %}
             {% block main_content %}{% endblock %}
         </div>
+
+        <aside class="sidebar">
+        {% block sidebar %}
+
+        {% endblock %}
+        </aside>
         {% block bottom_js %}
 
         <script type="text/javascript" src="{% static 'default/glue/js/app.js' %}"></script>
