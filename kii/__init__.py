@@ -3,17 +3,17 @@
 __version__ = "0.1"
 
 APPS = (
-    'kii.base_models',
     'kii.locale',
     'kii.hook',
     'kii.permission',
     'kii.user',
-    'kii.app',
     'kii.api',
     'kii.glue',
-    'kii.discussion',
-    'kii.stream',
     'kii.classify',
+    'kii.stream',
+    'kii.discussion',
+    'kii.base_models',
+    'kii.app',
 )
 
 

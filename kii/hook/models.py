@@ -1,12 +1,12 @@
 from django.db import models
 from six import with_metaclass
 
-from kii import base_models
+from kii.base_models.models import BaseMixin
 from kii.utils import meta
 from . import model_filters
 
 
-class HookMixin(base_models.models.BaseMixin):    
+class HookMixin(BaseMixin):    
 
     class Meta:
         abstract = True
