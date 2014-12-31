@@ -86,9 +86,19 @@ LANGUAGES = (
     ('en', 'English'),
 )
 
+from django.utils.functional import curry
 import markdown
+from markdown.extensions.codehilite import makeExtension as CodeHilite # noqa
+
+md_filter = curry(markdown.markdown, extensions=[CodeHilite(css_class='code',
+                                                            linenums=False, 
+                                                            noclasses=True)])
+MARKDOWN_FUNCTION = md_filter
+
 #markupfield
 MARKUP_FIELD_TYPES = (
-    ('markdown', markdown.markdown),
+    ('markdown', md_filter),
     ('none', lambda s: s),
 )
+
+
