@@ -1,12 +1,15 @@
 
 
 class ModelFilters(object):
-    """A registry for storing filters that will be called when model fields are accessed via Model.filtered_<field_name>"""
+    """A registry for storing filters that will be called when model fields
+    are accessed via Model.filtered_<field_name>
+    """
 
     _hooks = {}
 
     def register(self, model, field_name, filter_func):
-        """Register given filter function on given field name for given model"""
+        """Register given filter function on given field name for given model
+        """
         model_hooks = self._hooks.setdefault(model, {})
         field_hooks = model_hooks.setdefault(field_name, [])
 
@@ -14,17 +17,18 @@ class ModelFilters(object):
             field_hooks.append(filter_func)
 
     def get(self, model, field_name):
-        """ return a list of registered filters for given model and field_name"""
+        """ return a list of registered filters for given model and field_name
+        """
         model_hooks = self._hooks.get(model, None)
         if model_hooks is not None:
             return model_hooks.get(field_name, [])
         return []
 
-    def filter(self, field_name, instance):        
+    def filter(self, field_name, instance):
         """Return the filtered value of given field on given instance"""
         field = getattr(instance, field_name)
 
-        # allow usage of markupfield  
+        # allow usage of markupfield
         filtered_value = getattr(field, "rendered", field)
 
         for filter_func in self.get(instance.__class__, field_name):

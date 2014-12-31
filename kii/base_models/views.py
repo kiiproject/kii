@@ -1,12 +1,10 @@
-from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
+from django.views.generic import (DetailView, ListView, CreateView,
+                                  DeleteView, UpdateView)
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import get_user_model
 from django.http import Http404
-from django.conf import settings
-from django.shortcuts import get_object_or_404, redirect
-from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django_filters.views import FilterMixin
 
@@ -19,23 +17,27 @@ class RequireAuthenticationMixin(AppMixin):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(RequireAuthenticationMixin, self).dispatch(*args, **kwargs)
+        return super(RequireAuthenticationMixin, self).dispatch(*args,
+                                                                **kwargs)
 
 
 class ModelTemplateMixin(AppMixin):
     """Implements some convenient logic for:
 
-    - deducing the correct template to use, from :py:attr:`model` and :py:attr:`action`
+    - deducing the correct template to use, from :py:attr:`model` and
+    :py:attr:`action`
     - building the page title
     """
 
-
-    #: a string representing an action performed by the view, like update, delete, detail, list...
     action = None
+    """: a string representing an action performed by the view, like update,
+    delete, detail, list...
+    """
 
     def get_template_names(self):
         """
-        :return: an iterable of possible template names, deduced from :py:attr:`action` and :py:attr:`model`
+        :return: an iterable of possible template names, deduced from
+        :py:attr:`action` and :py:attr:`model`
         """
 
         if self.template_name:
@@ -51,7 +53,10 @@ class ModelTemplateMixin(AppMixin):
     def get_breadcrumbs(self):
         """Prepend action and model label to the page title"""
         breadcrumbs = super(ModelTemplateMixin, self).get_breadcrumbs()
-        return breadcrumbs + ((self.get_model_title(), None), (self.get_action_title(), None))
+        return breadcrumbs + (
+            (self.get_model_title(), None),
+            (self.get_action_title(), None)
+        )
 
     def get_model_title(self):
         return self.get_model()._meta.verbose_name_plural
@@ -87,14 +92,18 @@ class ModelFormMixin(ModelTemplateMixin):
 
     def get_form_kwargs(self, **kwargs):
         kwargs = super(ModelFormMixin, self).get_form_kwargs(**kwargs)
-        if self.form_class is not None and issubclass(self.form_class, forms.BaseMixinForm):
+        if self.form_class is not None and issubclass(self.form_class,
+                                                      forms.BaseMixinForm):
             kwargs['user'] = self.request.user
             kwargs['request'] = self.request
         return kwargs
 
+
 class SingleObjectMixin(object):
     def get_breadcrumbs(self):
-        return super(SingleObjectMixin, self).get_breadcrumbs() + ((self.object.get_title(), None),)
+        return super(SingleObjectMixin, self).get_breadcrumbs() + (
+            (self.object.get_title(), None),
+        )
 
 
 class Create(ModelFormMixin, CreateView):
@@ -115,7 +124,7 @@ class Update(SingleObjectMixin, ModelFormMixin, UpdateView):
 
 class Delete(SingleObjectMixin, ModelTemplateMixin, DeleteView):
     """A generic view for deleting an existing instance of a model"""
-    
+
     action = "delete"
     template_name = "base_models/basemixin/delete.html"
 
@@ -138,8 +147,6 @@ class Detail(SingleObjectMixin, ModelTemplateMixin, DetailView):
         return "object"
 
 
-
-
 class List(FilterMixin, ModelTemplateMixin, ListView):
     """A generic view for listing many instances of a model"""
 
@@ -148,8 +155,9 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
     filterset_class = None
 
     filterset = None
-    """:the filterset will be built automatically by the view from :py:attr:`filterset_class`,
-    and used for advanced queryset filtering via GET parameters"""
+    """:the filterset will be built automatically by the view from
+    :py:attr:`filterset_class`, and used for advanced queryset filtering
+    via GET parameters"""
 
     def get_queryset(self):
         """Filter the queryset using GET parameters, if needed"""
@@ -176,16 +184,12 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
 
 
 class OwnerMixin(AppMixin):
-    
 
     def dispatch(self, request, *args, **kwargs):
-        
         if request.owner is None:
             login = reverse('kii:user:login') + "?next=" + request.path
             return redirect(login)
-        
-        return super(OwnerMixin, self).dispatch(request, *args, **kwargs) 
-
+        return super(OwnerMixin, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(OwnerMixin, self).get_context_data(**kwargs)
@@ -194,54 +198,67 @@ class OwnerMixin(AppMixin):
 
 
 class PermissionMixin(AppMixin):
-    """A mixin that implements permission checks on single object related views.
+    """A mixin that implements permission checks on single object
+    related views.
 
-    No check will be performed if :py:attr:`required_permission` is set to ``None``
+    No check will be performed if :py:attr:`required_permission` is set to
+    ``None``
     """
 
     required_permission = None
-    """: a string indicating what kind of permission is required for displaying the view \
+    """: a string indicating what kind of permission is required for displaying
+    the view.
+
     The actuel check will be done via :py:meth:`has_required_permission`.
     """
 
     def pre_dispatch(self, request, *args, **kwargs):
-        r = super(PermissionMixin, self).pre_dispatch(request, *args, **kwargs)        
-        if self.required_permission is not None and not self.has_required_permission(request, *args, **kwargs):
+        r = super(PermissionMixin, self).pre_dispatch(request, *args, **kwargs)
+        if (self.required_permission is not None and
+                not self.has_required_permission(request, *args, **kwargs)):
             return self.permission_denied()
 
         return r
 
-    def has_required_permission(self, request, *args, **kwargs):   
-        """:return: A boolean indicating if the request user can access the view"""   
+    def has_required_permission(self, request, *args, **kwargs):
+        """:return: A boolean indicating if the request user can access
+        the view
+        """
         return False
-    
+
     def permission_denied(self):
-        """:return: a response for the case where user has not the required permission"""
+        """:return: a response for the case where user has not the required
+        permission
+        """
         raise Http404
 
 
 class SingleObjectPermissionMixin(PermissionMixin):
     """Implements basic pluggable permission logic on single object views"""
-    
+
     def pre_dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
-        
-        return super(SingleObjectPermissionMixin, self).pre_dispatch(request, *args, **kwargs)
+
+        return super(SingleObjectPermissionMixin,
+                     self).pre_dispatch(request, *args, **kwargs)
 
 
 class MultipleObjectPermissionMixin(PermissionMixin):
 
     pass
 
+
 class RequireOwnerMixin(SingleObjectPermissionMixin):
-    
-    """Permission mixin that checks the requested object is owned by ``request.user``
-    before granting access"""
+
+    """Permission mixin that checks the requested object is owned by
+    ``request.user`` before granting access
+    """
 
     required_permission = "owner"
 
-    def has_required_permission(self, request, *args, **kwargs):  
+    def has_required_permission(self, request, *args, **kwargs):
         return self.object.owned_by(request.user)
+
 
 class OwnerMixinDetail(RequireOwnerMixin, OwnerMixin, Detail):
     pass
@@ -252,7 +269,9 @@ class OwnerMixinList(OwnerMixin, List):
 
 
 class OwnerMixinCreate(OwnerMixin, Create):
-    """A create view that set the newly created instance ``owner`` attribute to ``request.user``"""
+    """A create view that set the newly created instance ``owner`` attribute to
+     ``request.user``
+     """
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -261,6 +280,7 @@ class OwnerMixinCreate(OwnerMixin, Create):
 
 class OwnerMixinUpdate(OwnerMixin, RequireOwnerMixin, Update):
     pass
+
 
 class OwnerMixinDelete(OwnerMixin, RequireOwnerMixin, Delete):
 
