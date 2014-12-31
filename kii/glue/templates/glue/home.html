@@ -3,4 +3,12 @@
 
 {% block breadcrumbs %}{% endblock %}
 {% block main_content %}
+    <section>
+        <h2>{% trans "user.registered" %}</h2>
+        <ul class="users">
+            {% for user in kii_users.all %}
+            <li><a href="{% url 'kii:user_area:stream:index' username=user.username %}">{{ user.username }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
 {% endblock %}
