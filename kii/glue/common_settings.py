@@ -1,11 +1,13 @@
 """Base settings shared by all environments"""
 # Import global settings to make it easier to extend settings.
-from django.conf.global_settings import *   # pylint: disable=W0614,W0401
+from django.conf.global_settings import *  # NOQA
 from django.core.urlresolvers import reverse_lazy
 #from https://github.com/lincolnloop/django-layout/blob/master/project_name/settings/base.py
 
-
+import os
 import kii
+
+KII_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -21,6 +23,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'kii.base_models.middleware.OwnerMiddleware',
+    #'kii.glue.middleware.SpacelessMiddleware',
 )
 
 INSTALLED_APPS = (
@@ -32,26 +36,30 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'guardian',
     'polymorphic',
+    'django_filters',
     'mptt',
+    'rest_framework',
 ) + kii.APPS_CONFIGS
 
 # kii settings
 
-KII_THEME = "default"
 KII_APPS = kii.APPS
 
 # group where all users will be registered. Used for permissions
 ALL_USERS_GROUP = "all_users"
 
 
-SITE_ID = 1    
+LOCALE_PATHS += (
+    os.path.join(KII_DIR, "locale"),
+)
+
+SITE_ID = 1
 STATIC_URL = "/static/"
 TEMPLATE_LOADERS = (
-    'kii.theme.loaders.ThemeLoader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 
-)   
+)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -65,7 +73,7 @@ AUTHENTICATION_BACKENDS += (
 
 LOGIN_URL = "kii:user:login"
 REVERSED_LOGIN_URL = reverse_lazy(LOGIN_URL)
-LOGIN_REDIRECT_URL="kii:stream:index"
+LOGIN_REDIRECT_URL = "kii:stream:index"
 
 # localization
 

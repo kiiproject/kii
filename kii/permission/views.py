@@ -1,36 +1,35 @@
 from kii.base_models import views
-from django.http import Http404
 
 
+class SingleObjectRequirePermissionMixin(views.SingleObjectPermissionMixin):
 
-class RequirePermissionMixin(object):
-
-    permission_denied = Http404
-
-    def has_required_permission(self, user):        
+    def has_required_permission(self, request, *args, **kwargs):
         mapping = {
             "read": "readable_by",
             "write": "writable_by",
             "delete": "deletable_by",
-        } 
+        }
         checker = getattr(self.object, mapping[self.required_permission])
-        return checker(user)
+        return checker(request.user)
 
 
-class PermissionMixinDetail(RequirePermissionMixin, views.OwnerMixinDetail):
-    """Raise 404 when unauthorized user try to detail a private model instance"""
-
+class PermissionMixinDetail(SingleObjectRequirePermissionMixin,
+                            views.OwnerMixinDetail):
     required_permission = "read"
 
-class PermissionMixinUpdate(RequirePermissionMixin, views.OwnerMixinUpdate):
+
+class PermissionMixinUpdate(SingleObjectRequirePermissionMixin,
+                            views.OwnerMixinUpdate):
     required_permission = "write"
 
 
-class PermissionMixinDelete(RequirePermissionMixin, views.OwnerMixinDelete):
+class PermissionMixinDelete(SingleObjectRequirePermissionMixin,
+                            views.OwnerMixinDelete):
     required_permission = "delete"
-       
 
-class PermissionMixinList(RequirePermissionMixin, views.OwnerMixinList):
+
+class PermissionMixinList(views.MultipleObjectPermissionMixin,
+                          views.OwnerMixinList):
     """Filter model instances depending on user and permissions"""
 
     def get_queryset(self):
@@ -39,12 +38,11 @@ class PermissionMixinList(RequirePermissionMixin, views.OwnerMixinList):
         queryset = super(PermissionMixinList, self).get_queryset()
 
         return queryset.readable_by(self.request.user.pk)
-        
+
 
 class PrivateReadDetail(PermissionMixinDetail):
     pass
 
+
 class PrivateReadList(PermissionMixinList):
     pass
-
-            

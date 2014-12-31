@@ -1,23 +1,29 @@
 from __future__ import unicode_literals
-from kii import base_models, stream as stream_app, permission
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
+from kii.base_models import models as bm
+from kii.stream import models as stream_models
+
+
 class Tag(
     MPTTModel,
-    base_models.models.OwnerMixin,
-    base_models.models.TitleMixin):
+    bm.OwnerMixin,
+    bm.TitleMixin):
     """
-    A model for storing StreamItem instances"""
+    Hierarchical model that can be attached to a :py:class:`kii.stream.models.StreamItem` instance.
+    """
 
-    streamitems = models.ManyToManyField(stream_app.models.StreamItem, through='TagStreamItem', related_name="tags")
+    streamitems = models.ManyToManyField(stream_models.StreamItem, through='TagStreamItem', related_name="tags")
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
     class MPTTMeta:
         order_insertion_by = ['title']
         
+        
 class TagStreamItem(models.Model):
     """Many to many relationship between StreamItem and Tag"""
-    streamitem = models.ForeignKey(stream_app.models.StreamItem)
+
+    streamitem = models.ForeignKey(stream_models.StreamItem)
     tag = models.ForeignKey(Tag)

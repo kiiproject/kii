@@ -9,10 +9,10 @@ from ...tests import test_stream
 
 class TestStreamItem(base.StreamTestCase):
     
-    def test_status_default_to_draft(self):
+    def test_status_default_to_pub(self):
 
         m = self.G(stream.models.StreamItem)
-        self.assertEqual(m.status, "dra")
+        self.assertEqual(m.status, "pub")
 
     def test_creation_and_modification_date(self):
         now = timezone.now()
@@ -47,15 +47,6 @@ class TestStreamItem(base.StreamTestCase):
         m1.save()
         m2.save()
         self.assertQuerysetEqualIterable(self.streams[0].children.all(), [m1, m2], ordered=False)
-
-
-    def test_comments(self):
-        m = stream.models.StreamItem(title="test", root=self.streams[0])
-        m.save()
-        c = self.G(stream.models.StreamItemComment, subject=m, user=m.owner)
-
-        self.assertEqual(c.published, True)
-        self.assertEqual(c.junk, False)
 
     def test_form_select_user_stream_as_default_stream(self):
         form = forms.StreamItemForm(user=self.users[0])

@@ -1,6 +1,22 @@
 // Foundation by ZURB
 // foundation.zurb.com
 // Licensed under MIT Open Source
+$content-width: 40rem;
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(Open_Sans.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Merriweather';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Merriweather'), url(Merriweather.woff) format('woff');
+}
+
+
 
 //
 
@@ -95,7 +111,7 @@ $row-width: rem-calc(1300);
 // $font-weight-normal: normal !default;
 // $font-weight-bold: bold !default;
 
-// $white       : #FFFFFF;
+$white       : #FFFFFF;
 // $ghost       : #FAFAFA;
 // $snow        : #F9F9F9;
 // $vapor       : #F6F6F6;
@@ -112,11 +128,11 @@ $row-width: rem-calc(1300);
 // $charcoal    : #555555;
 // $tuatara     : #444444;
 // $oil         : #333333;
-// $jet         : #222222;
+$jet         : #222222;
 // $black       : #000000;
 
 // We use these as default colors throughout
-// $primary-color: #008CBA;
+$primary-color: #008CBA;
 // $secondary-color: #e7e7e7;
 // $alert-color: #f04124;
 // $success-color: #43AC6A;
@@ -125,7 +141,7 @@ $row-width: rem-calc(1300);
 
 // We use these to control various global styles
 // $body-bg: $white;
-// $body-font-color: $jet;
+$body-font-color: $jet;
 // $body-font-family: $font-family-sans-serif;
 // $body-font-weight: $font-weight-normal;
 // $body-font-style: normal;
@@ -195,21 +211,21 @@ $row-width: rem-calc(1300);
 // $include-html-type-classes: $include-html-classes;
 
 // We use these to control header font styles
-// $header-font-family: $body-font-family;
-// $header-font-weight: $font-weight-normal;
+$header-font-family: "Open Sans", sans-serif;
+$header-font-weight: "bold";
 // $header-font-style: normal;
 // $header-font-color: $jet;
-// $header-line-height: 1.4;
+$header-line-height: 1;
 // $header-top-margin: .2rem;
-// $header-bottom-margin: .5rem;
+$header-bottom-margin: 1.5rem;
 // $header-text-rendering: optimizeLegibility;
 
 // We use these to control header font sizes
-// $h1-font-size: rem-calc(44);
-// $h2-font-size: rem-calc(37);
-// $h3-font-size: rem-calc(27);
-// $h4-font-size: rem-calc(23);
-// $h5-font-size: rem-calc(18);
+$h1-font-size: rem-calc(43);
+$h2-font-size: rem-calc(35);
+$h3-font-size: rem-calc(28);
+$h4-font-size: rem-calc(22);
+$h5-font-size: rem-calc(16);
 // $h6-font-size: 1rem;
 
 // We use these to control header size reduction on small screens
@@ -232,9 +248,9 @@ $row-width: rem-calc(1300);
 // $small-font-color: scale-color($header-font-color, $lightness: 35%);
 
 // We use these to style paragraphs
-// $paragraph-font-family: inherit;
+$paragraph-font-family: "Merriweather", serif;
 // $paragraph-font-weight: $font-weight-normal;
-// $paragraph-font-size: 1rem;
+$paragraph-font-size: 1.1rem;
 // $paragraph-line-height: 1.6;
 // $paragraph-margin-bottom: rem-calc(20);
 // $paragraph-aside-font-size: rem-calc(14);
@@ -1298,9 +1314,9 @@ $row-width: rem-calc(1300);
 
 // $include-html-tabs-classes: $include-html-classes;
 
-// $tabs-navigation-padding: rem-calc(16);
-// $tabs-navigation-bg-color: $silver  ;
-// $tabs-navigation-active-bg-color: $white;
+$tabs-navigation-padding: rem-calc(4);
+// // $tabs-navigation-bg-color: $silver  ;
+// $tabs-navigation-active-bg-color: $steel;
 // $tabs-navigation-hover-bg-color: scale-color($tabs-navigation-bg-color, $lightness: -6%);
 // $tabs-navigation-font-color: $jet;
 // $tabs-navigation-active-font-color: $tabs-navigation-font-color;
@@ -1360,8 +1376,9 @@ $row-width: rem-calc(1300);
 
 // $include-html-top-bar-classes: $include-html-classes;
 
+$topbar-bg-base-color: rgba(255, 255, 255, 0.95);
 // Background color for the top bar
-// $topbar-bg-color: $oil;
+$topbar-bg-color: $topbar-bg-base-color;
 // $topbar-bg: $topbar-bg-color;
 
 // Height and margin
@@ -1373,25 +1390,25 @@ $row-width: rem-calc(1300);
 // $topbar-title-font-size: rem-calc(17);
 
 // Style the top bar dropdown elements
-// $topbar-dropdown-bg: $oil;
-// $topbar-dropdown-link-color: $white;
-// $topbar-dropdown-link-bg: $oil;
+$topbar-dropdown-bg: $white;
+$topbar-dropdown-link-color: $body-font-color;
+$topbar-dropdown-link-bg: $white;
 // $topbar-dropdown-link-weight: $font-weight-normal;
 // $topbar-dropdown-toggle-size: 5px;
-// $topbar-dropdown-toggle-color: $white;
+$topbar-dropdown-toggle-color: $body-font-color;
 // $topbar-dropdown-toggle-alpha: 0.4;
 
 // Set the link colors and styles for top-level nav
-// $topbar-link-color: $white;
-// $topbar-link-color-hover: $white;
-// $topbar-link-color-active: $white;
-// $topbar-link-color-active-hover: $white;
+$topbar-link-color: $body-font-color;
+$topbar-link-color-hover: $white;
+$topbar-link-color-active: $body-font-color;
+$topbar-link-color-active-hover: $body-font-color;
 // $topbar-link-weight: $font-weight-normal;
 // $topbar-link-font-size: rem-calc(13);
 // $topbar-link-hover-lightness: -10%; // Darken by 10%
 // $topbar-link-bg: $topbar-bg;
-// $topbar-link-bg-color-hover: $charcoal;
-// $topbar-link-bg-hover: #272727;
+$topbar-link-bg-color-hover: $white;
+$topbar-link-bg-hover: $primary-color;
 // $topbar-link-bg-active: $primary-color;
 // $topbar-link-bg-active-hover: scale-color($primary-color, $lightness: -14%);
 // $topbar-link-font-family: $body-font-family;
@@ -1407,7 +1424,7 @@ $row-width: rem-calc(1300);
 // $topbar-dropdown-label-text-transform: uppercase;
 // $topbar-dropdown-label-font-weight: $font-weight-bold;
 // $topbar-dropdown-label-font-size: rem-calc(10);
-// $topbar-dropdown-label-bg: $oil;
+$topbar-dropdown-label-bg: $white;
 
 // Top menu icon styles
 // $topbar-menu-link-transform: uppercase;

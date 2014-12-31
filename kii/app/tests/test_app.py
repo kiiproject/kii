@@ -5,12 +5,11 @@ from django.core.urlresolvers import reverse
 from ..core import apps
 from .. import menu
 from . import base
-from kii import app
 from kii.tests.test_app import apps as test_apps, models
 from ..templatetags import app_tags
 
-class TestApp(base.BaseTestCase):
 
+class TestApp(base.BaseTestCase):
 
     def test_can_get_app(self):
         app = apps.get('test_app')
@@ -19,11 +18,14 @@ class TestApp(base.BaseTestCase):
     def test_can_get_all_apps(self):
         all_apps = list(apps.all())
         django_apps = list(django_app_registry.get_app_configs())
-        self.assertEqual(django_apps, all_apps)  
+        self.assertEqual(django_apps, all_apps)
 
     def test_can_get_kii_app(self):
-        kii_apps = apps.kii_apps()  
-        self.assertEqual(len(kii_apps), len(settings.KII_APPS + settings.TEST_APPS))
+        kii_apps = apps.kii_apps()
+        self.assertEqual(
+            len(kii_apps),
+            len(settings.KII_APPS + settings.TEST_APPS)
+        )
         for app in kii_apps:
             self.assertIn(app.name, settings.KII_APPS + settings.TEST_APPS)
 
@@ -46,10 +48,11 @@ class TestApp(base.BaseTestCase):
         reverse('kii:test_app2:third_view')
 
     def test_gathered_urls_also_accept_username_kwarg(self):
-        reverse('kii_user:test_app:index', kwargs={"username": "test0"})
-        reverse('kii_user:test_app1:some_view', kwargs={"username": "test1"})
-        reverse('kii_user:test_app2:third_view', kwargs={"username": "test2"})
-
+        reverse('kii:user_area:test_app:index', kwargs={"username": "test0"})
+        reverse('kii:user_area:test_app1:some_view',
+                kwargs={"username": "test1"})
+        reverse('kii:user_area:test_app2:third_view',
+                kwargs={"username": "test2"})
 
     def test_app_templates_inherit_from_page_template(self):
         response = self.client.get(reverse('kii:test_app:home'))
@@ -62,14 +65,19 @@ class TestApp(base.BaseTestCase):
         self.assertIn("Test app", parsed.title.string)
 
     def test_app_can_register_menu_items(self):
-        self.assertEqual(apps.get('test_app').menu.url(), "/kii/test_app/hello")
+        self.assertEqual(apps.get('test_app').menu.url(),
+                         "/kii/test_app/hello")
         self.assertEqual(apps.get('test_app').menu.label, "Test App Index")
-        self.assertEqual(apps.get('test_app').menu.title, "Click to return home")
+        self.assertEqual(apps.get('test_app').menu.title,
+                         "Click to return home")
 
     def test_menu_item_children_are_ordered_by_weight(self):
-        self.assertEqual(apps.get('test_app').menu.children[0].url(), "/kii/test_app/hello/first")
-        self.assertEqual(apps.get('test_app').menu.children[1].url(), "/kii/test_app/hello/second")
-        self.assertEqual(apps.get('test_app').menu.children[2].url(), "/kii/test_app/hello/third")
+        self.assertEqual(apps.get('test_app').menu.children[0].url(),
+                         "/kii/test_app/hello/first")
+        self.assertEqual(apps.get('test_app').menu.children[1].url(),
+                         "/kii/test_app/hello/second")
+        self.assertEqual(apps.get('test_app').menu.children[2].url(),
+                         "/kii/test_app/hello/third")
 
     def test_can_have_menu_node_without_reversing_url(self):
         m = menu.MenuNode(
@@ -80,18 +88,26 @@ class TestApp(base.BaseTestCase):
 
     def test_menu_item_with_user_url(self):
         m = menu.MenuNode(
-            route="kii_user:test_app:user",
+            route="kii:user_area:test_app:user",
             reverse=True,
             reverse_kwargs=["username"],
         )
-        self.assertEqual(m.url(username="test0"), "/kii/test0/test_app/hello/user")
-         
+        self.assertEqual(m.url(username="test0"),
+                         "/kii/test0/test_app/hello/user")
+
     def test_menu_url_template_tag(self):
         m = menu.MenuNode(
-            route="kii_user:test_app:user",
+            route="kii:user_area:test_app:user",
             reverse=True,
             reverse_kwargs=["username"],
         )
 
         url = app_tags.node_url(m, username="test0")
         self.assertEqual(url, "/kii/test0/test_app/hello/user")
+
+    def test_app_view_suffix_with_app_name(self):
+        url = reverse('kii:test_app:home')
+
+        response = self.client.get(url)
+        self.assertEqual(response.context['full_title'].endswith("Test app"),
+                         True)

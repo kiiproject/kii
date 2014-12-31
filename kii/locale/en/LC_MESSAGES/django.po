@@ -1,0 +1,199 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-19 17:43+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: base_models/models.py:84
+msgid "base_models.namemixin.title"
+msgstr "Title"
+
+#: base_models/models.py:125
+msgid "base_models.status_mixin.draft"
+msgstr "Draft"
+
+#: base_models/models.py:126
+msgid "base_models.status_mixin.published"
+msgstr "Published"
+
+#: base_models/views.py:86
+msgid "model.create"
+msgstr "Create"
+
+#: base_models/views.py:92
+msgid "model.update"
+msgstr "Update"
+
+#: base_models/views.py:102
+msgid "model.delete"
+msgstr "Delete"
+
+#: classify/templates/default/classify/widget.tags.html:4
+msgid "classify.tags"
+msgstr "Tags"
+
+#: discussion/apps.py:13
+msgid "discussion"
+msgstr "Discussion"
+
+#: discussion/apps.py:19
+msgid "moderation"
+msgstr "Moderation"
+
+#: discussion/models.py:70
+msgid "published"
+msgstr "Published"
+
+#: discussion/models.py:71
+msgid "awaiting moderation"
+msgstr "awaiting moderation"
+
+#: discussion/models.py:72
+msgid "disapproved"
+msgstr "disapproved"
+
+#: discussion/models.py:73
+msgid "junk"
+msgstr "junk"
+
+#: discussion/models.py:88
+msgid "You cannot create a comment with both user and user_profile"
+msgstr ""
+
+#: discussion/models.py:91
+msgid ""
+"Comments require either an authenticated user, either an "
+"AnonymousCommenterProfile"
+msgstr ""
+
+#: discussion/models.py:94
+msgid ""
+"You cannot register a comment for model instance that has discussion_open "
+"set to False"
+msgstr ""
+
+#: discussion/models.py:97
+msgid "You cannot post an empty comment"
+msgstr ""
+
+#: glue/templates/default/glue/main_navigation.html:8
+msgid "kii.apps"
+msgstr "apps"
+
+#: glue/templates/default/glue/main_navigation.html:18
+msgid "kii.user.menu"
+msgstr "user"
+
+#: glue/templates/default/glue/main_navigation.html:21
+#: user/templates/registration/login.html:7
+msgid "login"
+msgstr "login"
+
+#: glue/templates/default/glue/main_navigation.html:23
+msgid "logout"
+msgstr "logout"
+
+#: permission/forms.py:12
+msgid "owner"
+msgstr "owner"
+
+#: permission/forms.py:13
+msgid "everybody"
+msgstr "everybody"
+
+#: permission/models.py:37
+msgid "permissions.read"
+msgstr "read"
+
+#: permission/models.py:38
+#| msgid "permissions.read"
+msgid "permissions.write"
+msgstr "write"
+
+#: permission/models.py:39
+msgid "permissions.delete"
+msgstr "delete"
+
+#: stream/apps.py:16
+msgid "stream"
+msgstr "stream"
+
+#: stream/apps.py:22
+#: stream/templates/default/stream/streamitem/list_item.html:23
+msgid "update"
+msgstr "update"
+
+#: stream/templates/default/stream/itemcomment/list_item.html:5
+msgid "author"
+msgstr ""
+
+#: stream/templates/default/stream/itemcomment/list_item.html:9
+#, python-format
+msgid "%(timesince)s ago "
+msgstr ""
+
+#: stream/templates/default/stream/itemcomment/list_item.html:12
+msgid "about"
+msgstr ""
+
+#: stream/templates/default/stream/itemcomment/list_item_moderation.html:5
+msgid "comment.update.published"
+msgstr "publish"
+
+#: stream/templates/default/stream/itemcomment/list_item_moderation.html:6
+msgid "comment.update.disapproved"
+msgstr "disapprove"
+
+#: stream/templates/default/stream/itemcomment/list_item_moderation.html:7
+msgid "comment.update.junk"
+msgstr "mark as junk"
+
+#: stream/templates/default/stream/stream/info.html:6
+msgid "subscribe"
+msgstr ""
+
+#: stream/templates/default/stream/streamitem/list_item.html:8
+#, python-format
+msgid "published on %(date)s by <a href=\"%(stream_link)s\">%(author)s</a>"
+msgstr ""
+
+#: stream/templates/default/stream/streamitem/list_item.html:24
+msgid "delete"
+msgstr ""
+
+#: stream/templates/default/stream/streamitem/list_item.html:35
+msgid "comment.publish"
+msgstr "publish"
+
+#: stream/templates/default/stream/streamitem/list_item.html:42
+#, python-format
+msgid ""
+"\n"
+"                %(comment_count)s comment"
+msgid_plural "%(comment_count)s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: stream/views/__init__.py:134
+msgid "comment.list"
+msgstr "last comments"
+
+#: stream/views/__init__.py:145
+msgid "comment.moderation"
+msgstr "comment moderation"
+
+#~ msgid "permissions.edit"
+#~ msgstr "edit"

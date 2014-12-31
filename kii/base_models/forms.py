@@ -3,12 +3,13 @@ from django.forms import ModelForm
 from . import models
 
 
-
 class BaseMixinForm(ModelForm):
-    
+
     success_url = "kii:glue:home"
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        self.request = kwargs.pop('request', None)
         super(BaseMixinForm, self).__init__(*args, **kwargs)
 
 
@@ -34,4 +35,3 @@ class StatusMixinForm(BaseMixinForm):
     class Meta:
         model = models.StatusMixin
         fields = ('status',)
-

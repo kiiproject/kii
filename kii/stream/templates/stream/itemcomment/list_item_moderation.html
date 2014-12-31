@@ -1,0 +1,9 @@
+{% extends "stream/itemcomment/list_item.html" %}
+{% load i18n %}
+{% block actions %}
+    <ul class="actions">
+        <li><a ng-click="setStatus($event, 'published')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}"><i class="fi-check"></i>{% trans "comment.update.published" %}</a></li>
+        <li><a ng-click="setStatus($event, 'disapproved')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}"><i class="fi-dislike"></i>{% trans "comment.update.disapproved" %}</a></li>
+        <li><a ng-click="setStatus($event, 'junk')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}"><i class="fi-flag"></i>{% trans "comment.update.junk" %}</a></li>
+    </ul>
+{% endblock %}

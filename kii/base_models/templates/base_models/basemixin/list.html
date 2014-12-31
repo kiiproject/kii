@@ -1,0 +1,17 @@
+{% extends "app/app_model_page.html" %}
+
+{% block main_content %}
+    {% block filter %}
+        {% if show_filters %}
+            <form action="{{ request.path }}" method="get">
+                {{ filterset.form.as_p }}
+                <input type="submit" />
+            </form>
+        {% endif %}
+    {% endblock %}
+    {% block objects %}
+        {% for object in object_list %}
+            {% include object.list_item_template %}
+        {% endfor %}
+    {% endblock %}
+{% endblock %}

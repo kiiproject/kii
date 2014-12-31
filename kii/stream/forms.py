@@ -1,13 +1,16 @@
 from kii.base_models import forms
 from kii.permission.forms import PermissionMixinForm
+from kii.discussion.forms import CommentForm
+
 from . import models
 
 
-class StreamForm(PermissionMixinForm):
+class StreamForm(PermissionMixinForm, forms.ContentMixinForm):
 
-    class Meta(PermissionMixinForm):
+    class Meta(PermissionMixinForm, forms.ContentMixinForm.Meta):
         model = models.Stream
-        fields = PermissionMixinForm.Meta.fields
+        fields = (forms.ContentMixinForm.Meta.fields +
+                  PermissionMixinForm.Meta.fields)
 
 
 class StreamItemForm(
@@ -21,16 +24,17 @@ class StreamItemForm(
             forms.StatusMixinForm.Meta,):
 
         model = models.StreamItem
-        fields = forms.TitleMixinForm.Meta.fields + \
-                 forms.ContentMixinForm.Meta.fields + \
-                 forms.StatusMixinForm.Meta.fields + ('root',)
-
+        fields = (forms.TitleMixinForm.Meta.fields +
+                  forms.ContentMixinForm.Meta.fields +
+                  forms.StatusMixinForm.Meta.fields +
+                  ('root',))
 
     def __init__(self, *args, **kwargs):
-        """Set default stream to user's default stream if no stream is provided"""
+        """Set default stream to user's default stream if no stream is provided
+        """
 
         super(StreamItemForm, self).__init__(*args, **kwargs)
-        
+
         queryset = models.Stream.objects.filter(owner=self.user.pk)
         if len(queryset) < 1:
             raise Exception('User must have at lest one stream')
@@ -38,3 +42,9 @@ class StreamItemForm(
         self.fields['root'].queryset = queryset
         self.initial['root'] = queryset.first()
         self.fields['root'].empty_label = None
+
+
+class ItemCommentForm(CommentForm):
+
+    class Meta(CommentForm.Meta):
+        model = models.ItemComment

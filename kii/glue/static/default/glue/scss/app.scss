@@ -40,24 +40,71 @@
 //   "foundation/components/offcanvas",
 //   "foundation/components/visibility";
 
+* {
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
 
-.main-content {
-    @include grid-row;
-    padding: 2rem 0.5rem;
-    .stream {
-        @media #{$medium-up} { 
-            @include grid-column(9)
-        }
-    }
-    .widget.tags {
-        @media #{$medium-up} { 
-            @include grid-column(3)
-        }
+$sidebar-width: 20rem;
+
+.column {
+    margin-top: 2rem;
+    position: relative;
+    float: left;
+}
+body {
+    padding: 1rem;
+
+
+    &.has-sidebar {
+
+        padding-right: $sidebar-width + 1rem;     
+        .main-content {
+            @extend .column;            
+        } 
+        .sidebar {
+            @extend .column;
+            display: block;
+            width: $sidebar-width;
+            margin-right: -100%;
+        }    
     }
 }
 
-code, pre, blockquote {
+.main-navigation {
+    &, & .dropdown {
+        box-shadow: 1px 1px 1px $gainsboro;
+    }
+}
+
+
+.main-content {
+    margin-top: 2rem;
+    > * {
+        max-width: $content-width;
+        margin: 0 auto;
+        width: 100%;
+    }
+    > header:not(:empty){
+        margin-bottom: 2rem;
+    }    
+}
+
+code {
+    border: none;
+    background-color: #EEEEEE;
+    
+}
+code.code {
+    background-color: transparent;
+}
+.code > pre, blockquote {
+    background-color: #EEEEEE;
+    font-size: 1rem;
     padding: 0.5rem;
+    margin: 2rem 0;
+    overflow-x: auto;
 }
 // icons
 
@@ -66,16 +113,22 @@ i[class^="fi-"] {
 }
 
 .actions {
-    list-style-type: none;
-    margin-left: 0
+    @include inline-list;
+    margin: 1rem 0 0;
+    li {
+        margin:0 1rem 0 0;
+    }
 }
 
 .date {
     @include label;
 }
 
+.button, button, input[type="submit"] {
+    @include button;
+}
 form {
-    max-width: 30rem;
+    max-width: 50rem;
     display: block;
     margin: 0 auto;
 }
@@ -85,37 +138,91 @@ textarea {
 }
 // streams 
 
-.stream {
-    > .info {
-        @include panel;
-        .actions, h3 {
-            display: inline-block;
-            margin-bottom: 0;
-        }
-        .actions {
-            float: right;
-        }
+.stream.info {
+    @include panel();
+    h3 {
+        font-size: $paragraph-font-size;
     }
-}
-.stream-select {
-    display: inline-block;
-    width: auto;
-    margin: 0 1rem;
+    .content * {
+        font-size: 1rem;
+    }
 }
 
 article.stream-item {
-    @include grid-row;
-     
+    max-width: $content-width;
+    margin: 0 auto; 
     border-bottom: 1px solid $gainsboro;
     padding: 1rem 0;
-    .main {
-        @media #{$medium-up} { 
-            @include grid-column(9, $collapse: true)
+
+    .title {
+        letter-spacing: -2px;
+        font-size: 3rem;
+        font-weight: bold; 
+        line-height: 1;
+        a, a:hover {
+            color: #2E3437;
         }
     }
-    .secondary {
-        @media #{$medium-up} { 
-            @include grid-column(3)
+    .main {
+
+        .content {
+            margin: 2rem 0;
+            h1 {
+                padding-bottom: 1rem;
+                border-bottom: 1px solid $gainsboro;
+            }
         }
+    }
+}
+
+.meta {
+    @include panel; 
+}
+.publication, .actions, .date,  {
+    font-family: "Open Sans", sans-serif;
+}
+.tabs > dd {
+    border: 3px solid $silver;
+}
+
+// comments 
+
+.comments, #comments {
+    list-style-type: none;
+    margin-left: 0;
+}
+.comment {
+    padding: 1rem;
+    border: 1px solid $secondary-color;
+    margin-bottom: 2rem;
+    .author {
+        font-weight: bold;
+    }
+    .content {
+        h1 {
+            font-size: 2.2rem;
+        }
+        h2 {
+            font-size: 1.9rem;
+        }
+        h3 {
+            font-size: 1.7rem;
+        }
+        h4 {
+            font-size: 1.5rem;
+        }
+        h5 {
+            font-size: 1.3rem;
+        }
+        h6 {
+            font-size: 1.1rem;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #666;
+        }
+        p:last-child {
+            margin-bottom: 0;
+        }
+
     }
 }

@@ -1,11 +1,12 @@
 from __future__ import unicode_literals
+
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
-from polymorphic import PolymorphicModel, PolymorphicManager, PolymorphicQuerySet
-import inspect
+from guardian.shortcuts import get_anonymous_user
+from polymorphic import (PolymorphicModel, PolymorphicManager,
+                         PolymorphicQuerySet)
 
 from kii.base_models import models as base_models_models
 from kii.permission import models as permission_models
@@ -13,59 +14,82 @@ from kii.discussion import models as discussion_models
 from kii.hook.models import HookMixin
 
 
-class Stream(
-    permission_models.PermissionMixin,
-    base_models_models.TitleMixin):
-    """
-    A place were StreamItem instances will be published.
+class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
+             base_models_models.ContentMixin, HookMixin, ):
+    """A place were StreamItem instances will be published.
 
-    Think of it as a timeline, a wall, a list of element, such as blog entries for exemple,
-    but more generic"""
+    Think of it as a timeline, a wall, a list of element, such as blog entries
+    for exemple, but more generic"""
 
     class Meta(permission_models.PermissionMixin.Meta):
         unique_together = ('owner', 'title')
 
-    def reverse_detail(self):
-        return reverse("kii:stream:index")
+    def reverse_detail(self, **kwargs):
+        return reverse("kii:user_area:stream:index",
+                       kwargs={"username": self.owner.username})
 
-class StreamItemQuerySet(PolymorphicQuerySet, permission_models.InheritPermissionMixinQueryset):
+    def reverse_feed(self, **kwargs):
+        return reverse("kii:user_area:stream:stream:feed.atom",
+                       kwargs={"username": self.owner.username})
+
+
+class StreamItemQuerySet(PolymorphicQuerySet,
+                         permission_models.InheritPermissionMixinQueryset):
     def readable_by(self, target):
-        """Exclude draft items"""        
+        """Exclude draft items"""
+        return super(StreamItemQuerySet, self).readable_by(target)\
+                                              .filter(status="pub")
 
-        return super(StreamItemQuerySet, self).readable_by(target).filter(status="pub")
 
-class StreamItemQueryManager(PolymorphicManager, 
-    permission_models.InheritPermissionMixinQueryset.as_manager().__class__):
+class StreamItemQueryManager(
+        PolymorphicManager,
+        permission_models.InheritPermissionMixinQueryset.as_manager().__class__): # NOQA
+
     def get_queryset(self):
-        return StreamItemQuerySet(self.model, using=self._db)
+        return StreamItemQuerySet(self.model, using=self._db).select_related(
+            'owner',
+            'root')
+
+    def public(self):
+        return self.readable_by(get_anonymous_user())
 
 
-
-class StreamItem(
-    PolymorphicModel,    
-    HookMixin, 
-    base_models_models.TitleMixin,
-    base_models_models.ContentMixin,
-    base_models_models.StatusMixin,
-    base_models_models.TimestampMixin,
-    discussion_models.DiscussionMixin,
-    permission_models.InheritPermissionMixin,):
-
+class StreamItem(PolymorphicModel,
+                 base_models_models.TitleMixin,
+                 base_models_models.ContentMixin,
+                 base_models_models.StatusMixin,
+                 base_models_models.TimestampMixin,
+                 discussion_models.DiscussionMixin,
+                 HookMixin,
+                 permission_models.InheritPermissionMixin,):
     """A base class for streamable models"""
 
     root = models.ForeignKey(Stream, related_name="children")
 
     objects = StreamItemQueryManager()
 
-    class Meta(PolymorphicModel.Meta, permission_models.InheritPermissionMixin.Meta):
-        pass
+    class Meta(PolymorphicModel.Meta,
+               permission_models.InheritPermissionMixin.Meta):
+        ordering = ['-publication_date']
 
-    def reverse_delete(self):
-        return reverse("kii:stream:streamitem:delete", kwargs={"pk":self.pk})
+    def reverse_delete(self, **kwargs):
+        return reverse("kii:stream:streamitem:delete",
+                       kwargs={"pk": self.pk})
 
-class StreamItemComment(discussion_models.CommentMixin):
+    def reverse_detail(self, **kwargs):
+        return reverse("kii:user_area:stream:streamitem:detail",
+                       kwargs={"pk": self.pk, "username": self.owner.username})
+
+    def reverse_comment_create(self, **kwargs):
+        """Return URL for posting a comment"""
+        return reverse("kii:user_area:stream:streamitem:comment_create",
+                       kwargs={"username": self.owner.username, "pk": self.pk})
+
+
+class ItemComment(discussion_models.CommentMixin):
 
     subject = models.ForeignKey(StreamItem, related_name="comments")
+
 
 def create_user_stream(sender, instance, created, **kwargs):
     if created:

@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url, include
 from kii.base_models import views
 from . import models, forms
-from .views import OwnerModelList
+from .views import OwnerModelList, StatusModelList
 
 titlemodel_patterns = patterns('',
     url(r'^(?P<pk>\d+)/$', 
@@ -47,7 +47,21 @@ ownermodel_patterns = patterns('',
 
 )
 
+statusmodel_patterns = patterns('',
+    url(r'$', 
+        StatusModelList.as_view(), 
+        name='list'),
+)
+
+
 urlpatterns = patterns('',
+    url(
+        r'^statusmodel/', 
+        include(
+            statusmodel_patterns, 
+            namespace='statusmodel', 
+            app_name='statusmodel')
+        ),
     url(
         r'^titlemodel/', 
         include(

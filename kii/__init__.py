@@ -1,18 +1,21 @@
+from django.utils.version import get_version
 
+VERSION = (0, 2, 0, 'alpha', 0)
+__version__ = get_version(VERSION)
 
-__version__ = "0.1"
 
 APPS = (
-    'kii.base_models',
-    'kii.theme',
+    'kii.locale',
     'kii.hook',
     'kii.permission',
     'kii.user',
-    'kii.app',
+    'kii.api',
     'kii.glue',
-    'kii.discussion',
-    'kii.stream',
     'kii.classify',
+    'kii.stream',
+    'kii.discussion',
+    'kii.base_models',
+    'kii.app',
 )
 
 
