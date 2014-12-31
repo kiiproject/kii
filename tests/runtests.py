@@ -6,11 +6,13 @@ import sys
 import os
 
 # Give feedback on used versions
-sys.stderr.write('Using Python version {0} from {1}\n'.format(sys.version[:5], sys.executable))
+sys.stderr.write('Using Python version {0} from {1}\n'.format(sys.version[:5],
+                                                              sys.executable))
 sys.stderr.write('Using Django version {0} from {1}\n'.format(
     django.get_version(),
     os.path.dirname(os.path.abspath(django.__file__)))
 )
+
 # Detect location and available modules
 module_root = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,8 +22,9 @@ sys.path.append(KII_DIR)
 import kii
 from kii.tests import settings as test_settings
 # Inline settings file
-settings.configure(test_settings, 
-    INSTALLED_APPS=test_settings.INSTALLED_APPS+(
+settings.configure(
+    test_settings,
+    INSTALLED_APPS=test_settings.INSTALLED_APPS + (
         'django_nose',
     )
 )
@@ -47,12 +50,15 @@ functional = len(sys.argv) > 0 and "_functional" == sys.argv[-1]
 argv = sys.argv[1:]
 
 if functional:
-    # exclude functional param 
+    # exclude functional param
     argv = sys.argv[1:-1]
 
 apps_to_test = argv or kii.APPS
 if functional:
-    apps_to_test = ["{0}.tests.functional_tests".format(app_name) for app_name in apps_to_test]
+    apps_to_test = [
+        "{0}.tests.functional_tests".format(app_name)
+        for app_name in apps_to_test
+    ]
 failures = runner.run_tests(apps_to_test)
 
 if failures:
