@@ -1,12 +1,12 @@
-from django import forms as django_forms
-
 import collections
+
+from django import forms as django_forms
 
 from kii.base_models import forms
 from . import models
 
 
-class CommentForm(forms.ContentMixinForm):    
+class CommentForm(forms.ContentMixinForm):
 
     class Meta(forms.ContentMixinForm):
         """You will need to set model on child classes"""
@@ -34,11 +34,12 @@ class CommentForm(forms.ContentMixinForm):
         # add them at the beginning of the form
         try:
             # python 3
-            self.fields = collections.OrderedDict(anonymous_fields.items() | self.fields.items())
+            self.fields = collections.OrderedDict(
+                anonymous_fields.items() | self.fields.items())
         except TypeError:
-            # python 2 
-            self.fields = collections.OrderedDict(anonymous_fields.items() + self.fields.items())
-
+            # python 2
+            self.fields = collections.OrderedDict(
+                anonymous_fields.items() + self.fields.items())
 
     def build_anonymous_profile(self):
         profile = models.AnonymousCommenterProfile()

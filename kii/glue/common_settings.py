@@ -1,6 +1,6 @@
 """Base settings shared by all environments"""
 # Import global settings to make it easier to extend settings.
-from django.conf.global_settings import *  
+from django.conf.global_settings import *  # NOQA
 from django.core.urlresolvers import reverse_lazy
 #from https://github.com/lincolnloop/django-layout/blob/master/project_name/settings/base.py
 
@@ -53,13 +53,13 @@ LOCALE_PATHS += (
     os.path.join(KII_DIR, "locale"),
 )
 
-SITE_ID = 1    
+SITE_ID = 1
 STATIC_URL = "/static/"
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 
-)   
+)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -73,7 +73,7 @@ AUTHENTICATION_BACKENDS += (
 
 LOGIN_URL = "kii:user:login"
 REVERSED_LOGIN_URL = reverse_lazy(LOGIN_URL)
-LOGIN_REDIRECT_URL="kii:stream:index"
+LOGIN_REDIRECT_URL = "kii:stream:index"
 
 # localization
 

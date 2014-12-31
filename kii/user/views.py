@@ -8,5 +8,6 @@ def login(request, **kwargs):
         messages.success(request, "user.login.success")
     return r
 
+
 def logout(request, **kwargs):
     return views.logout(request, **kwargs)

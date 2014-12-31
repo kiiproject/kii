@@ -3,10 +3,10 @@ from django.http import Http404
 from django.contrib.syndication.views import Feed
 from django.utils.translation import ugettext_lazy as _
 
-from .. import models, forms, filterset
 from kii.base_models import views
 from kii.permission import views as permission_views
 from kii.discussion import views as discussion_views
+from .. import models, forms, filterset
 
 
 class StreamContextMixin(views.OwnerMixin):

@@ -1,9 +1,8 @@
 from __future__ import unicode_literals
 
-from django.db import models, IntegrityError
+from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from mptt.models import MPTTModel, TreeForeignKey
 from django.conf import settings
 
 from kii.base_models import models as bm
@@ -50,32 +49,34 @@ class AnonymousCommenterProfile(models.Model):
 
 class CommentQuerySet(bm.BaseMixinQuerySet):
     def public(self):
-        """Return public comments (not junk or awaiting moderation)"""  
-        return self.filter(status="published").select_related("user", "user_profile")
+        """Return public comments (not junk or awaiting moderation)"""
+        return self.filter(status="published").select_related("user",
+                                                              "user_profile")
 
 
-class CommentMixin(
-    bm.TimestampMixin,
-    bm.ContentMixin):
+class CommentMixin(bm.TimestampMixin, bm.ContentMixin):
+    """A base class for comment models.
 
-    """
-    A base class for comment models.
+    Must be linked to either an authenticated user via the :py:attr:`user`
+    attribute or an anonymous user via :py:attr:`user_profile`.
 
-    Must be linked to either an authenticated user via the :py:attr:`user` attribute or
-    an anonymous user via :py:attr:`user_profile`.
-
-    Subclasses MUST implement a ``subject`` ForeignKey field to the model that should accept comments.
-
+    Subclasses MUST implement a ``subject`` ForeignKey field to the model that
+    should accept comments.
     """
 
     #: relationship to an authenticated user
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)ss", editable=False, null=True, blank=True, default=None)
-    
-    #: relationship to an anonymous user
-    user_profile = models.ForeignKey(AnonymousCommenterProfile, null=True, default=None, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name="%(class)ss", editable=False,
+                             null=True, blank=True, default=None)
 
-    #: reference to a :py:class:`ProfileWrapper` instance. Will be set automatically on init
+    #: relationship to an anonymous user
+    user_profile = models.ForeignKey(AnonymousCommenterProfile, null=True,
+                                     default=None, blank=True)
+
     profile = None
+    """: reference to a :py:class:`ProfileWrapper` instance. Will be set
+    automatically on init
+    """
 
     objects = CommentQuerySet.as_manager()
 
@@ -86,28 +87,36 @@ class CommentMixin(
         ('junk', _('junk')),
     )
 
-    status = models.CharField(max_length=255, choices=STATUS_CHOICES, default="awaiting_moderation")
-    
+    status = models.CharField(max_length=255, choices=STATUS_CHOICES,
+                              default="awaiting_moderation")
+
     class Meta:
         abstract = True
-        ordering = ['created',]
+        ordering = ['created', ]
 
-    def __init__(self, *args, **kwargs):        
+    def __init__(self, *args, **kwargs):
         super(CommentMixin, self).__init__(*args, **kwargs)
         # create profile wrapper for easier attribute accesss
         self.profile = ProfileWrapper(self)
-        
-    def save(self, **kwargs): 
-        if self.new:       
+
+    def save(self, **kwargs):
+        if self.new:
             if self.user is not None and self.user_profile is not None:
-                raise ValidationError(_('You cannot create a comment with both user and user_profile'))
-                
+                raise ValidationError(_('You cannot create a comment with'
+                                        'both user and user_profile'))
+
             if self.user is None and self.user_profile is None:
-                raise ValidationError(_('Comments require either an authenticated user, either an AnonymousCommenterProfile'))
+                raise ValidationError(
+                    _('Comments require either an authenticated user, either'
+                      'an AnonymousCommenterProfile')
+                )
 
             if not self.subject.discussion_open:
-                raise ValidationError(_("You cannot register a comment for model instance that has discussion_open set to False"))
-           
+                raise ValidationError(
+                    _('You cannot register a comment for model instance that'
+                      'has discussion_open set to False')
+                )
+
             if not self.content.raw:
                 raise ValidationError(_("You cannot post an empty comment"))
 
@@ -133,11 +142,12 @@ class CommentMixin(
 
 comment_detect_junk = signals.InstanceSignal()
 
+
 class DiscussionMixin(bm.BaseMixin):
     """A mixin for models that accept comments"""
 
     #: whether the model instance is open to discussion or not
     discussion_open = models.BooleanField(default=True)
-    
+
     class Meta:
         abstract = True

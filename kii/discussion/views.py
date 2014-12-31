@@ -14,9 +14,10 @@ class CommentCreate(views.Create):
     def get_subject(self):
         # deduce the subject model class from the form model
         subject_model = self.form_class.Meta.model._meta.get_field('subject').rel.to
-        self.subject = get_object_or_404(subject_model, pk=self.kwargs['pk'], discussion_open=True)
+        self.subject = get_object_or_404(subject_model, pk=self.kwargs['pk'],
+                                         discussion_open=True)
         return self.subject
-        
+
     def get_form_kwargs(self, **kwargs):
         kwargs = super(CommentCreate, self).get_form_kwargs(**kwargs)
         kwargs['subject'] = self.get_subject()
@@ -26,7 +27,7 @@ class CommentCreate(views.Create):
         """Redirect the user to the subject absolute URL"""
         return self.get_subject().get_absolute_url()
 
-    def form_valid(self, *args, **kwargs):        
+    def form_valid(self, *args, **kwargs):
         r = super(CommentCreate, self).form_valid(*args, **kwargs)
         if self.object.status == "published":
             message = "comment.publish.success"
@@ -44,5 +45,8 @@ class CommentFormMixin(object):
     def get_context_data(self, **kwargs):
         context = super(CommentFormMixin, self).get_context_data(**kwargs)
 
-        context['comment_form'] = self.comment_form_class(request=self.request, user=self.request.user)
+        context['comment_form'] = self.comment_form_class(
+            request=self.request,
+            user=self.request.user)
+
         return context
