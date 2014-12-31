@@ -3,11 +3,12 @@ from django.test import RequestFactory
 from django_dynamic_fixture import G
 from bs4 import BeautifulSoup
 
+
 class BaseTestCase(django.test.LiveServerTestCase):
-    """A base Testcase other kii apps test cases inherit from"""    
-    
+    """A base Testcase other kii apps test cases inherit from"""
+
     def G(self, model, **kwargs):
-        """Shortcut for dynamic fixtures"""        
+        """Shortcut for dynamic fixtures"""
         return G(model, **kwargs)
 
     def setUp(self):
