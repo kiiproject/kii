@@ -9,7 +9,7 @@ kii_api_urls = core.apps.get_apps_urls("api_urls")
 
 urlpatterns = patterns('',
     url(r'^api/', include(kii_api_urls, namespace="api")), # NOQA
-    url(r'^(?P<username>\w+)/', include(kii_urls, namespace="user_area")),
+    url(r'^u/(?P<username>\w+)/', include(kii_urls, namespace="user_area")),
     url(r'^', include(kii_urls)),
     url(r'^$', RedirectView.as_view(url=reverse_lazy("kii:stream:index"),
         permanent=False)),
