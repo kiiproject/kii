@@ -4,10 +4,11 @@
 {% block breadcrumbs %}{% endblock %}
 {% block main_content %}
     <section>
-        <h2>{% trans "user.registered" %}</h2>
-        <ul class="users">
-            {% for user in kii_users.all %}
-            <li><a href="{% url 'kii:user_area:stream:index' username=user.username %}">{{ user.username }}</a></li>
+        <h2>{% trans "last published items" %}</h2>
+        <ul class="last-items">
+            {% for item in last_items %}
+            <li><a href="{{ item.reverse_detail }}" class="title">{{ item.title }}</a> - <span class="publication">{% blocktrans with timesince=item.publication_date|timesince %}{{ timesince }} ago {% endblocktrans %}</span>
+                (<a href="{{ item.root.reverse_detail }}">{{ item.owner.username }}</a>)</li>
             {% endfor %}
         </ul>
     </section>
