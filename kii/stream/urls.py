@@ -22,7 +22,7 @@ itemcomment_patterns = patterns('',
 
 urlpatterns = patterns('',
     url(r'^$', views.Index.as_view(), name='index'), # NOQA
-    url(r'^stream/', include(stream_patterns, namespace="stream")),
+    url(r'^', include(stream_patterns, namespace="stream")),
     url(r'^items/', include(streamitem_patterns, namespace="streamitem")),
     url(r'^comments/', include(itemcomment_patterns, namespace="itemcomment")),
 )
