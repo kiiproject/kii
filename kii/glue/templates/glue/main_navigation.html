@@ -42,7 +42,7 @@
             </ul> 
             {% if action == 'detail' and object.reverse_update %}
                <ul>            
-                    <li><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{% trans 'update' %}</a></li>
+                    <li><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{{ object.meta.verbose_name }} - {% trans 'update' %}</a></li>
                 </ul>
             {% endif %}
         {% endif %}

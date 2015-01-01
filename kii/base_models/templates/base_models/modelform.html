@@ -7,7 +7,7 @@
     {% endblock %}
     {% csrf_token %}
     {{ form.as_p }}
-    <input class="button success" type="submit" value="{% trans action %}" />
+    <input type="submit" value="{% trans action %}" />
 
     {% if action == "update" and form.instance.reverse_delete %}
     <a class="button alert right" href="{{ form.instance.reverse_delete }}">{% trans "delete" %}</a>

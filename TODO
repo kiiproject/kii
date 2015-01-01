@@ -7,3 +7,8 @@ TODO:
 
     #automatic URL inclusion via AppConfigs
     Implement webmentions
+    pagination
+    mail notification on comments (and the whole notification system)
+    antispam
+    password and account management
+    user profile
