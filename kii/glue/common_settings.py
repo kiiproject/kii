@@ -17,6 +17,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     'kii.app.context_processors.user_apps',
     'kii.stream.context_processors.user_stream',
     'kii.stream.context_processors.item_models',
+    'kii.glue.context_processors.kii_metadata',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

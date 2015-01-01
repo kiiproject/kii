@@ -11,19 +11,11 @@
     </div>
     {% block secondary %}
         {% if object.owner == request.user %}
-        <div class="meta">
-            {% block admin %}
-                {% block info %}
-                    <div class="info">              
-                         
-                        {% block status %}<span class="status">{{ object.get_status_display }}</span>{% endblock %}
-                    </div>
-                {% endblock %}
-                    <ul class="actions admin">
-                        <li class="update"><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{% trans "update" %}</a></li>                        
-                    </ul>
+            {% block admin %}    
+                <ul class="actions admin">
+                    <li class="update"><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{% trans "update" %}</a></li>                        
+                </ul>
             {% endblock %}
-        </div>
         {% endif %} 
     {% endblock %}  
 
