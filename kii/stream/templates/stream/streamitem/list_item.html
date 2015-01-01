@@ -1,11 +1,11 @@
-{% load base_models i18n %}
+{% load base_models i18n glue_tags %}
 
 {% with comments=item.comments.public %}
 <article class="stream-item {{ item.class_name }}">
     <div class="main">
         {% block main %}
             <h2 class="title"><a href="{{ item.reverse_detail }}">{% block title %}{{ item.filtered_title }}{% endblock %}</a></h2>
-            <p class="publication">{% blocktrans with stream_link=item.root.reverse_detail date=item.publication_date author=item.owner %}published on {{ date }} by <a href="{{ stream_link }}">{{ author }}</a>{% endblocktrans %} | <a href="{{ item.reverse_detail }}#comments"><i class="fi-comment"></i>{{ comments|length }}</a></p>
+            <p class="publication">{% blocktrans with stream_link=item.root.reverse_detail date=item.publication_date author=item.owner %}published on {{ date }} by <a href="{{ stream_link }}">{{ author }}</a>{% endblocktrans %} | <a href="{{ item.reverse_detail }}#comments">{% icon "fi-comment" %}{{ comments|length }}</a></p>
             <div class="content">{% block content %}{{ item.filtered_content }}{% endblock %}</div>
         {% endblock %}        
     </div>
@@ -20,8 +20,8 @@
                     </div>
                 {% endblock %}
                     <ul class="actions admin">
-                        <li class="update"><a href="{{ item.reverse_update }}"><i class="fi-pencil"></i>{% trans "update" %}</a></li>
-                        <li class="delete"><a href="{{ item.reverse_delete }}"><i class="fi-trash"></i>{% trans "delete" %}</a></li>
+                        <li class="update"><a href="{{ item.reverse_update }}">{% icon "fi-pencil" %}{% trans "update" %}</a></li>
+                        <li class="delete"><a href="{{ item.reverse_delete }}">{% icon "fi-trash" %}{% trans "delete" %}</a></li>
                     </ul>
             {% endblock %}
         </div>
@@ -31,7 +31,7 @@
     {% block comments %}
     
         {% if display_comments %}
-            <h3><i class="fi-comments"></i>{% blocktrans count comment_count=comments|length %}
+            <h3>{% icon "fi-comment" %}{% blocktrans count comment_count=comments|length %}
                 {{ comment_count }} comment{% plural %}{{ comment_count }} comments{% endblocktrans %}</h3>
             <ul id="comments">
                 {% for comment in comments %}
