@@ -25,6 +25,11 @@
             </li>
         </ul>    
         {% endif %}
+        {% if request.user.is_authenticated %}
+            <ul>
+                <li><a href="{{ user_stream.reverse_detail }}">{% trans "my stream" %}</a></li>
+            </ul>
+        {% endif %}
         <ul class="right">
             <li class="has-dropdown"><a href="#">{% trans 'kii.user.menu' %}</a>
                 <ul class="dropdown">

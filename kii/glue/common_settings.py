@@ -15,6 +15,7 @@ TEMPLATE_DEBUG = DEBUG
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
     'kii.app.context_processors.user_apps',
+    'kii.stream.context_processors.user_stream',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -17,10 +17,7 @@ class StreamContextMixin(views.OwnerMixin):
     def get_current_stream(self):
         if self.current_stream is None:
             try:
-                self.current_stream = models.Stream.objects.get(
-                    owner=self.request.owner.pk,
-                    title=self.request.owner.username
-                )
+                self.current_stream = models.Stream.objects.get_user_stream(self.request.owner)
 
                 return self.current_stream
             except models.Stream.DoesNotExist:
@@ -31,6 +28,7 @@ class StreamContextMixin(views.OwnerMixin):
     def get_context_data(self, **kwargs):
         context = super(StreamContextMixin, self).get_context_data(**kwargs)
         context['current_stream'] = self.get_current_stream()
+        
 
         return context
 
