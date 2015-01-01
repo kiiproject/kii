@@ -57,6 +57,18 @@ class List(StreamContextMixin, permission_views.PermissionMixinList):
     
     model = models.StreamItem
 
+    def get_filterset_kwargs(self):
+        kwargs = super(StreamContextMixin, self).get_filterset_kwargs()
+
+        if kwargs['data'].get('status') is None:
+            kwargs['data']['status'] = "pub"
+        return kwargs
+
+    def get_filterset_class(self):
+        if self.get_current_stream().owned_by(self.request.user):
+            return filterset.OwnerStreamItemFilterSet
+
+
 class Create(StreamContextMixin, views.OwnerMixinCreate):
     success_url = reverse_lazy('kii:stream:index')
 
@@ -76,8 +88,6 @@ class Delete(StreamContextMixin, permission_views.PermissionMixinDelete):
 
     def get_success_url(self):
         return reverse_lazy("kii:stream:index")
-
-
 
 
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
