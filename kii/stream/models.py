@@ -14,12 +14,20 @@ from kii.discussion import models as discussion_models
 from kii.hook.models import HookMixin
 
 
+class StreamManager(permission_models.PermissionMixinQuerySet.as_manager().__class__): # NOQA
+    def get_user_stream(self, user):
+        """:return: The main stream of the given user"""
+        return self.get(title=user.username, owner=user)
+
+
 class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
              base_models_models.ContentMixin, HookMixin, ):
     """A place were StreamItem instances will be published.
 
     Think of it as a timeline, a wall, a list of element, such as blog entries
     for exemple, but more generic"""
+
+    objects = StreamManager()
 
     class Meta(permission_models.PermissionMixin.Meta):
         unique_together = ('owner', 'title')
@@ -34,7 +42,7 @@ class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
 
 
 class StreamItemQuerySet(PolymorphicQuerySet,
-                         permission_models.InheritPermissionMixinQueryset):
+                         permission_models.InheritPermissionMixinQuerySet):
     def readable_by(self, target):
         """Exclude draft items"""
         return super(StreamItemQuerySet, self).readable_by(target)\
@@ -43,7 +51,7 @@ class StreamItemQuerySet(PolymorphicQuerySet,
 
 class StreamItemQueryManager(
         PolymorphicManager,
-        permission_models.InheritPermissionMixinQueryset.as_manager().__class__): # NOQA
+        permission_models.InheritPermissionMixinQuerySet.as_manager().__class__): # NOQA
 
     def get_queryset(self):
         return StreamItemQuerySet(self.model, using=self._db).select_related(

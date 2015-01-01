@@ -54,4 +54,7 @@ class TestStream(base.StreamTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-
+    def test_can_get_user_stream(self):
+        i = stream.models.Stream.objects.get(title=self.users[0].username,
+                                             owner=self.users[0])
+        self.assertEqual(stream.models.Stream.objects.get_user_stream(self.users[0]), i)

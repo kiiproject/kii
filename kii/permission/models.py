@@ -99,10 +99,10 @@ class PermissionMixin(base_models_models.OwnerMixin):
         return "you"
 
 
-class InheritPermissionMixinQueryset(PermissionMixinQuerySet):
+class InheritPermissionMixinQuerySet(PermissionMixinQuerySet):
 
     def filter_permission(self, permissions, target):
-        matching = super(InheritPermissionMixinQueryset,
+        matching = super(InheritPermissionMixinQuerySet,
                          self).filter_permission(permissions, target)
 
         # get root field and class for filtering
@@ -132,7 +132,7 @@ class InheritPermissionMixinQueryset(PermissionMixinQuerySet):
 
 class InheritPermissionMixin(PermissionMixin):
 
-    objects = InheritPermissionMixinQueryset.as_manager()
+    objects = InheritPermissionMixinQuerySet.as_manager()
     inherit_permissions = models.BooleanField(default=True)
 
     class Meta(PermissionMixin.Meta):
