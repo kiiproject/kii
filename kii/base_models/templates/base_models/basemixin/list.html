@@ -1,14 +1,18 @@
 {% extends "app/app_model_page.html" %}
-
-{% block main_content %}
+{% load i18n %}
+{% block sidebar %}
     {% block filter %}
         {% if show_filters %}
+            <h3>{% trans 'filter' %}</h3>
             <form action="{{ request.path }}" method="get">
                 {{ filterset.form.as_p }}
                 <input type="submit" />
             </form>
         {% endif %}
     {% endblock %}
+{% endblock %}
+{% block main_content %}
+    
     {% block objects %}
         {% for object in object_list %}
             {% include object.list_item_template %}

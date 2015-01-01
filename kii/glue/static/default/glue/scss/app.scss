@@ -189,7 +189,12 @@ article.stream-item {
 
 .comments, #comments {
     list-style-type: none;
-    margin-left: 0;
+}
+
+article {
+    .comments, #comments {        
+        margin-left: 0;
+    }
 }
 .comment {
     padding: 1rem;
