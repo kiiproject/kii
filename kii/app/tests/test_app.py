@@ -93,7 +93,7 @@ class TestApp(base.BaseTestCase):
             reverse_kwargs=["username"],
         )
         self.assertEqual(m.url(username="test0"),
-                         "/kii/test0/test_app/hello/user")
+                         "/kii/u/test0/test_app/hello/user")
 
     def test_menu_url_template_tag(self):
         m = menu.MenuNode(
@@ -103,7 +103,7 @@ class TestApp(base.BaseTestCase):
         )
 
         url = app_tags.node_url(m, username="test0")
-        self.assertEqual(url, "/kii/test0/test_app/hello/user")
+        self.assertEqual(url, "/kii/u/test0/test_app/hello/user")
 
     def test_app_view_suffix_with_app_name(self):
         url = reverse('kii:test_app:home')

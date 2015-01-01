@@ -1,6 +1,6 @@
 from django import template
 from django.db import models
-
+from django.core.urlresolvers import NoReverseMatch
 
 register = template.Library()
 
@@ -52,11 +52,17 @@ def model_url(model, suffix, **kwargs):
         {% endif %}
     Will ouptut something like ``/myapp/mymodel/12/delete`` if the URL exists.
 
-    Note model can be an instance or a :py:class:`Model` subclass.
-    """
-    if isinstance(model, models.Model):
-        return model.reverse(suffix, **kwargs)
+    Model can be an instance or a :py:class:`Model` subclass.
 
-    elif issubclass(model, models.Model):
-        return model.class_reverse(suffix, **kwargs)
+    This tag will fail silently if the URL is not foun and return an empty string.
+    """
+    try:
+        if isinstance(model, models.Model):
+            return model.reverse(suffix, **kwargs)
+
+        elif issubclass(model, models.Model):
+            return model.class_reverse(suffix, **kwargs)
+
+    except NoReverseMatch:
+        return ""
 
