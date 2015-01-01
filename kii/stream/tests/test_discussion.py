@@ -76,7 +76,7 @@ class TestDiscussion(base.StreamTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        self.assertQuerysetEqualIterable(response.context['object_list'], [c0, c1])
+        self.assertQuerysetEqualIterable(response.context['object_list'], [c1, c0])
         self.assertEqual(response.context['can_moderate'], True)
 
     def test_moderation_can_filter_by_status(self):

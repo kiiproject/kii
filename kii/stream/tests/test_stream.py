@@ -44,3 +44,17 @@ class TestStream(base.StreamTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(parsed_content['feed']['title'], i.title)
+
+    def test_empty_stream_atom_feed_does_not_raise_500(self):
+        i = stream.models.Stream.objects.get(title=self.users[0].username,
+                                             owner=self.users[0])
+        i.assign_perm('read', self.anonymous_user)
+        url = i.reverse_feed()
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_can_get_user_stream(self):
+        i = stream.models.Stream.objects.get(title=self.users[0].username,
+                                             owner=self.users[0])
+        self.assertEqual(stream.models.Stream.objects.get_user_stream(self.users[0]), i)

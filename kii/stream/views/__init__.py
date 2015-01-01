@@ -17,12 +17,7 @@ class StreamContextMixin(views.OwnerMixin):
     def get_current_stream(self):
         if self.current_stream is None:
             try:
-                self.current_stream = models.Stream.objects.get(
-                    owner=self.request.owner.pk,
-                    title=self.request.owner.username
-                )
-
-                return self.current_stream
+                self.current_stream = models.Stream.objects.get_user_stream(self.request.owner)
             except models.Stream.DoesNotExist:
                 raise Http404
 
@@ -35,27 +30,28 @@ class StreamContextMixin(views.OwnerMixin):
         return context
 
 
-class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
-    template_name = "stream/stream/detail.html"
+class List(StreamContextMixin, permission_views.PermissionMixinList):
+    
+    model = models.StreamItem
     streamitem_class = None
+    
+    def get_queryset(self, **kwargs):
+        queryset = super(List, self).get_queryset(**kwargs)
+        if self.streamitem_class:
+            queryset = queryset.instance_of(self.streamitem_class)
 
-    def get_model_title(self):
-        return ""
+        return queryset
 
-    def get_object(self):
-        return self.get_current_stream()
+    def get_filterset_kwargs(self):
+        kwargs = super(List, self).get_filterset_kwargs()
 
-    def get_context_data(self, **kwargs):
-        context = super(Index, self).get_context_data(**kwargs)
-        items = self.current_stream.children.readable_by(
-            self.request.user).select_related()
+        if kwargs['data'].get('status') is None:
+            kwargs['data']['status'] = "pub"
+        return kwargs
 
-        if self.streamitem_class is not None:
-            # filter items using given class
-            items = items.instance_of(self.streamitem_class)
-
-        context["items"] = items
-        return context
+    def get_filterset_class(self):
+        if self.get_current_stream().owned_by(self.request.user):
+            return filterset.OwnerStreamItemFilterSet
 
 
 class Create(StreamContextMixin, views.OwnerMixinCreate):
@@ -77,10 +73,6 @@ class Delete(StreamContextMixin, permission_views.PermissionMixinDelete):
 
     def get_success_url(self):
         return reverse_lazy("kii:stream:index")
-
-
-class List(StreamContextMixin, permission_views.PermissionMixinList):
-    pass
 
 
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
@@ -171,11 +163,9 @@ class ItemCommentModeration(StreamContextMixin,
     def get_queryset(self, **kwargs):
         queryset = super(ItemCommentModeration, self).get_queryset()
         stream = self.get_current_stream()
-        return queryset.filter(subject__root=stream).select_related(
-            "subject",
-            "user",
-            "user_profile"
-        )
+        return queryset.filter(subject__root=stream) \
+                       .select_related("subject", "user", "user_profile") \
+                       .order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super(ItemCommentModeration, self).get_context_data(**kwargs)

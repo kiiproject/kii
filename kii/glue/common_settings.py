@@ -15,6 +15,9 @@ TEMPLATE_DEBUG = DEBUG
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
     'kii.app.context_processors.user_apps',
+    'kii.stream.context_processors.user_stream',
+    'kii.stream.context_processors.item_models',
+    'kii.glue.context_processors.kii_metadata',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -86,9 +89,19 @@ LANGUAGES = (
     ('en', 'English'),
 )
 
+from django.utils.functional import curry
 import markdown
+from markdown.extensions.codehilite import makeExtension as CodeHilite # noqa
+
+md_filter = curry(markdown.markdown, extensions=[CodeHilite(css_class='code',
+                                                            linenums=False, 
+                                                            noclasses=True)])
+MARKDOWN_FUNCTION = md_filter
+
 #markupfield
 MARKUP_FIELD_TYPES = (
-    ('markdown', markdown.markdown),
+    ('markdown', md_filter),
     ('none', lambda s: s),
 )
+
+

@@ -46,12 +46,18 @@
     -webkit-box-sizing:border-box;
 }
 
+$main-wrapper-width: 70rem;
 $sidebar-width: 20rem;
 
 .column {
-    margin-top: 2rem;
-    position: relative;
-    float: left;
+    @media #{$large-up} {
+        margin-top: 2rem;
+        position: relative;
+        float: left;
+    }
+}
+.block {
+    margin: 0 auto;
 }
 body {
     padding: 1rem;
@@ -59,19 +65,29 @@ body {
 
     &.has-sidebar {
 
-        padding-right: $sidebar-width + 1rem;     
-        .main-content {
-            @extend .column;            
-        } 
-        .sidebar {
-            @extend .column;
-            display: block;
-            width: $sidebar-width;
-            margin-right: -100%;
-        }    
+        .main-wrapper {
+            margin: 0 auto;
+            > *{
+                padding: 0 1rem;
+            }
+            @media #{$large-up} {
+                max-width: $main-wrapper-width;
+                padding-right: $sidebar-width + 1rem;  
+            }   
+            .main-content {
+                @extend .column;            
+            } 
+            .sidebar {
+                @extend .column;
+                @media #{$large-up} {
+                    width: $sidebar-width;
+                    margin-right: -100%;
+                }
+            } 
+            
+        }
     }
 }
-
 .main-navigation {
     &, & .dropdown {
         box-shadow: 1px 1px 1px $gainsboro;
@@ -80,6 +96,7 @@ body {
 
 
 .main-content {
+    min-height: 80vh;
     margin-top: 2rem;
     > * {
         max-width: $content-width;
@@ -90,6 +107,17 @@ body {
         margin-bottom: 2rem;
     }    
 }
+
+footer {
+    clear: both;
+    section  {
+        max-width: $content-width;
+        margin: 0 auto;
+        * {
+            font-size: 0.9rem;
+        }
+    }
+}   
 
 code {
     border: none;
@@ -149,8 +177,7 @@ textarea {
 }
 
 article.stream-item {
-    max-width: $content-width;
-    margin: 0 auto; 
+    margin: 1rem auto; 
     border-bottom: 1px solid $gainsboro;
     padding: 1rem 0;
 
@@ -175,9 +202,6 @@ article.stream-item {
     }
 }
 
-.meta {
-    @include panel; 
-}
 .publication, .actions, .date,  {
     font-family: "Open Sans", sans-serif;
 }
@@ -189,7 +213,15 @@ article.stream-item {
 
 .comments, #comments {
     list-style-type: none;
-    margin-left: 0;
+}
+
+article {
+    .comments, #comments {        
+        margin-left: 0;
+    }
+    .actions.admin {
+        margin: 2rem 0;
+    }
 }
 .comment {
     padding: 1rem;

@@ -31,4 +31,5 @@ class OwnerMiddleware(object):
             else:
                 return None
         else:
+            print(owner_name)
             return User.objects.get(username=owner_name)

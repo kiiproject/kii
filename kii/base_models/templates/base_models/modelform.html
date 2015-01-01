@@ -1,3 +1,4 @@
+{% load i18n %}
 <form action="{{ request.path }}" class="{{ form.Meta.model.class_name }} {{ action }}" method="POST">
     {% block instance_info %}
         {% if action == "update" %}
@@ -6,5 +7,9 @@
     {% endblock %}
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="OK" />
+    <input type="submit" value="{% trans action %}" />
+
+    {% if action == "update" and form.instance.reverse_delete %}
+    <a class="button alert right" href="{{ form.instance.reverse_delete }}">{% trans "delete" %}</a>
+    {% endif %}
 </form>
