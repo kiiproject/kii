@@ -177,6 +177,7 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
 
     def get_filterset_kwargs(self):
         """:return: required arguments for building the filterset"""
+        self.request.GET = self.request.GET.copy()
         return {'data': self.request.GET or {}}
 
     def get_context_data(self, **kwargs):

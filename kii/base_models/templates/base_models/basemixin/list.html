@@ -16,12 +16,14 @@
     {% endblock %}
 {% endblock %}
 {% block main_content %}
-    
-    {% block objects %}
-        {% for object in object_list %}
-            {% with list_item_template=object|list_item_template %}
-                {% include list_item_template %}
-            {% endwith %}
-        {% endfor %}
-    {% endblock %}
+    <div class="list {{ object_list.model.class_name }}">
+        {% block objects %}
+            {% for object in object_list %}
+                {% with list_item_template=object|list_item_template %}
+                    {% include list_item_template %}
+                {% endwith %}
+            {% endfor %}
+        {% endblock %}
+        {% include "base_models/pagination.html" %}
+    </div>
 {% endblock %}

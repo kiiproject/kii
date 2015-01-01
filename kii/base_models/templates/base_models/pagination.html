@@ -1,0 +1,12 @@
+{% load glue_tags %}
+{% if is_paginated %}
+    <ul class="pagination">        
+        {% for num in paginator.page_range %}
+          {% ifequal num page_obj.number %}
+            <li class="current"><a href="">{{ num }}</a></li>
+          {% else %}
+            <li><a href="?{% query_transform request page=num %}">{{ num }}</a></li>
+          {% endifequal %}
+        {% endfor %}
+    </ul>
+{% endif %}

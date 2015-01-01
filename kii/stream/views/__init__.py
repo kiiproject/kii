@@ -66,7 +66,7 @@ class List(StreamContextMixin, permission_views.PermissionMixinList):
         return queryset
 
     def get_filterset_kwargs(self):
-        kwargs = super(StreamContextMixin, self).get_filterset_kwargs()
+        kwargs = super(List, self).get_filterset_kwargs()
 
         if kwargs['data'].get('status') is None:
             kwargs['data']['status'] = "pub"
