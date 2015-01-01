@@ -18,8 +18,6 @@ class StreamContextMixin(views.OwnerMixin):
         if self.current_stream is None:
             try:
                 self.current_stream = models.Stream.objects.get_user_stream(self.request.owner)
-
-                return self.current_stream
             except models.Stream.DoesNotExist:
                 raise Http404
 
@@ -28,7 +26,6 @@ class StreamContextMixin(views.OwnerMixin):
     def get_context_data(self, **kwargs):
         context = super(StreamContextMixin, self).get_context_data(**kwargs)
         context['current_stream'] = self.get_current_stream()
-        
 
         return context
 
@@ -56,6 +53,30 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
         return context
 
 
+class List(StreamContextMixin, permission_views.PermissionMixinList):
+    
+    model = models.StreamItem
+    streamitem_class = None
+    
+    def get_queryset(self, **kwargs):
+        queryset = super(List, self).get_queryset(**kwargs)
+        if self.streamitem_class:
+            queryset = queryset.instance_of(self.streamitem_class)
+
+        return queryset
+
+    def get_filterset_kwargs(self):
+        kwargs = super(List, self).get_filterset_kwargs()
+
+        if kwargs['data'].get('status') is None:
+            kwargs['data']['status'] = "pub"
+        return kwargs
+
+    def get_filterset_class(self):
+        if self.get_current_stream().owned_by(self.request.user):
+            return filterset.OwnerStreamItemFilterSet
+
+
 class Create(StreamContextMixin, views.OwnerMixinCreate):
     success_url = reverse_lazy('kii:stream:index')
 
@@ -75,10 +96,6 @@ class Delete(StreamContextMixin, permission_views.PermissionMixinDelete):
 
     def get_success_url(self):
         return reverse_lazy("kii:stream:index")
-
-
-class List(StreamContextMixin, permission_views.PermissionMixinList):
-    pass
 
 
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
@@ -169,11 +186,9 @@ class ItemCommentModeration(StreamContextMixin,
     def get_queryset(self, **kwargs):
         queryset = super(ItemCommentModeration, self).get_queryset()
         stream = self.get_current_stream()
-        return queryset.filter(subject__root=stream).select_related(
-            "subject",
-            "user",
-            "user_profile"
-        )
+        return queryset.filter(subject__root=stream) \
+                       .select_related("subject", "user", "user_profile") \
+                       .order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super(ItemCommentModeration, self).get_context_data(**kwargs)

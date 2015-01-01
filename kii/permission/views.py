@@ -37,7 +37,7 @@ class PermissionMixinList(views.MultipleObjectPermissionMixin,
         # retrieve standard queryset
         queryset = super(PermissionMixinList, self).get_queryset()
 
-        return queryset.readable_by(self.request.user.pk)
+        return queryset.readable_by(self.request.user)
 
 
 class PrivateReadDetail(PermissionMixinDetail):

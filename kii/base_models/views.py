@@ -163,16 +163,21 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
         """Filter the queryset using GET parameters, if needed"""
 
         queryset = super(List, self).get_queryset()
-        if self.filterset_class is not None:
+        filterset_class = self.get_filterset_class()
+        if filterset_class is not None:
             filterset_kwargs = self.get_filterset_kwargs()
             filterset_kwargs['queryset'] = queryset
-            self.filterset = self.filterset_class(**filterset_kwargs)
+            self.filterset = filterset_class(**filterset_kwargs)
             queryset = self.filterset.qs
 
         return queryset
 
+    def get_filterset_class(self):
+        return self.filterset_class
+
     def get_filterset_kwargs(self):
         """:return: required arguments for building the filterset"""
+        self.request.GET = self.request.GET.copy()
         return {'data': self.request.GET or {}}
 
     def get_context_data(self, **kwargs):

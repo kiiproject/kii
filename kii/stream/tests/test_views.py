@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 
 from . import base
 from .. import models
-
+from ..filterset import OwnerStreamItemFilterSet
 
 class TestStreamViews(base.StreamTestCase):
     
@@ -25,3 +25,19 @@ class TestStreamViews(base.StreamTestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['object'], si)
+
+    def test_stream_item_list_filter_class_change_depending_on_user(self):
+        # anonymous see nothing
+        stream = models.Stream.objects.get_user_stream(self.users[0])
+        url = stream.reverse_detail()
+        response = self.client.get(url)
+
+        with self.assertRaises(KeyError):
+            response.context['filterset']
+
+        # log in as owner
+        self.login(self.users[0].username)
+        response = self.client.get(url)
+
+        self.assertEqual(isinstance(response.context['filterset'],
+                                    OwnerStreamItemFilterSet), True)

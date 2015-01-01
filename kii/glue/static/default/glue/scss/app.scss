@@ -150,7 +150,7 @@ textarea {
 
 article.stream-item {
     max-width: $content-width;
-    margin: 0 auto; 
+    margin: 1rem auto; 
     border-bottom: 1px solid $gainsboro;
     padding: 1rem 0;
 
@@ -189,7 +189,12 @@ article.stream-item {
 
 .comments, #comments {
     list-style-type: none;
-    margin-left: 0;
+}
+
+article {
+    .comments, #comments {        
+        margin-left: 0;
+    }
 }
 .comment {
     padding: 1rem;

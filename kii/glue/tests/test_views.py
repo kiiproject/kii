@@ -8,7 +8,7 @@ class GlueViewsTestCase(base.StreamTestCase):
 
     def test_home_has_correct_context(self):
 
-        url = reverse('kii:index')
+        url = reverse('kii:glue:home')
         response = self.client.get(url)
 
         self.assertQuerysetEqualIterable(response.context['kii_users'].all(),

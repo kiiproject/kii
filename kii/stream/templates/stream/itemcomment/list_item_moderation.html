@@ -2,8 +2,14 @@
 {% load i18n glue_tags %}
 {% block actions %}
     <ul class="actions">
-        <li><a ng-click="setStatus($event, 'published')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% icon "fi-check" %}{% trans "comment.update.published" %}</a></li>
-        <li><a ng-click="setStatus($event, 'disapproved')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% icon "fi-dislike" %}{% trans "comment.update.disapproved" %}</a></li>
-        <li><a ng-click="setStatus($event, 'junk')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% icon "fi-flag" %}{% trans "comment.update.junk" %}</a></li>
+        {% if comment.status != "published" %}
+            <li><a ng-click="setStatus($event, 'published')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% icon "fi-check" %}{% trans "comment.update.published" %}</a></li>
+        {% endif %}
+        {% if comment.status != "disapproved" %}
+            <li><a ng-click="setStatus($event, 'disapproved')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% icon "fi-dislike" %}{% trans "comment.update.disapproved" %}</a></li>
+        {% endif %}
+        {% if comment.status != "junk" %}
+            <li><a ng-click="setStatus($event, 'junk')" href="{% url 'kii:api:stream:itemcomment:update' pk=comment.pk %}">{% icon "fi-flag" %}{% trans "comment.update.junk" %}</a></li>
+        {% endif %}
     </ul>
 {% endblock %}
