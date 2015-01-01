@@ -1,4 +1,4 @@
-{% load i18n glue_tags %}
+{% load i18n glue_tags app_tags %}
 <div class="fixed">
 <nav class="top-bar main-navigation" data-topbar role="navigation">
 {% block main_navigation %}        
@@ -9,26 +9,44 @@
          <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
         <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
-    <section class="apps top-bar-section">
-        {% if request.user.is_authenticated %}
-        <ul class="left">
-            <li class="has-dropdown">
-                <a href="#">{% trans 'kii.apps' %}</a>
-                <ul class="dropdown">
-                    {% for app in user_apps %}
-                        {% if app.menu %}
-                            {% include "glue/menu_node.html" with node=app.menu %}
-                        {% endif %}
-                    {% endfor %}                              
-                    
-                </ul>
-            </li>
-        </ul>    
-        {% endif %}
+    <section class="top-bar-section">
         {% if request.user.is_authenticated %}
             <ul>
                 <li><a href="{{ user_stream.reverse_detail }}">{% icon "fi-home" %}{% trans "my stream" %}</a></li>
             </ul>
+            <ul>
+                <li class="has-dropdown">
+                    <a href="#">{% icon "fi-thumbnails" %}{% trans 'kii.apps' %}</a>
+                    <ul class="dropdown">
+                        {% for app in user_apps %}
+                            {% if app.menu %}
+                                {% include "glue/menu_node.html" with node=app.menu %}
+                            {% endif %}
+                        {% endfor %}                              
+                        
+                    </ul>
+                </li>
+            </ul> 
+            <ul>
+                <li class="has-dropdown">
+                    <a href="#">{% icon "fi-plus" %}{% trans 'create' %}</a>
+                    <ul class="dropdown">
+                        {% for model in item_models %}
+                            {% model_url model 'create' as url %}
+                            {% if url %}
+                                <li><a href="{{ url }}">{{ model.meta.verbose_name }}</a>
+                            {% endif %}
+                        {% endfor %}    
+                    </ul>
+                </li>
+            </ul> 
+            {% if action == 'detail' and object.reverse_update %}
+               <ul>            
+                    <li><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{% trans 'update' %}</a></li>
+                </ul>
+            {% endif %}
+        {% endif %}
+        {% if request.user.is_authenticated %}
             <ul class="right">
                 <li class="has-dropdown"><a href="#">{% icon "fi-torso" %}{% trans 'kii.user.menu' %}</a>
                     <ul class="dropdown">                       

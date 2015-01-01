@@ -36,6 +36,10 @@ class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
         return reverse("kii:user_area:stream:index",
                        kwargs={"username": self.owner.username})
 
+    def reverse_update(self, **kwargs):
+        """:return: The update URL of the instance"""
+        return reverse(self.url_namespace(**kwargs) + "update")
+
     def reverse_feed(self, **kwargs):
         return reverse("kii:user_area:stream:stream:feed.atom",
                        kwargs={"username": self.owner.username})

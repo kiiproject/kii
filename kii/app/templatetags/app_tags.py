@@ -1,4 +1,6 @@
 from django import template
+from django.db import models
+
 
 register = template.Library()
 
@@ -33,3 +35,28 @@ def node_url(node, **kwargs):
     """
 
     return node.url(**kwargs)
+
+
+@register.assignment_tag
+def model_url(model, suffix, **kwargs):
+    """
+    Return a model-related URL. Usage:
+
+    .. code-block:: html+django
+
+        {% load app_tags %}
+
+        {% model_url my_object "delete" as url %}
+        {% if url %}
+            {{ url }}
+        {% endif %}
+    Will ouptut something like ``/myapp/mymodel/12/delete`` if the URL exists.
+
+    Note model can be an instance or a :py:class:`Model` subclass.
+    """
+    if isinstance(model, models.Model):
+        return model.reverse(suffix, **kwargs)
+
+    elif issubclass(model, models.Model):
+        return model.class_reverse(suffix, **kwargs)
+
