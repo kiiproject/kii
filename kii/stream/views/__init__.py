@@ -56,6 +56,14 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
 class List(StreamContextMixin, permission_views.PermissionMixinList):
     
     model = models.StreamItem
+    streamitem_class = None
+    
+    def get_queryset(self, **kwargs):
+        queryset = super(List, self).get_queryset(**kwargs)
+        if self.streamitem_class:
+            queryset = queryset.instance_of(self.streamitem_class)
+
+        return queryset
 
     def get_filterset_kwargs(self):
         kwargs = super(StreamContextMixin, self).get_filterset_kwargs()

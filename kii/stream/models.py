@@ -20,6 +20,7 @@ class StreamManager(permission_models.PermissionMixinQuerySet.as_manager().__cla
         return self.get(title=user.username, owner=user)
 
 
+
 class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
              base_models_models.ContentMixin, HookMixin, ):
     """A place were StreamItem instances will be published.
@@ -48,9 +49,9 @@ class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
 class StreamItemQuerySet(PolymorphicQuerySet,
                          permission_models.InheritPermissionMixinQuerySet):
     def readable_by(self, target):
-        """Exclude draft items"""
-        return super(StreamItemQuerySet, self).readable_by(target)\
-                                              .filter(status="pub")
+        """Exclude draft items for not owners"""
+        queryset = super(StreamItemQuerySet, self).readable_by(target)
+        return queryset.filter(models.Q(status='pub') | models.Q(owner=target.pk))
 
 
 class StreamItemQueryManager(
@@ -59,8 +60,7 @@ class StreamItemQueryManager(
 
     def get_queryset(self):
         return StreamItemQuerySet(self.model, using=self._db).select_related(
-            'owner',
-            'root')
+            'owner','root')
 
     def public(self):
         return self.readable_by(get_anonymous_user())
