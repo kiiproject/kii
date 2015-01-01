@@ -169,11 +169,9 @@ class ItemCommentModeration(StreamContextMixin,
     def get_queryset(self, **kwargs):
         queryset = super(ItemCommentModeration, self).get_queryset()
         stream = self.get_current_stream()
-        return queryset.filter(subject__root=stream).select_related(
-            "subject",
-            "user",
-            "user_profile"
-        )
+        return queryset.filter(subject__root=stream) \
+                       .select_related("subject", "user", "user_profile") \
+                       .order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super(ItemCommentModeration, self).get_context_data(**kwargs)

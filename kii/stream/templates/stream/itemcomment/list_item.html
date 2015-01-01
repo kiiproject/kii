@@ -11,11 +11,7 @@
     {% if request.path != comment.subject.reverse_detail %}
         <span class="subject">{% trans "about" %} <a href="{{ comment.subject.get_absolute_url }}">{{ comment.subject.title }}</a>
     {% endif %}
-    </p>
-
-    {% if can_moderate and comment.status != "published" %}
-        <p class="status">{{ comment.get_status_display }}</p>
-    {% endif %}
+    </p>    
     <div class="content">{{ comment.content.rendered }}</div>
     {% block actions %}{% endblock %}
 </li>
