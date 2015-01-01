@@ -30,29 +30,6 @@ class StreamContextMixin(views.OwnerMixin):
         return context
 
 
-class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
-    template_name = "stream/stream/detail.html"
-    streamitem_class = None
-
-    def get_model_title(self):
-        return ""
-
-    def get_object(self):
-        return self.get_current_stream()
-
-    def get_context_data(self, **kwargs):
-        context = super(Index, self).get_context_data(**kwargs)
-        items = self.current_stream.children.readable_by(
-            self.request.user).select_related()
-
-        if self.streamitem_class is not None:
-            # filter items using given class
-            items = items.instance_of(self.streamitem_class)
-
-        context["items"] = items
-        return context
-
-
 class List(StreamContextMixin, permission_views.PermissionMixinList):
     
     model = models.StreamItem
