@@ -6,7 +6,8 @@
             <h3>{% trans 'filter' %}</h3>
             <form action="{{ request.path }}" method="get">
                 {{ filterset.form.as_p }}
-                <input type="submit" />
+                <input type="submit" value="{% trans 'submit' %}"/>
+                <a href="{{ request.path }}" class="right">{% trans "reset" %}</a>
             </form>
         {% endif %}
     {% endblock %}
