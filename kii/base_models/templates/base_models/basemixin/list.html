@@ -1,5 +1,8 @@
 {% extends "app/app_model_page.html" %}
-{% load i18n %}
+{% load i18n base_models %}
+
+{% block body_class %}{{ block.super }} has-sidebar{% endblock %}
+
 {% block sidebar %}
     {% block filter %}
         {% if show_filters %}
@@ -16,7 +19,9 @@
     
     {% block objects %}
         {% for object in object_list %}
-            {% include object.list_item_template %}
+            {% with list_item_template=object|list_item_template %}
+                {% include list_item_template %}
+            {% endwith %}
         {% endfor %}
     {% endblock %}
 {% endblock %}

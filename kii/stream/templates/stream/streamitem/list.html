@@ -1,10 +1,6 @@
-{% load base_models %}
-<div class="stream-items">
-{% block stream_items %}
-    {% for item in items %}
-        {% with list_item_template=item|list_item_template %}
-            {% include list_item_template %}
-        {% endwith %}
-    {% endfor %}
+{% extends "base_models/basemixin/list.html" %}
+
+{% block sidebar %}
+    {% include 'stream/stream/info.html' with stream=current_stream %}
+    {{ block.super }}
 {% endblock %}
-</div>

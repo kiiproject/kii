@@ -18,8 +18,6 @@ class StreamContextMixin(views.OwnerMixin):
         if self.current_stream is None:
             try:
                 self.current_stream = models.Stream.objects.get_user_stream(self.request.owner)
-
-                return self.current_stream
             except models.Stream.DoesNotExist:
                 raise Http404
 
@@ -28,7 +26,6 @@ class StreamContextMixin(views.OwnerMixin):
     def get_context_data(self, **kwargs):
         context = super(StreamContextMixin, self).get_context_data(**kwargs)
         context['current_stream'] = self.get_current_stream()
-        
 
         return context
 
@@ -56,6 +53,10 @@ class Index(StreamContextMixin, permission_views.PermissionMixinDetail):
         return context
 
 
+class List(StreamContextMixin, permission_views.PermissionMixinList):
+    
+    model = models.StreamItem
+
 class Create(StreamContextMixin, views.OwnerMixinCreate):
     success_url = reverse_lazy('kii:stream:index')
 
@@ -77,8 +78,6 @@ class Delete(StreamContextMixin, permission_views.PermissionMixinDelete):
         return reverse_lazy("kii:stream:index")
 
 
-class List(StreamContextMixin, permission_views.PermissionMixinList):
-    pass
 
 
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):

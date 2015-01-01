@@ -15,8 +15,6 @@
     <script type="text/javascript" src="{% static 'default/stream/js/moderation.js' %}"></script>
 {% endblock %}
 
-{% block body_class %}{{ block.super }} has-sidebar{% endblock %}
-
 {% block objects %}
     <ul class="comments" ng-controller="commentCtrl">
         
