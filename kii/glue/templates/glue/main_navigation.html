@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n glue_tags %}
 <div class="fixed">
 <nav class="top-bar main-navigation" data-topbar role="navigation">
 {% block main_navigation %}        
@@ -27,20 +27,20 @@
         {% endif %}
         {% if request.user.is_authenticated %}
             <ul>
-                <li><a href="{{ user_stream.reverse_detail }}">{% trans "my stream" %}</a></li>
+                <li><a href="{{ user_stream.reverse_detail }}">{% icon "fi-home" %}{% trans "my stream" %}</a></li>
             </ul>
-        {% endif %}
-        <ul class="right">
-            <li class="has-dropdown"><a href="#">{% trans 'kii.user.menu' %}</a>
-                <ul class="dropdown">
-                    {% if not request.user.is_authenticated %}
-                        <li><a href="{% url 'kii:user:login' %}" class="login">{% trans 'login' %}</a></li>
-                    {% else %}
-                        <li class="logout"><a href="{% url 'kii:user:logout' %}"><i class="fi-x"></i>{% trans 'logout' %}</a></li>
-                    {% endif %}
-                </ul>
-            </li>
+            <ul class="right">
+                <li class="has-dropdown"><a href="#">{% icon "fi-torso" %}{% trans 'kii.user.menu' %}</a>
+                    <ul class="dropdown">                       
+                        <li class="logout"><a href="{% url 'kii:user:logout' %}">{% icon "fi-x" %}{% trans 'logout' %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        {% else %}
+        <ul class="right">            
+            <li><a href="{% url 'kii:user:login' %}" class="login">{% trans 'login' %}</a></li>            
         </ul>
+        {% endif %}
     </section>
 {% endblock %}
 </nav>
