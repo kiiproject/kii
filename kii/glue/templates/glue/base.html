@@ -53,5 +53,8 @@
         <script type="text/javascript" src="{% static 'default/glue/js/app.js' %}"></script>
         <script type="text/javascript">var kii_root = "{{ kii_root|slice:":-1" }}";</script>
         {% endblock %}
+        {% block tracking_code %}
+            {{ tracking_code|safe }}
+        {% endblock %}
     </body>
 </html>

@@ -18,6 +18,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     'kii.stream.context_processors.user_stream',
     'kii.stream.context_processors.item_models',
     'kii.glue.context_processors.kii_metadata',
+    'kii.glue.context_processors.tracking_code',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -104,4 +105,6 @@ MARKUP_FIELD_TYPES = (
     ('none', lambda s: s),
 )
 
+# Tracking code (like Piwik or Google Analytics) that will be included in every template
+TRACKING_CODE = ""
 
