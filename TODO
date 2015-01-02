@@ -5,13 +5,16 @@ Settings :
 
 TODO:
 
-    #automatic URL inclusion via AppConfigs
     Implement webmentions
-    pagination
     mail notification on comments (and the whole notification system)
     antispam
     password and account management
     user profile
     draft preview
     autosave on writing
+    file management application
+
+Done:
+    #automatic URL inclusion via AppConfigs
+    #pagination
     add option for analytics
