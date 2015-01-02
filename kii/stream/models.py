@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse
 from guardian.shortcuts import get_anonymous_user
 from polymorphic import (PolymorphicModel, PolymorphicManager,
                          PolymorphicQuerySet)
+from actstream import action
+from actstream.actions import follow
 
 from kii.base_models import models as base_models_models
 from kii.permission import models as permission_models
@@ -18,7 +20,6 @@ class StreamManager(permission_models.PermissionMixinQuerySet.as_manager().__cla
     def get_user_stream(self, user):
         """:return: The main stream of the given user"""
         return self.get(title=user.username, owner=user)
-
 
 
 class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
@@ -44,6 +45,9 @@ class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
     def reverse_feed(self, **kwargs):
         return reverse("kii:user_area:stream:stream:feed.atom",
                        kwargs={"username": self.owner.username})
+
+    def __str__(self):
+        return "<Stream: {0}>".format(self.title)
 
 
 class StreamItemQuerySet(PolymorphicQuerySet,
@@ -104,9 +108,24 @@ class ItemComment(discussion_models.CommentMixin):
 
 
 def create_user_stream(sender, instance, created, **kwargs):
+    """Create a stream for new users and make the user follow his stream"""
     if created:
         # create a new stream, set title after the owner
         stream = Stream(title=instance.username, owner=instance)
         stream.save()
 
+        # follow the newly crated stream
+        follow(instance, stream, actor_only=False)
+
+
 post_save.connect(create_user_stream, sender=settings.AUTH_USER_MODEL)
+
+def send_new_comment_notification(sender, instance, created, **kwargs):
+    if created:
+        user = instance.user or get_anonymous_user()
+        action.send(user, verb='created comment', action_object=instance,
+                    target=instance.subject.root)
+
+
+post_save.connect(send_new_comment_notification, sender=ItemComment)
+

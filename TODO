@@ -13,6 +13,9 @@ TODO:
     draft preview
     autosave on writing
     file management application
+    Fix root in stream queryset
+    add permalink on item list
+    use default_app_config ( https://docs.djangoproject.com/en/dev/ref/applications/#for-application-authors)
 
 Done:
     #automatic URL inclusion via AppConfigs

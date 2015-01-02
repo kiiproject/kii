@@ -38,11 +38,13 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.admin',
+    # third-party dependencies
     'guardian',
     'polymorphic',
     'django_filters',
     'mptt',
     'rest_framework',
+    'actstream',
 ) + kii.APPS_CONFIGS
 
 # kii settings
@@ -107,4 +109,3 @@ MARKUP_FIELD_TYPES = (
 
 # Tracking code (like Piwik or Google Analytics) that will be included in every template
 TRACKING_CODE = ""
-

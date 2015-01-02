@@ -1,4 +1,7 @@
 from django.core.urlresolvers import reverse
+from actstream import models as actstream_models
+
+
 import json
 
 from kii.discussion.models import AnonymousCommenterProfile
@@ -110,4 +113,24 @@ class TestDiscussion(base.StreamTestCase):
         self.assertEqual(response.status_code, 200)
         c = models.ItemComment.objects.get(pk=c0.pk)
         self.assertEqual(c.status, "disapproved")
+
+    def test_addding_comment_send_notificatation_to_stream_owner(self):
+        s = models.Stream.objects.get_user_stream(self.users[1])
+        si0 = self.G(models.StreamItem, root=s)
+
+        c = self.G(models.ItemComment, subject=si0, user=self.users[0])
+
+        activity = actstream_models.user_stream(self.users[1])
+        self.assertEqual(activity[0].action_object, c)
+        self.assertEqual(activity[0].target, s)
+
+    def test_user_can_follow_stream(self):
+        s = models.Stream.objects.get_user_stream(self.users[1])
+        
+        url = s.reverse_follow(self)
+
+        self.login(self.users[0].username)
+        self.client.get(url)
+
+        self.assertIn(self.users[0], actstream_models.following(s))
 

@@ -1,4 +1,4 @@
-{% load i18n glue_tags app_tags %}
+{% load i18n glue_tags app_tags activity_tags %}
 <div class="fixed">
 <nav class="top-bar main-navigation" data-topbar role="navigation">
 {% block main_navigation %}        
@@ -45,6 +45,11 @@
                     <li><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{{ object.meta.verbose_name }} - {% trans 'update' %}</a></li>
                 </ul>
             {% endif %}
+            stream
+            {% activity_stream 'user' request.user %}
+            {% for action in stream %}
+                {% display_action action %}
+            {% endfor %}
         {% endif %}
         {% if request.user.is_authenticated %}
             <ul class="right">
