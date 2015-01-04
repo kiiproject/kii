@@ -45,17 +45,23 @@
                     <li><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{{ object.meta.verbose_name }} - {% trans 'update' %}</a></li>
                 </ul>
             {% endif %}
-            stream
-            {% activity_stream 'user' request.user %}
-            {% for action in stream %}
-                {% display_action action %}
-            {% endfor %}
+            
         {% endif %}
         {% if request.user.is_authenticated %}
             <ul class="right">
-                <li class="has-dropdown"><a href="#">{% icon "fi-torso" %}{% trans 'kii.user.menu' %}</a>
+                <li class="has-dropdown"><a href="#">{% icon "fi-torso" %}{{ request.user.username }}</a>
                     <ul class="dropdown">                       
                         <li class="logout"><a href="{% url 'kii:user:logout' %}">{% icon "fi-x" %}{% trans 'logout' %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="notifications right">
+                <li class="has-dropdown">
+                    <a href="#">{% icon "fi-burst" %} {{ unread_notifications|length }}</a>
+                    <ul class="dropdown">
+                    {% for notification in unread_notifications %}
+                        <li>{% display_action notification.action %}</li>
+                    {% endfor %}
                     </ul>
                 </li>
             </ul>

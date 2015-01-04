@@ -19,6 +19,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     'kii.stream.context_processors.item_models',
     'kii.glue.context_processors.kii_metadata',
     'kii.glue.context_processors.tracking_code',
+    'kii.activity.context_processors.unread_notifications',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -43,9 +44,9 @@ INSTALLED_APPS = (
     'polymorphic',
     'django_filters',
     'mptt',
-    'rest_framework',
-    'actstream',
-) + kii.APPS_CONFIGS
+    'rest_framework',    
+) + kii.APPS_CONFIGS + ('actstream',)
+
 
 # kii settings
 

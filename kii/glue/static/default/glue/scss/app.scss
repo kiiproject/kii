@@ -92,6 +92,26 @@ body {
     &, & .dropdown {
         box-shadow: 1px 1px 1px $gainsboro;
     }
+    .notifications {
+        ul > li {
+            width: 25rem;
+            p {
+                font-size: 0.8rem;
+                line-height: 1.5;
+                padding: 0.5rem;
+                margin: 0;
+            }
+            a {
+                line-height: 1.2 !important;
+                padding: 0 !important;
+                white-space: wrap;
+                color: $primary-color;
+                &:hover  {
+                    color: white;
+                }
+            }            
+        }
+    }
 }
 
 
