@@ -17,6 +17,7 @@ APPS = (
     'kii.stream',
     'kii.discussion',
     'kii.base_models',
+    'kii.activity',
     'kii.app',
 )
 
