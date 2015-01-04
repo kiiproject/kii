@@ -188,20 +188,6 @@ class List(FilterMixin, ModelTemplateMixin, ListView):
         return context
 
 
-class OwnerMixin(AppMixin):
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.owner is None:
-            login = reverse('kii:user:login') + "?next=" + request.path
-            return redirect(login)
-        return super(OwnerMixin, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(OwnerMixin, self).get_context_data(**kwargs)
-        context['owner'] = self.request.owner
-        return context
-
-
 class PermissionMixin(AppMixin):
     """A mixin that implements permission checks on single object
     related views.
@@ -221,7 +207,7 @@ class PermissionMixin(AppMixin):
         r = super(PermissionMixin, self).pre_dispatch(request, *args, **kwargs)
         if (self.required_permission is not None and
                 not self.has_required_permission(request, *args, **kwargs)):
-            return self.permission_denied()
+            return self.permission_denied(request)
 
         return r
 
@@ -231,11 +217,14 @@ class PermissionMixin(AppMixin):
         """
         return False
 
-    def permission_denied(self):
+    def permission_denied(self, request):
         """:return: a response for the case where user has not the required
         permission
         """
-        raise Http404
+        login = reverse('kii:user:login') + "?next=" + request.path
+        if request.user.is_authenticated():
+            raise Http404
+        return redirect(login)
 
 
 class SingleObjectPermissionMixin(PermissionMixin):
@@ -265,15 +254,15 @@ class RequireOwnerMixin(SingleObjectPermissionMixin):
         return self.object.owned_by(request.user)
 
 
-class OwnerMixinDetail(RequireOwnerMixin, OwnerMixin, Detail):
+class OwnerMixinDetail(RequireOwnerMixin, Detail):
     pass
 
 
-class OwnerMixinList(OwnerMixin, List):
+class OwnerMixinList(List):
     pass
 
 
-class OwnerMixinCreate(OwnerMixin, Create):
+class OwnerMixinCreate(RequireAuthenticationMixin, Create):
     """A create view that set the newly created instance ``owner`` attribute to
      ``request.user``
      """
@@ -283,10 +272,10 @@ class OwnerMixinCreate(OwnerMixin, Create):
         return super(OwnerMixinCreate, self).form_valid(form)
 
 
-class OwnerMixinUpdate(OwnerMixin, RequireOwnerMixin, Update):
+class OwnerMixinUpdate(RequireAuthenticationMixin, RequireOwnerMixin, Update):
     pass
 
 
-class OwnerMixinDelete(OwnerMixin, RequireOwnerMixin, Delete):
+class OwnerMixinDelete(RequireAuthenticationMixin, RequireOwnerMixin, Delete):
 
     pass

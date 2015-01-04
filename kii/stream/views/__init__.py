@@ -9,7 +9,7 @@ from kii.discussion import views as discussion_views
 from .. import models, forms, filterset
 
 
-class StreamContextMixin(views.OwnerMixin):
+class StreamContextMixin(views.AppMixin):
     """pass current requested stream into context"""
 
     current_stream = None
@@ -92,14 +92,13 @@ class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
 from django.utils.feedgenerator import Atom1Feed
 
 
-class StreamFeedAtom(StreamContextMixin, views.OwnerMixin, Feed):
+class StreamFeedAtom(StreamContextMixin, Feed):
 
     feed_type = Atom1Feed
 
     def __call__(self, request, *args, **kwargs):
         self.setup(request, *args, **kwargs)
         self.pre_dispatch(request, *args, **kwargs)
-        self.owner = request.owner
         self.stream = self.get_current_stream()
 
         return super(StreamFeedAtom, self).__call__(request, *args, **kwargs)

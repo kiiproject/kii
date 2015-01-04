@@ -22,7 +22,7 @@ class TestViews(base.UserTestCase):
         
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, 404)
+        self.assertRedirectsLogin(response, url)
 
     def test_permission_mixin_detail_view_is_accessible_by_authorized_user(self):
         m = self.G(test_permission.models.PermissionModel, owner=self.users[0])
