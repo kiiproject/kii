@@ -18,8 +18,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('read', models.BooleanField(default=False)),
-                ('action', models.ForeignKey(related_name=b'notifications', to='actstream.Action')),
-                ('recipient', models.ForeignKey(related_name=b'notifications', to=settings.AUTH_USER_MODEL)),
+                ('action', models.ForeignKey(related_name='notifications', to='actstream.Action')),
+                ('recipient', models.ForeignKey(related_name='notifications', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-action__timestamp'],
