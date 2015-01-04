@@ -40,7 +40,7 @@ class List(StreamContextMixin, permission_views.PermissionMixinList):
         if self.streamitem_class:
             queryset = queryset.instance_of(self.streamitem_class)
 
-        return queryset
+        return queryset.filter(root=self.current_stream)
 
     def get_filterset_kwargs(self):
         kwargs = super(List, self).get_filterset_kwargs()
