@@ -134,3 +134,12 @@ class TestDiscussion(base.StreamTestCase):
 
         self.assertIn(self.users[0], actstream_models.following(s))
 
+    def test_each_comment_gets_an_absolute_url(self):
+        print('YOLO')
+        s = models.Stream.objects.get_user_stream(self.users[1])
+        si0 = self.G(models.StreamItem, root=s)
+
+        c = self.G(models.ItemComment, subject=si0, user=self.users[0])
+
+        self.assertEqual(c.get_absolute_url(), 
+                         si0.get_absolute_url() + "#comment-{0}".format(c.pk))

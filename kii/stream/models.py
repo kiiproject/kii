@@ -106,6 +106,9 @@ class ItemComment(discussion_models.CommentMixin):
 
     subject = models.ForeignKey(StreamItem, related_name="comments")
 
+    def reverse_detail(self, **kwargs):
+        return self.subject.get_absolute_url() + "#comment-{0}".format(self.pk)
+        
 
 def create_user_stream(sender, instance, created, **kwargs):
     """Create a stream for new users and make the user follow his stream"""
