@@ -8,21 +8,21 @@ streamitem_patterns = patterns('',
         name='comment_create'),
 )
 
-stream_patterns = patterns('',
-    url(r'^update$', views.StreamUpdate.as_view(), name='update'), # NOQA
-    url(r'^feed/atom$', views.StreamFeedAtom(), name='feed.atom'),
-)
-
 itemcomment_patterns = patterns('',
     url(r'^$', views.ItemCommentList.as_view(), name='list'), # NOQA
     url(r'^moderation$', views.ItemCommentModeration.as_view(),
         name='moderation'),
 )
 
-
-urlpatterns = patterns('',
+stream_patterns = patterns('',
     url(r'^$', views.List.as_view(), name='index'), # NOQA
-    url(r'^', include(stream_patterns, namespace="stream")),
+    url(r'^update$', views.StreamUpdate.as_view(), name='update'), # NOQA
+    url(r'^feed/atom$', views.StreamFeedAtom(), name='feed.atom'),
     url(r'^items/', include(streamitem_patterns, namespace="streamitem")),
     url(r'^comments/', include(itemcomment_patterns, namespace="itemcomment")),
+)
+
+urlpatterns = patterns('',
+    url(r'^stream/(?P<stream>\w+)/', include(stream_patterns, namespace="stream")),
+    url(r'^items/', include(streamitem_patterns, namespace="streamitem")),
 )

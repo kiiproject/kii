@@ -22,7 +22,7 @@ class TestStream(base.StreamTestCase):
         self.assertEqual(s.owner, u)
 
     def test_can_update_stream(self):
-        url = reverse("kii:stream:stream:update")
+        url = reverse("kii:stream:stream:update", kwargs={"stream": self.users[0].username})
         self.login(self.users[0].username)
 
         response = self.client.get(url)

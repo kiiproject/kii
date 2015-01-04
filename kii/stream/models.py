@@ -11,6 +11,7 @@ from actstream import action
 from actstream.actions import follow
 
 from kii.base_models import models as base_models_models
+import kii.base_models.fields
 from kii.permission import models as permission_models
 from kii.discussion import models as discussion_models
 from kii.hook.models import HookMixin
@@ -19,7 +20,7 @@ from kii.hook.models import HookMixin
 class StreamManager(permission_models.PermissionMixinQuerySet.as_manager().__class__): # NOQA
     def get_user_stream(self, user):
         """:return: The main stream of the given user"""
-        return self.get(title=user.username, owner=user)
+        return self.get(slug=user.username)
 
 
 class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
@@ -29,25 +30,25 @@ class Stream(permission_models.PermissionMixin, base_models_models.TitleMixin,
     Think of it as a timeline, a wall, a list of element, such as blog entries
     for exemple, but more generic"""
 
+    slug = kii.base_models.fields.SlugField(populate_from=("title",), unique=True)
+
     objects = StreamManager()
 
-    class Meta(permission_models.PermissionMixin.Meta):
-        unique_together = ('owner', 'title')
-
     def reverse_detail(self, **kwargs):
-        return reverse("kii:user_area:stream:index",
-                       kwargs={"username": self.owner.username})
+        return reverse("kii:stream:stream:index",
+                       kwargs={"stream": self.slug})
 
     def reverse_update(self, **kwargs):
         """:return: The update URL of the instance"""
-        return reverse(self.url_namespace(**kwargs) + "update")
+        return reverse(self.url_namespace(**kwargs) + "update",
+                       kwargs={"stream": self.slug})
 
     def reverse_feed(self, **kwargs):
-        return reverse("kii:user_area:stream:stream:feed.atom",
-                       kwargs={"username": self.owner.username})
+        return reverse("kii:stream:stream:feed.atom",
+                       kwargs={"stream": self.slug})
 
     def __str__(self):
-        return "<Stream: {0}>".format(self.title)
+        return "<Stream: {0}>".format(self.slug)
 
 
 class StreamItemQuerySet(PolymorphicQuerySet,
@@ -93,13 +94,13 @@ class StreamItem(PolymorphicModel,
                        kwargs={"pk": self.pk})
 
     def reverse_detail(self, **kwargs):
-        return reverse("kii:user_area:stream:streamitem:detail",
-                       kwargs={"pk": self.pk, "username": self.owner.username})
+        return reverse("kii:stream:streamitem:detail",
+                       kwargs={"pk": self.pk})
 
     def reverse_comment_create(self, **kwargs):
         """Return URL for posting a comment"""
-        return reverse("kii:user_area:stream:streamitem:comment_create",
-                       kwargs={"username": self.owner.username, "pk": self.pk})
+        return reverse("kii:stream:streamitem:comment_create",
+                       kwargs={"pk": self.pk})
 
 
 class ItemComment(discussion_models.CommentMixin):
@@ -114,7 +115,7 @@ def create_user_stream(sender, instance, created, **kwargs):
     """Create a stream for new users and make the user follow his stream"""
     if created:
         # create a new stream, set title after the owner
-        stream = Stream(title=instance.username, owner=instance)
+        stream = Stream(title=instance.username, slug=instance.username, owner=instance)
         stream.save()
 
         # follow the newly crated stream

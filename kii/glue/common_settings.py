@@ -80,7 +80,7 @@ AUTHENTICATION_BACKENDS += (
 
 LOGIN_URL = "kii:user:login"
 REVERSED_LOGIN_URL = reverse_lazy(LOGIN_URL)
-LOGIN_REDIRECT_URL = "kii:stream:index"
+LOGIN_REDIRECT_URL = "/"
 
 # localization
 

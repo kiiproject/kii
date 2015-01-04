@@ -17,3 +17,6 @@ class App(core.App):
         registry.register(self.get_model("Stream"))
         registry.register(self.get_model("ItemComment"))
         registry.register(self.get_model("StreamItem"))
+
+    def get_url_prefix(self):
+        return r'^'

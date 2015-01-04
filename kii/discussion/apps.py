@@ -10,14 +10,16 @@ class App(core.App):
     def ready(self):
         super(App, self).ready()
         self.menu = menu.MenuNode(
-            route="kii:stream:itemcomment:list",
+            route="kii:stream:stream:itemcomment:list",
             label=_("discussion"),
             icon="fi-comments",
             require_authentication=False,
+            reverse_kwargs=["stream"],
             children=[
                 menu.MenuNode(
-                    route="kii:stream:itemcomment:moderation",
-                    label=_("moderation")
+                    route="kii:stream:stream:itemcomment:moderation",
+                    label=_("moderation"),
+                    reverse_kwargs=["stream"],
                 )
             ]
         )
