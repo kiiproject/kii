@@ -17,7 +17,7 @@ class OwnerModel(base_models.models.OwnerMixin):
     useless_field = models.CharField(max_length=255, default="", blank=True)
 
     def get_absolute_url(self):
-        reverse('kii:stream:index')
+        return "/"
 
 InheritModel, signals = base_models.models.get_inherit_model(
     local_field='title', 
