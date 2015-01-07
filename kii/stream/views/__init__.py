@@ -33,7 +33,7 @@ class StreamContextMixin(views.AppMixin):
 class StreamItemContextMixin(StreamContextMixin):
     def get_current_stream(self, **kwargs):
         return self.object.root
-        
+
 class List(StreamContextMixin, permission_views.PermissionMixinList):
     
     model = models.StreamItem
@@ -58,16 +58,14 @@ class List(StreamContextMixin, permission_views.PermissionMixinList):
             return filterset.OwnerStreamItemFilterSet
 
 
-class Create(StreamItemContextMixin, views.OwnerMixinCreate):
+class Create(views.OwnerMixinCreate):
     def get_success_url(self):
-        return reverse_lazy("kii:stream:stream:index",
-                            kwargs={"stream": self.current_stream.slug})
+        return self.object.reverse_detail()
 
 
 class Update(StreamItemContextMixin, permission_views.PermissionMixinUpdate):
     def get_success_url(self):
-        return reverse_lazy("kii:stream:stream:index",
-                            kwargs={"stream": self.current_stream.slug})
+        return self.object.reverse_detail()
 
 
 class Detail(StreamItemContextMixin, discussion_views.CommentFormMixin,
@@ -80,8 +78,7 @@ class Delete(StreamItemContextMixin, permission_views.PermissionMixinDelete):
     model = models.StreamItem
 
     def get_success_url(self):
-        return reverse_lazy("kii:stream:stream:index",
-                            kwargs={"stream": self.current_stream.slug})
+        return self.object.root.reverse_detail()
 
 
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
