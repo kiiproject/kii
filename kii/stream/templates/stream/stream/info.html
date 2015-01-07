@@ -1,4 +1,4 @@
-{% load i18n glue_tags %}
+{% load i18n glue_tags activity_tags %}
 <div class="stream info">
     <h3><a href="{{ stream.reverse_detail }}">{{ stream.title }}</a></h3>
     <div class="content">{{ stream.content.rendered }}</div>
@@ -6,6 +6,13 @@
         <li class="subscribe"><a href="{{ stream.reverse_feed }}">{% icon "fi-rss" %}{% trans "subscribe" %}</a></li>
         {% if stream.owner == request.user %}
             <li><a href="{{ stream.reverse_update }}">{% icon "fi-pencil" %}{% trans "update" %}</a></li>
+            <li><a href="">
+                {% if request.user|is_following:stream %}
+                    stop following
+                {% else %}
+                    follow
+                {% endif %}
+            </a></li>
         {% endif %}
     </ul>
 </div>

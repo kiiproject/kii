@@ -19,6 +19,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     'kii.stream.context_processors.item_models',
     'kii.glue.context_processors.kii_metadata',
     'kii.glue.context_processors.tracking_code',
+    'kii.activity.context_processors.unread_notifications',
 )
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -27,7 +28,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'kii.base_models.middleware.OwnerMiddleware',
     #'kii.glue.middleware.SpacelessMiddleware',
 )
 
@@ -38,12 +38,14 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.admin',
+    # third-party dependencies
     'guardian',
     'polymorphic',
     'django_filters',
     'mptt',
-    'rest_framework',
-) + kii.APPS_CONFIGS
+    'rest_framework',    
+) + kii.APPS_CONFIGS + ('actstream',)
+
 
 # kii settings
 
@@ -77,7 +79,7 @@ AUTHENTICATION_BACKENDS += (
 
 LOGIN_URL = "kii:user:login"
 REVERSED_LOGIN_URL = reverse_lazy(LOGIN_URL)
-LOGIN_REDIRECT_URL = "kii:stream:index"
+LOGIN_REDIRECT_URL = "/"
 
 # localization
 
@@ -107,4 +109,3 @@ MARKUP_FIELD_TYPES = (
 
 # Tracking code (like Piwik or Google Analytics) that will be included in every template
 TRACKING_CODE = ""
-

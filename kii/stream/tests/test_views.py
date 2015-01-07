@@ -8,7 +8,7 @@ class TestStreamViews(base.StreamTestCase):
     
     def test_base_stream_view_passes_current_stream_to_context(self):
 
-        url = reverse('kii:stream:index')
+        url = reverse('kii:stream:stream:index', kwargs={"stream": self.users[0].username})
         stream = models.Stream.objects.get(owner=self.users[0], title=self.users[0].username)
         self.login(self.users[0].username)
         response = self.client.get(url)

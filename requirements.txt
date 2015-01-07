@@ -10,3 +10,4 @@ lxml
 django-bower
 djangorestframework
 django-filter
+django-activity-stream
