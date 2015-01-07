@@ -26,5 +26,5 @@ class Migration(migrations.Migration):
             field=kii.base_models.fields.SlugField(populate_from=('title',), null=True, editable=False, blank=True),
             preserve_default=True,
         ),
-        #migrations.RunPython(set_stream_slug),
+        migrations.RunPython(set_stream_slug),
     ]
