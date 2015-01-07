@@ -28,6 +28,7 @@ setup(
         'django-markupfield',
         'django-extensions',
         'django-filter',
+        'django-activity-stream',
     ],
     zip_safe=False,
     classifiers=[
