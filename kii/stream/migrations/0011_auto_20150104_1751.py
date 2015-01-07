@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='stream',
             name='slug',
-            field=kii.base_models.fields.SlugField(editable=False, populate_from=('title',), null=True, unique=True),
+            field=kii.base_models.fields.SlugField(editable=False, populate_from=('title',), blank=True, unique=True),
         ),
     ]
