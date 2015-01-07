@@ -10,7 +10,7 @@ def set_stream_slug(apps, schema_editor):
     stream_model = apps.get_model("stream", "Stream")
     for stream in stream_model.objects.all():
         stream.slug = stream.title
-        stream.save()
+        stream_model.objects.filter(pk=stream.pk).update(slug=stream.title)
 
 
 class Migration(migrations.Migration):
@@ -26,5 +26,5 @@ class Migration(migrations.Migration):
             field=kii.base_models.fields.SlugField(populate_from=('title',), null=True, editable=False, blank=True),
             preserve_default=True,
         ),
-        migrations.RunPython(set_stream_slug),
+        #migrations.RunPython(set_stream_slug),
     ]
