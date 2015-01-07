@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse_lazy
 from django.http import Http404
+from django.shortcuts import redirect
 from django.contrib.syndication.views import Feed
 from django.utils.translation import ugettext_lazy as _
 
@@ -72,6 +73,12 @@ class Detail(StreamItemContextMixin, discussion_views.CommentFormMixin,
              permission_views.PermissionMixinDetail):
     comment_form_class = forms.ItemCommentForm
     model = models.StreamItem
+
+    def dispatch(self, request, *args, **kwargs):
+        r = super(Detail, self).dispatch(request, *args, **kwargs)
+        if self.object.reverse_custom_detail() != request.path:
+            return redirect(self.object.reverse_custom_detail())
+        return r
 
 
 class Delete(StreamItemContextMixin, permission_views.PermissionMixinDelete):
