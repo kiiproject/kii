@@ -1,14 +1,15 @@
 from django import template
 
-
 register = template.Library()
+
 
 @register.filter(name="list_item_template")
 def list_item_template(item):
-    """Find the list_item template that should render a given BaseModelMixin instance"""
+    """Find the list_item template that should render a given
+    :py:class:`kii.base_models.models.BaseMixin` instance"""
+
     template_names = item.__class__.get_template_names("list_item")
     for name in template_names:
-        print(name)
         try:
             template.loader.get_template(name)
             return name

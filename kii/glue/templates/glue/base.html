@@ -1,0 +1,61 @@
+{% load i18n %}<!DOCTYPE html>
+<html {% block html_attributes %}{% endblock %}>{% load i18n static %}
+    <head>
+        <title>{% block title %}{{ full_title }}{% endblock %}</title>
+        <meta charset="utf-8" />
+        {% block css %}
+            <link href="{% static 'default/glue/stylesheets/app.css' %}" rel="stylesheet" type="text/css" />            
+        {% endblock %}
+        {% block head_js %}
+            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/vendor/jquery.js' %}"></script>
+            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/vendor/modernizr.js' %}"></script>
+            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/foundation.min.js' %}"></script>    
+            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/foundation/foundation.alert.js' %}"></script>
+        {% endblock %}
+    </head>
+    <body class="{% block body_class %}{% endblock %}"> 
+        
+        {% include "glue/main_navigation.html" %}
+        <div class="main-wrapper">
+            <div class="main-content">
+                
+                {% block header %}<header>{% block breadcrumbs %}{% include "glue/breadcrumbs.html" %}{% endblock %}{% if page_title %}
+                        <h1>{{ page_title }}</h1>
+                    {% endif %}</header>
+                {% endblock %}
+                {% block messages %}       
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="alert-box {{ message.tags }}"{% endif %} data-alert>{{ message }}<a href="#" class="close">&times;</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% endblock %}
+                {% block main_content %}{% endblock %}
+            </div>
+
+            <aside class="sidebar">
+            {% block sidebar %}
+
+            {% endblock %}
+            </aside>
+
+            <footer>
+                {% block footer %}
+
+                    <section>
+                        <p class="generator">Powered by <a href="{{ kii_project_url }}">kii</a></p>
+                    </section>
+                {% endblock %}
+            </footer>
+        </div>
+        {% block bottom_js %}
+        <script type="text/javascript" src="{% static 'default/glue/js/app.js' %}"></script>
+        <script type="text/javascript">var kii_root = "{{ kii_root|slice:":-1" }}";</script>
+        {% endblock %}
+        {% block tracking_code %}
+            {{ tracking_code|safe }}
+        {% endblock %}
+    </body>
+</html>

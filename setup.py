@@ -22,10 +22,12 @@ setup(
         'markdown',
         'six',
         'django-guardian',
+        'djangorestframework',
         'django-mptt',
         'django-polymorphic',
         'django-markupfield',
         'django-extensions',
+        'django-filter',
     ],
     zip_safe=False,
     classifiers=[

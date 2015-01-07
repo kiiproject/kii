@@ -1,0 +1,6 @@
+{% extends "base_models/basemixin/list.html" %}
+
+{% block sidebar %}
+    {% include 'stream/stream/info.html' with stream=current_stream %}
+    {{ block.super }}
+{% endblock %}

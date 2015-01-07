@@ -5,9 +5,11 @@ from django.contrib.auth.models import Group
 
 
 class UserData(models.Model):
-    """Used to store additional data in user model, without extending or replaceing it"""
-    pass
+    """Used to store additional data in user model, without extending
+    or replaceing it
+    """
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="data")
+
 
 def create_user_data(sender, instance, created, **kwargs):
     if created:
@@ -16,14 +18,16 @@ def create_user_data(sender, instance, created, **kwargs):
 
 post_save.connect(create_user_data, sender=settings.AUTH_USER_MODEL)
 
+
 def add_user_to_default_group(sender, instance, created, **kwargs):
     """Will add all users to default group, except AnonymousUser"""
     if created and not instance.pk == settings.ANONYMOUS_USER_ID:
-        group, group_created = Group.objects.get_or_create(name=settings.ALL_USERS_GROUP)
+        group, group_created = Group.objects.get_or_create(
+            name=settings.ALL_USERS_GROUP)
         group.user_set.add(instance)
 
-    
 post_save.connect(add_user_to_default_group, sender=settings.AUTH_USER_MODEL)
+
 
 def get_all_users_group():
     return Group.objects.get(name=settings.ALL_USERS_GROUP)

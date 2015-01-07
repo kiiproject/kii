@@ -22,12 +22,6 @@ class TestViews(base.UserTestCase):
         response = self.client.get(url)
         self.assertTemplateUsed(response, "test_base_models/titlemodel/detail.html")
     
-    def test_app_model_page_contains_model_verbose_name(self):
-
-        response = self.client.get(reverse('kii:test_base_models:titlemodel:list'))
-        parsed = self.parse_html(response.content)
-        self.assertIn("Title Model", parsed.title.string)
-
     def test_model_template_mixin_pass_context(self):
         response = self.client.get(reverse('kii:test_base_models:titlemodel2:list'))
 
@@ -36,22 +30,28 @@ class TestViews(base.UserTestCase):
         response = self.client.get(reverse('kii:test_base_models:titlemodel2:create'))
         self.assertEqual(response.context['action'], "create")
 
-    @override_settings(KII_DEFAULT_USER='test0')
-    def test_owner_view_require_username_argument_or_deduce_it_automatically_from_logged_in_user_or_settings(self):
-        url = reverse('kii:test_base_models:ownermodel:list')
+    
+    def test_filters(self):
 
-        # anonymous user should see test0 page
+        i0 = self.G(test_base_models.models.StatusModel, status="pub")
+        i1 = self.G(test_base_models.models.StatusModel, status="dra")
+        i2 = self.G(test_base_models.models.StatusModel, status="pub")
+
+        url = reverse('kii:test_base_models:statusmodel:list')
         response = self.client.get(url)
-        self.assertEqual(response.context['owner'], self.users[0])
 
-        # authenticated user should see his own page
-        re = self.login(self.users[1].username)
-        print(re.content)
+        self.assertQuerysetEqualIterable(response.context['object_list'], [i0, i1, i2], ordered=False)
+
+        response = self.client.get(url+"?status=dra")
+
+        self.assertQuerysetEqualIterable(response.context['object_list'], [i1], ordered=False)
+
+        response = self.client.get(url+"?status=pub")
+
+        self.assertQuerysetEqualIterable(response.context['object_list'], [i0, i2], ordered=False)
+
+    def test_model_template_view_suffix_with_model_name(self):
+        url = reverse('kii:test_base_models:statusmodel:list')
+
         response = self.client.get(url)
-        self.assertEqual(response.context['owner'], self.users[1])
-
-    def test_owner_view_raise_404_for_anonymous_user_without_KII_DEFAULT_USER_SET(self):
-        url = reverse('kii:test_base_models:ownermodel:list')
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertIn("status model", response.context['full_title'])

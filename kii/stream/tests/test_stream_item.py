@@ -5,14 +5,15 @@ from . import base
 from .. import models, forms
 from kii import stream, hook
 from ...tests import test_stream
+from kii.tests.test_stream.models import StreamItemChild1
 
 
 class TestStreamItem(base.StreamTestCase):
     
-    def test_status_default_to_draft(self):
+    def test_status_default_to_pub(self):
 
         m = self.G(stream.models.StreamItem)
-        self.assertEqual(m.status, "dra")
+        self.assertEqual(m.status, "pub")
 
     def test_creation_and_modification_date(self):
         now = timezone.now()
@@ -48,15 +49,6 @@ class TestStreamItem(base.StreamTestCase):
         m2.save()
         self.assertQuerysetEqualIterable(self.streams[0].children.all(), [m1, m2], ordered=False)
 
-
-    def test_comments(self):
-        m = stream.models.StreamItem(title="test", root=self.streams[0])
-        m.save()
-        c = self.G(stream.models.StreamItemComment, subject=m, user=m.owner)
-
-        self.assertEqual(c.published, True)
-        self.assertEqual(c.junk, False)
-
     def test_form_select_user_stream_as_default_stream(self):
         form = forms.StreamItemForm(user=self.users[0])
         self.assertEqual(form.initial['root'], models.Stream.objects.get(title=self.users[0].username))
@@ -83,3 +75,14 @@ class TestStreamItem(base.StreamTestCase):
 
         hook.model_filters.register(stream.models.StreamItem, "title", uppercase)
         self.assertEqual(m1.filtered_title, "TEST")
+
+    def test_stream_item_detail_redirect_to_clean_url_if_any(self):
+        m1 = StreamItemChild1(title="Test", root=self.streams[0])
+        m1.save()
+        m1.root.assign_perm("read", self.anonymous_user)
+        url = m1.reverse_detail()
+        self.assertEqual(url, "/kii/items/{0}".format(m1.pk))
+
+        response = self.client.get(url)
+
+        self.assertRedirects(response, "/kii/test_stream/streamitemchild1/{0}/".format(m1.pk))

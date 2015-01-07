@@ -1,0 +1,45 @@
+{% load base_models i18n glue_tags %}
+
+{% with comments=object.comments.public %}
+<article class="stream-item {{ object.class_name }}">
+    <div class="main">
+        {% block main %}
+            <h2 class="title"><a href="{{ object.reverse_detail }}">{% block title %}{{ object.filtered_title }}{% endblock %}</a></h2>
+            <p class="publication">{% blocktrans with stream_link=object.root.reverse_detail date=object.publication_date author=object.owner %}published on {{ date }} by <a href="{{ stream_link }}">{{ author }}</a>{% endblocktrans %} | <a href="{{ object.reverse_detail }}#comments">{% icon "fi-comment" %}{{ comments|length }}</a></p>
+            <div class="content">{% block content %}{{ object.filtered_content }}{% endblock %}</div>
+        {% endblock %}        
+    </div>
+    {% block secondary %}
+        {% if object.owner == request.user %}
+            {% block admin %}    
+                <ul class="actions admin">
+                    <li class="update"><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{% trans "update" %}</a></li>                        
+                </ul>
+            {% endblock %}
+        {% endif %} 
+    {% endblock %}  
+
+    {% block comments %}
+    
+        {% if display_comments %}
+            <h3>{% icon "fi-comment" %}{% blocktrans count comment_count=comments|length %}
+                {{ comment_count }} comment{% plural %}{{ comment_count }} comments{% endblocktrans %}</h3>
+            <ul id="comments">
+                {% for comment in comments %}
+                    {% with comment_item_template=comment|list_item_template %}
+                        {% include comment_item_template with comment=comment subject=object %}
+                    {% endwith %}                    
+                {% endfor %}
+            </ul>
+            {% if object.discussion_open %}
+                <h3 id="comment-post">{% trans "comment.publish" %}</h3>
+                <form action="{{ object.reverse_comment_create }}" class="{{ comment_form.Meta.model.class_name }}" method="POST">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <input type="submit" value="OK" />
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endblock %}      
+</article>
+{% endwith %}

@@ -1,0 +1,25 @@
+{% extends "base_models/basemixin/list.html" %}
+{% load base_models static %}
+
+{% block html_attributes %}
+    {{ block.super }} ng-app="moderationApp"
+{% endblock %}
+
+{% block head_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'default/glue/js/angular.min.js' %}"></script>    
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}    
+    <script type="text/javascript" src="{% static 'default/stream/js/moderation.js' %}"></script>
+{% endblock %}
+
+{% block objects %}
+    <ul class="comments" ng-controller="commentCtrl">
+        
+    {% for comment in object_list %}
+        {% include "stream/itemcomment/list_item_moderation.html" with comment=comment %}
+    {% endfor %}
+    </ul>
+{% endblock %}

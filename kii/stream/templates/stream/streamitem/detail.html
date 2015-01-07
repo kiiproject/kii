@@ -1,0 +1,16 @@
+{% extends "base_models/basemixin/detail.html" %}
+{% load base_models %}
+
+{% block body_class %}{{ block.super }} has-sidebar{% endblock %}
+
+{% block sidebar %}
+    {% include 'stream/stream/info.html' with stream=current_stream %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main_content %}
+    {% with list_item_template=object|list_item_template %}
+        {% include list_item_template with item=object display_comments="true"%}
+        
+    {% endwith %}
+{% endblock %}

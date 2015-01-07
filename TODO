@@ -5,5 +5,19 @@ Settings :
 
 TODO:
 
-    #automatic URL inclusion via AppConfigs
     Implement webmentions
+    mail notification on comments (and the whole notification system)
+    antispam
+    password and account management
+    user profile
+    draft preview
+    autosave on writing
+    file management application
+    add permalink on item list
+    use default_app_config ( https://docs.djangoproject.com/en/dev/ref/applications/#for-application-authors)
+
+Done:
+    #automatic URL inclusion via AppConfigs
+    Fix root in stream queryset
+    #pagination
+    add option for analytics

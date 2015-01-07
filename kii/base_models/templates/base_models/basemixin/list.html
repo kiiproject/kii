@@ -1,0 +1,29 @@
+{% extends "app/app_model_page.html" %}
+{% load i18n base_models %}
+
+{% block body_class %}{{ block.super }} has-sidebar{% endblock %}
+
+{% block sidebar %}
+    {% block filter %}
+        {% if show_filters %}
+            <h3>{% trans 'filter' %}</h3>
+            <form action="{{ request.path }}" method="get">
+                {{ filterset.form.as_p }}
+                <input type="submit" value="{% trans 'submit' %}"/>
+                <a href="{{ request.path }}" class="right">{% trans "reset" %}</a>
+            </form>
+        {% endif %}
+    {% endblock %}
+{% endblock %}
+{% block main_content %}
+    <div class="list {{ object_list.model.class_name }}">
+        {% block objects %}
+            {% for object in object_list %}
+                {% with list_item_template=object|list_item_template %}
+                    {% include list_item_template %}
+                {% endwith %}
+            {% endfor %}
+        {% endblock %}
+        {% include "base_models/pagination.html" %}
+    </div>
+{% endblock %}

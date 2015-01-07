@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django_dynamic_fixture import G
 
 import time
+import unittest
 
 from kii.app.core import apps as app_manager
 from kii.stream import models as stream_models
@@ -12,6 +13,7 @@ from . import SeleniumTestCase
 
 class GlueTest(SeleniumTestCase):
 
+    @unittest.skip("too early for functional tests")
     def test_user_can_display_home_page_and_login(self):
 
         # Harold is a regular Kii user
@@ -57,7 +59,6 @@ class GlueTest(SeleniumTestCase):
 
         expected_items = stream.children.all().order_by('-publication_date')
         items = self.browser.find_elements_by_css_selector('.stream-items > article')
-        time.sleep(55)
         self.assertEqual(len(items), len(expected_items))
 
         for i, item in enumerate(items):

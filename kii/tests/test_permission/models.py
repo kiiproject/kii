@@ -1,8 +1,12 @@
-from kii import permission, utils, base_models
 from django.db import models
+from django.core.urlresolvers import reverse
+
+from kii import permission, utils, base_models
 
 class PermissionModel(permission.models.PermissionMixin):
-    pass
+    
+    def reverse_detail(self, **kwargs):
+        return reverse("kii:user_area:test_permission:permissionmodel:detail", kwargs={"pk":self.pk, "username": self.owner.username})
 
 
 
@@ -11,7 +15,7 @@ class InheritPermissionModel(permission.models.InheritPermissionMixin):
     root = models.ForeignKey(PermissionModel, related_name="children")
 
 
-class InheritInheritPermissionQuerySet(permission.models.InheritPermissionMixinQueryset):
+class InheritInheritPermissionQuerySet(permission.models.InheritPermissionMixinQuerySet):
     pass
 
 class InheritInheritPermissionModel(permission.models.InheritPermissionMixin):

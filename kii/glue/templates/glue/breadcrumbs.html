@@ -1,0 +1,16 @@
+
+{% if breadcrumbs %}
+<ul class="breadcrumbs">
+    {% with breadcrumbs|last as last %}
+        {% for element in breadcrumbs %}
+        <li class="{% if element == last %}current{% endif %}">
+            {% if element.1 %}
+            <a href="{{ element.1 }}">{{ element.0 }}</a>
+            {% else %}
+                {{ element.0}}
+            {% endif %}
+        </li>
+        {% endfor %}
+    {% endwith %}
+</ul>
+{% endif %}

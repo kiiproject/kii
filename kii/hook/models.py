@@ -1,12 +1,8 @@
-from django.db import models
-from six import with_metaclass
-
-from kii import base_models
-from kii.utils import meta
+from kii.base_models.models import BaseMixin
 from . import model_filters
 
 
-class HookMixin(base_models.models.BaseMixin):    
+class HookMixin(BaseMixin):
 
     class Meta:
         abstract = True
@@ -17,7 +13,8 @@ class HookMixin(base_models.models.BaseMixin):
 
     def __getattribute__(self, name):
         splitted = name.split("_", 1)
-        if splitted[0] == "filtered" and splitted[1] in self._meta.get_all_field_names():
+        if (splitted[0] == "filtered" and
+                splitted[1] in self._meta.get_all_field_names()):
             return self._filter_field(splitted[1])
         else:
             # Default behaviour
