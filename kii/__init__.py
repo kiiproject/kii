@@ -1,6 +1,6 @@
 from django.utils.version import get_version
 
-VERSION = (0, 4, 0, 'alpha', 0)
+VERSION = (0, 4, 1, 'alpha', 0)
 __version__ = get_version(VERSION)
 
 PROJECT_URL = "http://code.eliotberriot.com/kii/kii"
