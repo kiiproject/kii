@@ -94,13 +94,13 @@ class StreamItem(PolymorphicModel,
                        kwargs={"pk": self.pk})
 
     def reverse_detail(self, **kwargs):
-        return reverse("kii:stream:streamitem:detail",
-                       kwargs={"pk": self.pk})
+        return reverse("kii:stream:stream:streamitem:detail",
+                       kwargs={"pk": self.pk, "stream": self.root.slug})
 
     def reverse_custom_detail(self, **kwargs):
         """Override this method if you want to provide a custom
         URL pattern for your model such as ``/myapp/mymodel/<slug>``"""
-        
+
         return self.reverse_detail(**kwargs)
 
     def reverse_comment_create(self, **kwargs):
