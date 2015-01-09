@@ -15,7 +15,8 @@ TODO:
     file management application
     add permalink on item list
     use default_app_config ( https://docs.djangoproject.com/en/dev/ref/applications/#for-application-authors)
-
+    #Atom feed seems to include every stream items
+    
 Done:
     #automatic URL inclusion via AppConfigs
     Fix root in stream queryset

@@ -4,7 +4,7 @@ This module provides two core components for kii:
 - :py:data:`apps`, an instance of :py:class:`AppManager`, used especialy for
    automatic URL inclusion of kii apps.
 - :py:class:`App`, a class that extends django regular
-  :py:class:`django.apps.AppConfig` and you should use for building your own
+  :py:class:`django.apps.AppConfig` and you should use for building your own \
    kii apps.
 """
 from django.apps import AppConfig, apps as django_app_registry
@@ -23,7 +23,7 @@ class AppManager(object):
     def get(self, app_label):
         """
         :param str app_label:
-        :return: A :py:class:`django.apps.AppConfig` instance corresponding to
+        :return: A :py:class:`django.apps.AppConfig` instance corresponding to\
         the given app_abel.
         """
         return self.registry.get_app_config(app_label)
@@ -52,7 +52,7 @@ class AppManager(object):
 
     def kii_apps(self):
         """
-        :return: An iterable containing all registered django apps marked that
+        :return: An iterable containing all registered django apps marked that\
         are also kii apps
         """
         return self.filter(kii_app=True)
@@ -112,7 +112,7 @@ class App(AppConfig):
 
     @property
     def installed(self):
-        """:return: a boolean that indicates if the app is marked as installed
+        """:return: a boolean that indicates if the app is marked as installed \
         by django"""
 
         return apps.registry.is_installed(self.name)
@@ -128,7 +128,7 @@ class App(AppConfig):
 
     def urlconf(self, target):
         """:param str target: The targeted path
-        :return: The full path to the targeted URLconf, for further inclusion
+        :return: The full path to the targeted URLconf, for further inclusion\
         in a URL pattern
         """
 
