@@ -23,6 +23,6 @@ stream_patterns = patterns('',
 )
 
 urlpatterns = patterns('',
-    url(r'^stream/(?P<stream>\w+)/', include(stream_patterns, namespace="stream")),
+    url(r'^stream/(?P<stream>[-\w\d]+)/', include(stream_patterns, namespace="stream")),
     url(r'^items/', include(streamitem_patterns, namespace="streamitem")),
 )
