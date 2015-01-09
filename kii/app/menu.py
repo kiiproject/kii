@@ -17,21 +17,22 @@ class MenuNode(object):
 
     def __init__(self, **kwargs):
         """
-        :param str route: Either a relative URL, absolute URL or a django URL
+        :param str route: Either a relative URL, absolute URL or a django URL\
         name, such as ``kii:myapp:index``. Defaults to ``#``.
-        :param bool reverse: Wether the given route should be reversed using
+        :param bool reverse: Wether the given route should be reversed using\
         django's :py:func:`reverse` or returned 'as is'. Defaults to ``True``.
         :param parent: TODO, seems useless
-        :param int weight: Indicate the importance of the node. Higher is more
+        :param int weight: Indicate the importance of the node. Higher is more\
         important, default to ``0``.
-        :param bool require_authentication: Used to determine if the node
+        :param bool require_authentication: Used to determine if the node\
         should be shown to unauthenticated users. Defaults to ``True``.
-        :param list reverse_kwargs: A list of strings that the route will
+        :param list reverse_kwargs: A list of strings that the route will\
         accept when reversing. Defaults to ``[]``
-        :param list children: A list of children :py:class:`MenuNode` instances
-        that will be considered as submenus of this instance.
+        :param list children: A list of children :py:class:`MenuNode` instances\
+        that will be considered as submenus of this instance.\
         Defaults to ``[]``.
         :param icon: TODO, seems useless.
+        
         """
 
         self.reverse = kwargs.get('reverse', self.reverse)
@@ -54,8 +55,8 @@ class MenuNode(object):
 
     def url(self, **kwargs):
         """
-        :param kwargs: a dictionary of values that will be used for reversing,
-        if the corresponding key is present in :py:attr:`self.reverse_kwargs
+        :param kwargs: a dictionary of values that will be used for reversing,\
+        if the corresponding key is present in :py:attr:`self.reverse_kwargs\
         <MenuNode.reverse_kwargs>`
         :return: The target URL of the node, after reversing (if needed)
         """

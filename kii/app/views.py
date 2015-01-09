@@ -47,9 +47,9 @@ class AppMixin(object):
         return super(AppMixin, self).dispatch(request, *args, **kwargs)
 
     def get_breadcrumbs(self):
-        """:return: an tuple of breadcrumb elements , such as
-        ``(('Delete' '/delete'), ('My model', None), ('My app', None))``
-        for use in templates. The first item of each tuple is the title of
+        """:return: an tuple of breadcrumb elements , such as\
+        ``(('Delete' '/delete'), ('My model', None), ('My app', None))``\
+        for use in templates. The first item of each tuple is the title of\
         the element, the second is the URL. URL can be None.
         """
         return ((self.app.verbose_name, None),)
