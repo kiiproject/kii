@@ -84,8 +84,7 @@ class StreamItem(PolymorphicModel,
 
     root = models.ForeignKey(Stream, 
                              verbose_name=_('stream'),
-                             related_name="children", 
-                             help_text=_("streamitem.stream.help_text"))
+                             related_name="children",)
 
     objects = StreamItemQueryManager()
 
