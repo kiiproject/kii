@@ -1,7 +1,7 @@
 {% load app_tags glue_tags %}
 
 {% if node.require_authentication and request.user.is_authenticated or not node.require_authentication %}
-{% node_url node=node stream=user_stream.slug as url %}
+{% node_url node=node stream=default_user_stream.slug as url %}
     <li class="{{ node.label }} {% if node.children %}has-dropdown{% endif %}">
         <a href="{{ url }}" class="{% if request.path == url %}active{% endif %} {% if url in request.path%}parent-active{% endif %}">{% if node.icon %}{% icon node.icon %}{% endif %}{{ node.label }}</a>
         {% if node.children %}

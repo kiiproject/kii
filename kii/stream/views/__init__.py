@@ -88,6 +88,14 @@ class Delete(StreamItemContextMixin, permission_views.PermissionMixinDelete):
         return self.object.root.reverse_detail()
 
 
+class StreamCreate(StreamContextMixin, views.OwnerMixinCreate):
+    model = models.Stream
+    form_class = forms.StreamForm
+
+    def get_object(self):
+
+        return self.get_current_stream()
+
 class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
     model = models.Stream
     form_class = forms.StreamForm
