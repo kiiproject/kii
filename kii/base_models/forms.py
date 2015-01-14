@@ -6,7 +6,8 @@ from . import models
 class BaseMixinForm(ModelForm):
 
     success_url = "kii:glue:home"
-
+    required_css_class = 'required'
+    
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         self.request = kwargs.pop('request', None)
