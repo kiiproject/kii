@@ -6,8 +6,12 @@ itemcomment_patterns = patterns('',
         api.ItemCommentUpdate.as_view(), name='update'),
 )
 
-
+stream_patterns = patterns('',
+    url(r'^select/(?P<pk>\d+)$',
+        api.StreamSelect.as_view(), name='select'),
+)
 urlpatterns = patterns('',
     url(r'^comments/',
         include(itemcomment_patterns, namespace="itemcomment")),
+    url(r'^streams/', include(stream_patterns, namespace="stream")),
 )

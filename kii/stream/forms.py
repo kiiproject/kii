@@ -5,11 +5,12 @@ from kii.discussion.forms import CommentForm
 from . import models
 
 
-class StreamForm(PermissionMixinForm, forms.ContentMixinForm):
+class StreamForm(forms.TitleMixinForm, PermissionMixinForm, forms.ContentMixinForm):
 
     class Meta(PermissionMixinForm, forms.ContentMixinForm.Meta):
         model = models.Stream
-        fields = (forms.ContentMixinForm.Meta.fields +
+        fields = (forms.TitleMixinForm.Meta.fields +
+                  forms.ContentMixinForm.Meta.fields +
                   PermissionMixinForm.Meta.fields)
 
 
@@ -40,7 +41,6 @@ class StreamItemForm(
             raise Exception('User must have at lest one stream')
 
         self.fields['root'].queryset = queryset
-        self.initial['root'] = queryset.first()
         self.fields['root'].empty_label = None
 
 

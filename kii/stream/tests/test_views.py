@@ -41,3 +41,15 @@ class TestStreamViews(base.StreamTestCase):
 
         self.assertEqual(isinstance(response.context['filterset'],
                                     OwnerStreamItemFilterSet), True)
+
+    def test_authenticated_user_can_update_his_default_stream(self):
+        s = self.G(models.Stream, owner=self.users[0])
+        url = reverse("kii:api:stream:stream:select", kwargs={"pk": s.pk})
+        self.login(self.users[0].username)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse("kii:glue:home"))
+
+        self.assertEqual(response.context["selected_stream"], s)

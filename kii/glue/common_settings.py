@@ -15,8 +15,8 @@ TEMPLATE_DEBUG = DEBUG
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
     'kii.app.context_processors.user_apps',
-    'kii.stream.context_processors.user_stream',
-    'kii.stream.context_processors.item_models',
+    'kii.stream.context_processors.streams',
+    'kii.stream.context_processors.stream_models',
     'kii.glue.context_processors.kii_metadata',
     'kii.glue.context_processors.tracking_code',
     'kii.activity.context_processors.unread_notifications',
@@ -96,9 +96,7 @@ from django.utils.functional import curry
 import markdown
 from markdown.extensions.codehilite import makeExtension as CodeHilite # noqa
 
-md_filter = curry(markdown.markdown, extensions=[CodeHilite(css_class='code',
-                                                            linenums=False, 
-                                                            noclasses=True)])
+md_filter = curry(markdown.markdown, extensions=[CodeHilite()])
 MARKDOWN_FUNCTION = md_filter
 
 #markupfield
