@@ -25,11 +25,20 @@ class StreamContextMixin(views.AppMixin):
 
         return self.current_stream
 
+    def get_breadcrumbs(self):
+        breadcrumbs = super(StreamContextMixin, self).get_breadcrumbs()
+        stream = self.get_current_stream()
+        breadcrumbs.insert(1, (stream.title, stream.reverse_detail()))
+        return breadcrumbs
+
     def get_context_data(self, **kwargs):
         context = super(StreamContextMixin, self).get_context_data(**kwargs)
         context['current_stream'] = self.get_current_stream()
 
+        if context['current_stream'].owned_by(self.request.user):
+            self.request.session['selected_stream'] = context['current_stream'].pk
         return context
+        
 
 class StreamItemContextMixin(StreamContextMixin):
     def get_current_stream(self, **kwargs):
@@ -88,7 +97,7 @@ class Delete(StreamItemContextMixin, permission_views.PermissionMixinDelete):
         return self.object.root.reverse_detail()
 
 
-class StreamCreate(StreamContextMixin, views.OwnerMixinCreate):
+class StreamCreate(views.OwnerMixinCreate):
     model = models.Stream
     form_class = forms.StreamForm
 

@@ -53,10 +53,10 @@ class ModelTemplateMixin(AppMixin):
     def get_breadcrumbs(self):
         """Prepend action and model label to the page title"""
         breadcrumbs = super(ModelTemplateMixin, self).get_breadcrumbs()
-        return breadcrumbs + (
+        return breadcrumbs + [
             (self.get_model_title(), None),
             (self.get_action_title(), None)
-        )
+        ]
 
     def get_model_title(self):
         return self.get_model()._meta.verbose_name_plural
@@ -101,9 +101,9 @@ class ModelFormMixin(ModelTemplateMixin):
 
 class SingleObjectMixin(object):
     def get_breadcrumbs(self):
-        return super(SingleObjectMixin, self).get_breadcrumbs() + (
+        return super(SingleObjectMixin, self).get_breadcrumbs() + [
             (self.object.get_title(), None),
-        )
+        ]
 
 
 class Create(ModelFormMixin, CreateView):

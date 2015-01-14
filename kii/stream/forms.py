@@ -41,8 +41,6 @@ class StreamItemForm(
             raise Exception('User must have at lest one stream')
 
         self.fields['root'].queryset = queryset
-        if not self.instance.new:
-            self.initial['root'] = queryset.first()
         self.fields['root'].empty_label = None
 
 

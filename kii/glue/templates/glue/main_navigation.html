@@ -10,13 +10,16 @@
         <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
     <section class="top-bar-section">
+
         {% if request.user.is_authenticated %}
             <ul>
                 <li class="has-dropdown">
-                    <a href="#">{% icon "fi-home" %}{% trans "my stream" %}</a>
+                    <a href="#">{% icon "fi-home" %}{% trans "my streams" %}</a>
                     <ul class="dropdown">
                         {% for stream in user_streams %}
-                            <li><a href="{{ stream.reverse_detail }}">{{ stream.title }}</a></li>
+                            <li class="{% if stream == selected_stream %}active{% endif %}">
+                                <a href="{{ stream.reverse_detail }}">{{ stream.title }}</a>
+                            </li>
                         {% endfor %}
                     </ul>
                 </li>

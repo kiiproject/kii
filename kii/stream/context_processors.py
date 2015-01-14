@@ -6,7 +6,12 @@ def streams(request):
     context = {}
     if request.user.is_authenticated():
         context['user_streams'] = models.Stream.objects.filter(owner=request.user)
-        context['default_user_stream'] = context['user_streams'].first()
+
+        if request.session.get("selected_stream"):
+            selected_stream = models.Stream.objects.get(pk=request.session.get("selected_stream"))
+        else:
+            selected_stream = models.Stream.objects.get_user_stream(request.user)
+        context['selected_stream'] = selected_stream
     return context
 
 
