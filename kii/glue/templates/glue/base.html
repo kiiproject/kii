@@ -4,14 +4,14 @@
         <title>{% block title %}{{ full_title }}{% endblock %}</title>
         <meta charset="utf-8" />
         {% block css %}
-            <link href="{% static 'default/glue/stylesheets/app.css' %}" rel="stylesheet" type="text/css" />
+            <link href="{% static 'glue/stylesheets/app.css' %}" rel="stylesheet" type="text/css" />
         {% endblock %}
           
         {% block head_js %}
-            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/vendor/jquery.js' %}"></script>
-            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/vendor/modernizr.js' %}"></script>
-            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/foundation.min.js' %}"></script>    
-            <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/foundation/foundation.alert.js' %}"></script>
+            <script type="text/javascript" src="{% static 'glue/bower_components/foundation/js/vendor/jquery.js' %}"></script>
+            <script type="text/javascript" src="{% static 'glue/bower_components/foundation/js/vendor/modernizr.js' %}"></script>
+            <script type="text/javascript" src="{% static 'glue/bower_components/foundation/js/foundation.min.js' %}"></script>    
+            <script type="text/javascript" src="{% static 'glue/bower_components/foundation/js/foundation/foundation.alert.js' %}"></script>
         {% endblock %}
     </head>
     <body class="{% block body_class %}{% endblock %}"> 
@@ -52,7 +52,7 @@
             </footer>
         </div>
         {% block bottom_js %}
-        <script type="text/javascript" src="{% static 'default/glue/js/app.js' %}"></script>
+        <script type="text/javascript" src="{% static 'glue/js/app.js' %}"></script>
         <script type="text/javascript">var kii_root = "{{ kii_root|slice:":-1" }}";</script>
         {% endblock %}
         {% block tracking_code %}

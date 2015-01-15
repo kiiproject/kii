@@ -7,11 +7,11 @@ class Markdown(forms.Textarea):
 
         css = {
             "all": (
-                "default/editor/editor.css", 
-                "default/editor/vendor/icomoon/style.css", 
+                "editor/editor.css", 
+                "editor/vendor/icomoon/style.css", 
             )
         }
         js = (
-            "default/editor/editor.js", 
-            "default/editor/marked.js", 
+            "editor/editor.js", 
+            "editor/marked.js", 
         )
