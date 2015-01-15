@@ -14,7 +14,8 @@ class PermissionMixinForm(BaseMixinForm):
         ("everybody", _("everybody")),
     )
     readable_by = forms.ChoiceField(choices=PERMISSION_CHOICES,
-                                    widget=forms.RadioSelect)
+                                    widget=forms.RadioSelect,
+                                    help_text="permission.readable_by.help_text")
 
     class Meta:
         model = models.PermissionMixin
