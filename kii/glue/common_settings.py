@@ -107,3 +107,24 @@ MARKUP_FIELD_TYPES = (
 
 # Tracking code (like Piwik or Google Analytics) that will be included in every template
 TRACKING_CODE = ""
+
+import logging
+KII_LOGGER = logging.getLogger("kii")
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        "kii": {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        }
+
+    },
+}

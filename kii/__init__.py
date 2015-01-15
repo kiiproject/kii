@@ -19,6 +19,7 @@ APPS = (
     'kii.base_models',
     'kii.activity',
     'kii.app',
+    'kii.vendor',
 )
 
 

@@ -15,11 +15,14 @@ class StreamContextMixin(views.AppMixin):
 
     current_stream = None
 
+    def _get_current_stream(self):
+        stream_slug = self.kwargs.get('stream', self.request.user.username)
+        return models.Stream.objects.get(slug=stream_slug)
+
     def get_current_stream(self):
         if self.current_stream is None:
             try:
-                stream_slug = self.kwargs.get('stream', self.request.user.username)
-                self.current_stream = models.Stream.objects.get(slug=stream_slug)
+                self.current_stream = self._get_current_stream()
             except models.Stream.DoesNotExist:
                 raise Http404
 
@@ -115,6 +118,7 @@ class StreamUpdate(StreamContextMixin, permission_views.PermissionMixinUpdate):
 
 from django.utils.feedgenerator import Atom1Feed
 
+from django.conf import settings
 
 class StreamFeedAtom(StreamContextMixin, Feed):
 
@@ -123,7 +127,11 @@ class StreamFeedAtom(StreamContextMixin, Feed):
     def __call__(self, request, *args, **kwargs):
         self.setup(request, *args, **kwargs)
         self.pre_dispatch(request, *args, **kwargs)
-        self.stream = self.get_current_stream()
+        
+        try:
+            self.stream = self._get_current_stream()
+        except models.Stream.DoesNotExist:
+            raise Http404
 
         return super(StreamFeedAtom, self).__call__(request, *args, **kwargs)
 
