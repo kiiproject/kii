@@ -1,11 +1,12 @@
-{% load i18n %}<!DOCTYPE html>
+{% load i18n static %}<!DOCTYPE html>
 <html {% block html_attributes %}{% endblock %}>{% load i18n static %}
     <head>
         <title>{% block title %}{{ full_title }}{% endblock %}</title>
         <meta charset="utf-8" />
         {% block css %}
-            <link href="{% static 'default/glue/stylesheets/app.css' %}" rel="stylesheet" type="text/css" />            
+            <link href="{% static 'default/glue/stylesheets/app.css' %}" rel="stylesheet" type="text/css" />
         {% endblock %}
+          
         {% block head_js %}
             <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/vendor/jquery.js' %}"></script>
             <script type="text/javascript" src="{% static 'default/glue/bower_components/foundation/js/vendor/modernizr.js' %}"></script>

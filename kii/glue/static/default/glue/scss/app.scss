@@ -40,6 +40,7 @@
 //   "foundation/components/offcanvas",
 //   "foundation/components/visibility";
 
+
 * {
     box-sizing:border-box;
     -moz-box-sizing:border-box;
@@ -189,9 +190,6 @@ form {
     }
 }
 
-#id_content {
-    display: none;
-}
 textarea {
     min-height: 10rem;
 }

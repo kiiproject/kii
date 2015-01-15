@@ -12,16 +12,7 @@
     {% if action == "update" and form.instance.reverse_delete %}
     <a class="button alert right" href="{{ form.instance.reverse_delete }}">{% trans "delete" %}</a>
     {% endif %}
-
-    {% if form.fields.content %}
-        <script src="{% static 'default/base_models/epiceditor/js/epiceditor.min.js' %}"></script>
-        <script type="text/javascript">
-        var opts = {
-            basePath: '{% static "default/base_models/epiceditor" %}',
-            textarea: 'id_content'
-        }
-        var editor = new EpicEditor(opts);
-        editor.load();
-        </script>
+    {% if form.fields.content %} 
+        <script type="text/javascript">var editor = new Editor().render();</script>
     {% endif %}
 </form>

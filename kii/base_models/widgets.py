@@ -3,5 +3,15 @@ from django import forms
 
 class Markdown(forms.Textarea):
 
-    def render(self, *args, **kwargs):
-        return "<div id='epiceditor'></div>" + super(Markdown, self).render(*args, **kwargs)
+    class Media:
+
+        css = {
+            "all": (
+                "default/editor/editor.css", 
+                "default/editor/vendor/icomoon/style.css", 
+            )
+        }
+        js = (
+            "default/editor/editor.js", 
+            "default/editor/marked.js", 
+        )
