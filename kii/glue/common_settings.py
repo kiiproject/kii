@@ -95,10 +95,15 @@ LANGUAGES = (
 from django.utils.functional import curry
 import markdown
 from markdown.extensions.codehilite import makeExtension as CodeHilite # noqa
+from kii.markdown.inlinepatterns import makeExtension as KiiFlavoredMarkdown
 
-md_filter = curry(markdown.markdown, extensions=[CodeHilite(css_class='code',
-                                                            linenums=False, 
-                                                            noclasses=True)])
+MARKDOWN_EXTENSIONS = (
+    CodeHilite(css_class='code', linenums=False, noclasses=True),
+    KiiFlavoredMarkdown()
+)
+
+md_filter = curry(markdown.markdown, extensions=MARKDOWN_EXTENSIONS)
+                    
 MARKDOWN_FUNCTION = md_filter
 
 #markupfield

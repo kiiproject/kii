@@ -30,11 +30,11 @@ So we end up with something like this:
 
 For tags::
 
-    #tagslug(Optionnal anchor)
+    #tagslug[Optionnal anchor]
 
 For other objects::
 
-    #contenttype/ID(Optional anchor)
+    #contenttype/ID[Optional anchor]
 
 .. note:: 
 
