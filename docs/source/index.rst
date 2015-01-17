@@ -45,6 +45,7 @@ Contents
    installation
    architecture
    apps/index
+   kii_flavored_markdown
    credits
 
 
