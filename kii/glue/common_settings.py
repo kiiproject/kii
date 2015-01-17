@@ -15,8 +15,8 @@ TEMPLATE_DEBUG = DEBUG
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
     'kii.app.context_processors.user_apps',
-    'kii.stream.context_processors.user_stream',
-    'kii.stream.context_processors.item_models',
+    'kii.stream.context_processors.streams',
+    'kii.stream.context_processors.stream_models',
     'kii.glue.context_processors.kii_metadata',
     'kii.glue.context_processors.tracking_code',
     'kii.activity.context_processors.unread_notifications',
@@ -103,7 +103,7 @@ MARKDOWN_EXTENSIONS = (
 )
 
 md_filter = curry(markdown.markdown, extensions=MARKDOWN_EXTENSIONS)
-                    
+      
 MARKDOWN_FUNCTION = md_filter
 
 #markupfield
@@ -114,3 +114,24 @@ MARKUP_FIELD_TYPES = (
 
 # Tracking code (like Piwik or Google Analytics) that will be included in every template
 TRACKING_CODE = ""
+
+import logging
+KII_LOGGER = logging.getLogger("kii")
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        "kii": {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        }
+
+    },
+}

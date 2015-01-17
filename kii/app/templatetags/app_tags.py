@@ -29,7 +29,7 @@ def node_url(node, **kwargs):
         {% endwith %}
 
     :param node: a :py:class:`kii.app.menu.MenuNode` instance
-    :param kwargs: kwargs that will be passed to the :py:func:`reverse`
+    :param kwargs: kwargs that will be passed to the :py:func:`reverse`\
     function
     :return: the target URL of the menu node
     """
@@ -50,6 +50,7 @@ def model_url(model, suffix, **kwargs):
         {% if url %}
             {{ url }}
         {% endif %}
+        
     Will ouptut something like ``/myapp/mymodel/12/delete`` if the URL exists.
 
     Model can be an instance or a :py:class:`Model` subclass.

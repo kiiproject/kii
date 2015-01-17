@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from guardian.shortcuts import get_anonymous_user
@@ -81,7 +82,9 @@ class StreamItem(PolymorphicModel,
                  permission_models.InheritPermissionMixin,):
     """A base class for streamable models"""
 
-    root = models.ForeignKey(Stream, related_name="children")
+    root = models.ForeignKey(Stream, 
+                             verbose_name=_('stream'),
+                             related_name="children",)
 
     objects = StreamItemQueryManager()
 

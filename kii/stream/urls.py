@@ -24,5 +24,6 @@ stream_patterns = patterns('',
 
 urlpatterns = patterns('',
     url(r'^stream/(?P<stream>[-\w\d]+)/', include(stream_patterns, namespace="stream")),
+    url(r'^create/', views.StreamCreate.as_view(), name="create"),
     url(r'^items/', include(streamitem_patterns, namespace="streamitem")),
 )

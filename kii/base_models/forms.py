@@ -1,11 +1,12 @@
 from django.forms import ModelForm
 
-from . import models
+from . import models, widgets
 
 
 class BaseMixinForm(ModelForm):
 
     success_url = "kii:glue:home"
+    required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -22,11 +23,13 @@ class TitleMixinForm(BaseMixinForm):
 
 
 class ContentMixinForm(BaseMixinForm):
-    pass
 
     class Meta:
         model = models.ContentMixin
         fields = ('content',)
+        widgets = {
+            'content': widgets.Markdown()
+        }
 
 
 class StatusMixinForm(BaseMixinForm):

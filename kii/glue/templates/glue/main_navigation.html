@@ -10,9 +10,19 @@
         <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
     <section class="top-bar-section">
+
         {% if request.user.is_authenticated %}
             <ul>
-                <li><a href="{{ user_stream.reverse_detail }}">{% icon "fi-home" %}{% trans "my stream" %}</a></li>
+                <li class="has-dropdown">
+                    <a href="#">{% icon "fi-home" %}{% trans "my streams" %}</a>
+                    <ul class="dropdown">
+                        {% for stream in user_streams %}
+                            <li class="{% if stream == selected_stream %}active{% endif %}">
+                                <a href="{{ stream.reverse_detail }}">{{ stream.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
             </ul>
             <ul>
                 <li class="has-dropdown">
@@ -36,6 +46,7 @@
                             {% if url %}
                                 <li><a href="{{ url }}">{{ model.meta.verbose_name }}</a>
                             {% endif %}
+                            <li><a href="{% url 'kii:stream:create' %}">{{ stream_model.meta.verbose_name }}</a>
                         {% endfor %}    
                     </ul>
                 </li>

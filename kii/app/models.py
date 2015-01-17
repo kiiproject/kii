@@ -23,9 +23,9 @@ class AppModel(models.Model):
 
     def url_namespace(self, **kwargs):
         """
-        :param bool user_area: whether the URL namespace should include
+        :param bool user_area: whether the URL namespace should include\
         the username part
-        :return: a string representing the URL namespace of the model,
+        :return: a string representing the URL namespace of the model,\
         such as ``kii:myapp:mymodel:``
         """
 
@@ -43,9 +43,9 @@ class AppModel(models.Model):
         or update URL. You can override per-suffix URLs by defining
         ``reverse_<suffix>`` methods on the model class.
 
-        :param str suffix: a string that will be used to find the corresponding
+        :param str suffix: a string that will be used to find the corresponding\
         reverse method on the model class (if any)
-        :param dict kwargs: optional URL kwargs that will be passed to the
+        :param dict kwargs: optional URL kwargs that will be passed to the\
         reverse function
         :return: a reversed URL
         """
@@ -77,7 +77,7 @@ class AppModel(models.Model):
         )
 
     def get_absolute_url(self):
-        """:return: The absolute URL of the instance, which is equal to
+        """:return: The absolute URL of the instance, which is equal to\
         ``self.reverse_detail()`` by default"""
         # TODO : user_include should be replaced with user_area
         return self.reverse_detail(user_include=True)
