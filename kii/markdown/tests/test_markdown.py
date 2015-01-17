@@ -21,3 +21,5 @@ class TestMarkdown(StreamTestCase):
                     username)
 
         self.assertEqual(rendered, expected)
+
+        
