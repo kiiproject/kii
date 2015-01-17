@@ -2,9 +2,10 @@ from markdown import inlinepatterns, util, Extension
 
 from django.core.urlresolvers import reverse
 
+ANCHOR_RE = r'(?:(\(.*?\)))?'
 USERNAME_RE = r'(@[\w@+-]+)'
-STREAM_RE = r'#(stream)\/([\w@+-_]+)'
-ITEM_RE = r'#(item)\/([\w@+-_]+)'
+STREAM_RE = r'#(stream)\/([\w@+-_]+)' + ANCHOR_RE
+ITEM_RE = r'#(item)\/([\w@+-_]+)' + ANCHOR_RE
 
 
 class UsernamePattern(inlinepatterns.Pattern):
@@ -51,10 +52,16 @@ class HashPattern(inlinepatterns.Pattern):
         except self.get_model().DoesNotExist:
             return pattern
 
-        print(m.groups(4))
         el = util.etree.Element("a")
         el.set('href', target.get_absolute_url())
-        el.text = pattern
+        anchor = m.group(4)
+        if anchor:
+            # remove parenthesis
+            anchor = anchor[1:-1]
+        else:
+            anchor = pattern
+        el.text = anchor
+
         return el
 
 
