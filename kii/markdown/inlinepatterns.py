@@ -51,6 +51,7 @@ class HashPattern(inlinepatterns.Pattern):
         except self.get_model().DoesNotExist:
             return pattern
 
+        print(m.groups(4))
         el = util.etree.Element("a")
         el.set('href', target.get_absolute_url())
         el.text = pattern
