@@ -1,6 +1,7 @@
 from markdown import inlinepatterns, util, Extension
-
 from django.core.urlresolvers import reverse
+
+from kii.utils import full_url
 
 ANCHOR_RE = r'(?:(\(.*?\)))?'
 USERNAME_RE = r'(@[\w@+-]+)'
@@ -19,8 +20,8 @@ class UsernamePattern(inlinepatterns.Pattern):
         except User.DoesNotExist:
             return m.group(2)
 
-        user_profile_url = reverse("kii:user_area:user:profile",
-                                   kwargs={"username": user.username})
+        user_profile_url = full_url(reverse("kii:user_area:user:profile",
+                                   kwargs={"username": user.username}))
         el = util.etree.Element("a")
         el.set('href', user_profile_url)
         el.text = m.group(2)
@@ -53,7 +54,7 @@ class HashPattern(inlinepatterns.Pattern):
             return pattern
 
         el = util.etree.Element("a")
-        el.set('href', target.get_absolute_url())
+        el.set('href', full_url(target.get_absolute_url()))
         anchor = m.group(4)
         if anchor:
             # remove parenthesis

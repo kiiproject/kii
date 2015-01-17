@@ -18,8 +18,8 @@ class TestMarkdown(StreamTestCase):
         content = "@{0}".format(username)
         rendered = markdown(content)
         expected = """<p><a href="{0}">@{1}</a></p>""".format(
-                    reverse("kii:user_area:user:profile",
-                            kwargs={"username": username}),
+                    self.full_url(reverse("kii:user_area:user:profile",
+                            kwargs={"username": username})),
                     username)
 
         self.assertEqual(rendered, expected)
@@ -32,8 +32,8 @@ class TestMarkdown(StreamTestCase):
         content = "Test #stream/{0}".format(slug)
         rendered = markdown(content)
         expected = """<p>Test <a href="{0}">{1}</a></p>""".format(
-                    reverse("kii:stream:stream:index",
-                            kwargs={"stream": slug}),
+                    self.full_url(reverse("kii:stream:stream:index",
+                            kwargs={"stream": slug})),
                     "#stream/{0}".format(slug))
 
         self.assertEqual(rendered, expected)
@@ -46,8 +46,8 @@ class TestMarkdown(StreamTestCase):
         content = "Test #item/{0}".format(i.pk)
         rendered = markdown(content)
         expected = """<p>Test <a href="{0}">{1}</a></p>""".format(
-                    reverse("kii:stream:stream:streamitem:detail",
-                            kwargs={"pk": i.pk, "stream": i.root.slug}),
+                    self.full_url(reverse("kii:stream:stream:streamitem:detail",
+                            kwargs={"pk": i.pk, "stream": i.root.slug})),
                     "#item/{0}".format(i.pk))
 
         self.assertEqual(rendered, expected)
@@ -59,7 +59,7 @@ class TestMarkdown(StreamTestCase):
         content = "Test #stream/{0}(yolo)".format(slug)
         rendered = markdown(content)
         expected = """<p>Test <a href="{0}">yolo</a></p>""".format(
-                    reverse("kii:stream:stream:index",
-                            kwargs={"stream": slug}))
+                    self.full_url(reverse("kii:stream:stream:index",
+                            kwargs={"stream": slug})))
 
         self.assertEqual(rendered, expected)

@@ -3,6 +3,7 @@ from django.test import RequestFactory
 from django_dynamic_fixture import G
 from bs4 import BeautifulSoup
 
+from kii.utils import full_url
 
 class BaseTestCase(django.test.LiveServerTestCase):
     """A base Testcase other kii apps test cases inherit from"""
@@ -15,6 +16,9 @@ class BaseTestCase(django.test.LiveServerTestCase):
         self.factory = RequestFactory()
 
         super(BaseTestCase, self).setUp()
+
+    def full_url(self, *args, **kwargs):
+        return full_url(*args, **kwargs)
 
     def assertQuerysetEqualIterable(self, qs, it, **kwargs):
 
