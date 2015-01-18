@@ -14,6 +14,7 @@ APPS = (
     'kii.api',
     'kii.glue',
     'kii.classify',
+    'kii.search',
     'kii.stream',
     'kii.discussion',
     'kii.base_models',

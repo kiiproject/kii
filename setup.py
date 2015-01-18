@@ -29,6 +29,7 @@ setup(
         'django-extensions',
         'django-filter',
         'django-activity-stream',
+        'django-autocomplete-light',
     ],
     zip_safe=False,
     classifiers=[
