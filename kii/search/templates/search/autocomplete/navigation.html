@@ -1,10 +1,13 @@
 {% load i18n %}
-<span class="separator">{% trans "streams" %}</span>
-{% for obj in streams %}
-    <a class="block choice" href="{{ obj.get_absolute_url }}">{{ obj.title }}</a>
-{% endfor %}
-
-<span class="separator">{% trans "items" %}</span>
-{% for obj in items %}
-    <a class="block choice" href="{{ obj.get_absolute_url }}">{{ obj.title }}</a>
-{% endfor %}
+{% if streams|length %}
+    <span class="separator">{% trans "streams" %}</span>
+    {% for obj in streams %}
+        <a class="block choice" href="{{ obj.get_absolute_url }}">{{ obj.title }}</a>
+    {% endfor %}
+{% endif %}
+{% if items|length %}
+    <span class="separator">{% trans "items" %}</span>
+    {% for obj in items %}
+        <a class="block choice" href="{{ obj.get_absolute_url }}">{{ obj.title }}</a>
+    {% endfor %}
+{% endif %}
