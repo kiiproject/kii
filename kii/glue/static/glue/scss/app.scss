@@ -115,6 +115,24 @@ body {
     }
 }
 
+.yourlabs-autocomplete {
+    background-color: white;
+    box-shadow: 1px 1px 1px $gainsboro;
+    > * {
+        display: block;
+        padding: 0.5rem;
+    }
+    .separator {
+        font-weight: bold;
+    }
+    a {
+        padding-left: 1rem;
+    }
+    .hilight {
+        background-color: $primary-color;
+        color: white;
+    }
+}
 
 .main-content {
     min-height: 80vh;
