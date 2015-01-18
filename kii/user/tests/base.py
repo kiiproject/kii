@@ -32,3 +32,6 @@ class UserTestCase(base.BaseTestCase):
 
     def tearDown(self):
         self.logout()
+
+    def assertRedirectsLogin(self, response, next):
+        self.assertRedirects(response, reverse(settings.LOGIN_URL)+"?next="+next)

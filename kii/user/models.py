@@ -26,7 +26,6 @@ def add_user_to_default_group(sender, instance, created, **kwargs):
             name=settings.ALL_USERS_GROUP)
         group.user_set.add(instance)
 
-
 post_save.connect(add_user_to_default_group, sender=settings.AUTH_USER_MODEL)
 
 

@@ -14,7 +14,8 @@ class PermissionMixinForm(BaseMixinForm):
         ("everybody", _("everybody")),
     )
     readable_by = forms.ChoiceField(choices=PERMISSION_CHOICES,
-                                    widget=forms.RadioSelect)
+                                    widget=forms.RadioSelect,
+                                    help_text="permission.readable_by.help_text")
 
     class Meta:
         model = models.PermissionMixin
@@ -33,6 +34,7 @@ class PermissionMixinForm(BaseMixinForm):
                 self.fields['readable_by'].initial = "owner"
 
     def save(self, *args, **kwargs):
+        r = super(PermissionMixinForm, self).save(*args, **kwargs)
 
         readable_by = self.cleaned_data['readable_by']
         if readable_by == "everybody":
@@ -43,4 +45,4 @@ class PermissionMixinForm(BaseMixinForm):
             # Delete anonymous user perm, if any
             self.instance.remove_perm('read', get_anonymous_user())
 
-        return super(PermissionMixinForm, self).save(*args, **kwargs)
+        return r

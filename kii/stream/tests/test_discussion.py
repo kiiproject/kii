@@ -1,4 +1,7 @@
 from django.core.urlresolvers import reverse
+from actstream import models as actstream_models
+
+
 import json
 
 from kii.discussion.models import AnonymousCommenterProfile
@@ -48,10 +51,10 @@ class TestDiscussion(base.StreamTestCase):
     def test_moderation_page_require_to_be_stream_owner(self):
 
         s = models.Stream.objects.get(title=self.users[0].username, owner=self.users[0])
-        url = reverse('kii:user_area:stream:itemcomment:moderation', kwargs={"username": self.users[0].username})
+        url = reverse('kii:stream:stream:itemcomment:moderation', 
+                      kwargs={"stream": s.slug})
         response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 404)
+        self.assertRedirectsLogin(response, url)
 
         self.login(self.users[0].username)
         response = self.client.get(url)
@@ -70,7 +73,8 @@ class TestDiscussion(base.StreamTestCase):
         c2 = self.G(models.ItemComment, subject=si1, user_profile=profile)
         c3 = self.G(models.ItemComment, subject=si1, user_profile=profile)
 
-        url = reverse('kii:user_area:stream:itemcomment:moderation', kwargs={"username": self.users[1].username})
+        url = reverse('kii:stream:stream:itemcomment:moderation', 
+                      kwargs={"stream": s.slug})
         self.login(self.users[1].username)
         response = self.client.get(url)
 
@@ -89,7 +93,8 @@ class TestDiscussion(base.StreamTestCase):
         c0 = self.G(models.ItemComment, subject=si0, user_profile=profile, status="junk")
         c1 = self.G(models.ItemComment, subject=si0, user_profile=profile)
 
-        url = reverse('kii:user_area:stream:itemcomment:moderation', kwargs={"username": self.users[1].username})
+        url = reverse('kii:stream:stream:itemcomment:moderation', 
+                      kwargs={"stream": s.slug})
         self.login(self.users[1].username)
         response = self.client.get(url+"?status=junk")
 
@@ -111,3 +116,21 @@ class TestDiscussion(base.StreamTestCase):
         c = models.ItemComment.objects.get(pk=c0.pk)
         self.assertEqual(c.status, "disapproved")
 
+    def test_addding_comment_send_notificatation_to_stream_owner(self):
+        s = models.Stream.objects.get_user_stream(self.users[1])
+        si0 = self.G(models.StreamItem, root=s)
+
+        c = self.G(models.ItemComment, subject=si0, user=self.users[0])
+
+        activity = actstream_models.user_stream(self.users[1])
+        self.assertEqual(activity[0].action_object, c)
+        self.assertEqual(activity[0].target, s)
+
+    def test_each_comment_gets_an_absolute_url(self):
+        s = models.Stream.objects.get_user_stream(self.users[1])
+        si0 = self.G(models.StreamItem, root=s)
+
+        c = self.G(models.ItemComment, subject=si0, user=self.users[0])
+
+        self.assertEqual(c.get_absolute_url(), 
+                         si0.get_absolute_url() + "#comment-{0}".format(c.pk))

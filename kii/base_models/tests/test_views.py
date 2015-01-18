@@ -30,25 +30,6 @@ class TestViews(base.UserTestCase):
         response = self.client.get(reverse('kii:test_base_models:titlemodel2:create'))
         self.assertEqual(response.context['action'], "create")
 
-    @override_settings(KII_DEFAULT_USER='test0')
-    def test_owner_view_require_username_argument_or_deduce_it_automatically_from_logged_in_user_or_settings(self):
-        url = reverse('kii:test_base_models:ownermodel:list')
-
-        # anonymous user should see test0 page
-        response = self.client.get(url)
-        self.assertEqual(response.context['owner'], self.users[0])
-
-        # authenticated user should see his own page
-        re = self.login(self.users[1].username)
-        response = self.client.get(url)
-        self.assertEqual(response.context['owner'], self.users[1])
-
-    def test_owner_view_redirect_to_login_for_anonymous_user_without_KII_DEFAULT_USER_SET(self):
-        url = reverse('kii:test_base_models:ownermodel:list')
-
-        response = self.client.get(url)
-        self.assertRedirects(response, reverse("kii:user:login")+"?next="+url)
-
     
     def test_filters(self):
 
@@ -74,27 +55,3 @@ class TestViews(base.UserTestCase):
 
         response = self.client.get(url)
         self.assertIn("status model", response.context['full_title'])
-
-    def test_owner_middleware_with_kwarg(self):
-        url = reverse('kii:user_area:test_base_models:ownermodel:list', kwargs={"username": self.users[0]})
-        
-        response = self.client.get(url)
-
-        self.assertEqual(response.context['request'].owner, self.users[0])
-        self.assertEqual(response.status_code, 200)
-
-    def test_owner_middleware_with_logger_in_user(self):
-        url = reverse('kii:test_base_models:ownermodel:list')
-        self.login(self.users[1])
-        response = self.client.get(url)
-
-        self.assertEqual(response.context['request'].owner, self.users[1])
-        self.assertEqual(response.status_code, 200)
-
-    @override_settings(KII_DEFAULT_USER='test0')
-    def test_owner_middleware_with_default_user(self):
-        url = reverse('kii:test_base_models:ownermodel:list')
-        response = self.client.get(url)
-
-        self.assertEqual(response.context['request'].owner, self.user_model.objects.get(username='test0'))
-        self.assertEqual(response.status_code, 200)

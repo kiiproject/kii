@@ -1,6 +1,6 @@
 from django.utils.version import get_version
 
-VERSION = (0, 3, 0, 'alpha', 0)
+VERSION = (0, 7, 0, 'alpha', 0)
 __version__ = get_version(VERSION)
 
 PROJECT_URL = "http://code.eliotberriot.com/kii/kii"
@@ -17,7 +17,9 @@ APPS = (
     'kii.stream',
     'kii.discussion',
     'kii.base_models',
+    'kii.activity',
     'kii.app',
+    'kii.vendor',
 )
 
 

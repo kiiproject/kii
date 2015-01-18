@@ -1,4 +1,4 @@
-{% load i18n glue_tags app_tags %}
+{% load i18n glue_tags app_tags activity_tags %}
 <div class="fixed">
 <nav class="top-bar main-navigation" data-topbar role="navigation">
 {% block main_navigation %}        
@@ -10,9 +10,19 @@
         <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
     <section class="top-bar-section">
+
         {% if request.user.is_authenticated %}
             <ul>
-                <li><a href="{{ user_stream.reverse_detail }}">{% icon "fi-home" %}{% trans "my stream" %}</a></li>
+                <li class="has-dropdown">
+                    <a href="#">{% icon "fi-home" %}{% trans "my streams" %}</a>
+                    <ul class="dropdown">
+                        {% for stream in user_streams %}
+                            <li class="{% if stream == selected_stream %}active{% endif %}">
+                                <a href="{{ stream.reverse_detail }}">{{ stream.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
             </ul>
             <ul>
                 <li class="has-dropdown">
@@ -36,6 +46,7 @@
                             {% if url %}
                                 <li><a href="{{ url }}">{{ model.meta.verbose_name }}</a>
                             {% endif %}
+                            <li><a href="{% url 'kii:stream:create' %}">{{ stream_model.meta.verbose_name }}</a>
                         {% endfor %}    
                     </ul>
                 </li>
@@ -45,12 +56,23 @@
                     <li><a href="{{ object.reverse_update }}">{% icon "fi-pencil" %}{{ object.meta.verbose_name }} - {% trans 'update' %}</a></li>
                 </ul>
             {% endif %}
+            
         {% endif %}
         {% if request.user.is_authenticated %}
             <ul class="right">
-                <li class="has-dropdown"><a href="#">{% icon "fi-torso" %}{% trans 'kii.user.menu' %}</a>
+                <li class="has-dropdown"><a href="#">{% icon "fi-torso" %}{{ request.user.username }}</a>
                     <ul class="dropdown">                       
                         <li class="logout"><a href="{% url 'kii:user:logout' %}">{% icon "fi-x" %}{% trans 'logout' %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="notifications right">
+                <li class="has-dropdown">
+                    <a href="#">{% icon "fi-burst" %} {{ unread_notifications|length }}</a>
+                    <ul class="dropdown">
+                    {% for notification in unread_notifications %}
+                        <li>{% display_action notification.action %}</li>
+                    {% endfor %}
                     </ul>
                 </li>
             </ul>
