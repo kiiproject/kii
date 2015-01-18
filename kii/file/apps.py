@@ -5,5 +5,18 @@ from kii.app import core, menu
 
 class App(core.App):
     name = "kii.file"
-
+    urls = ".urls"
     user_access = True
+    
+    def ready(self):
+        super(App, self).ready()
+        self.menu = menu.MenuNode(
+            route="kii:file:index", 
+            label=_("files"),
+            children = [
+                menu.MenuNode(
+                    route="kii:file:file:create",
+                    label=_("create")
+                )
+            ]           
+    )
