@@ -11,3 +11,4 @@ django-bower
 djangorestframework
 django-filter
 django-activity-stream
+django-autocomplete-light
