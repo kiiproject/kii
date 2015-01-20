@@ -1,0 +1,9 @@
+{% extends 'stream/streamitem/list_item.html' %}
+{% load i18n glue_tags %}
+{% block content %}
+    {% if object.type == 'image' %}
+        <img src="{{ object.reverse_raw }}" />
+    {% endif %}
+    {{ block.super }}
+    <a class="button" href="{{ object.reverse_raw }}">{% icon "fi-download" %}{% trans 'download' %} - {{ object.original_name }} ({{ object.file_obj.size|filesizeformat }})</a>
+{% endblock %}
