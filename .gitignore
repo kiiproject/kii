@@ -1,4 +1,6 @@
 tests/static
 tests/components
 tests/.sass*
+tests/kii
 build
+
