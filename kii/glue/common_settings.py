@@ -43,7 +43,8 @@ INSTALLED_APPS = (
     'polymorphic',
     'django_filters',
     'mptt',
-    'rest_framework',    
+    'rest_framework',  
+    'autocomplete_light',  
 ) + kii.APPS_CONFIGS + ('actstream',)
 
 
