@@ -86,3 +86,5 @@ class TestStreamItem(base.StreamTestCase):
         response = self.client.get(url)
 
         self.assertRedirects(response, "/kii/test_stream/streamitemchild1/{0}/".format(m1.pk))
+
+        

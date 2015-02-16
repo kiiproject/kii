@@ -53,3 +53,16 @@ class TestStreamViews(base.StreamTestCase):
         response = self.client.get(reverse("kii:glue:home"))
 
         self.assertEqual(response.context["selected_stream"], s)
+
+    def test_stream_item_list_excludes_low_importance_itesm(self):
+        stream = models.Stream.objects.get(owner=self.users[0], title=self.users[0].username)
+        s1 = models.StreamItem(root=stream, title="Hello", content="test", status="pub", importance=1)
+        s1.save()
+        
+        si2 = models.StreamItem(root=stream, title="Hello", content="test", status="pub")
+        si2.save()
+        stream.assign_perm('read', self.anonymous_user)
+
+        url = stream.reverse_detail()
+        response = self.client.get(url)
+        self.assertQuerysetEqualIterable(response.context['object_list'], [si2])
