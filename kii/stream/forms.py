@@ -16,11 +16,13 @@ class StreamForm(forms.TitleMixinForm, PermissionMixinForm, forms.ContentMixinFo
 
 class StreamItemForm(
         forms.TitleMixinForm,
+        forms.ImportanceMixinForm,
         forms.ContentMixinForm,
         forms.StatusMixinForm,):
 
     class Meta(
             forms.TitleMixinForm.Meta,
+            forms.ImportanceMixinForm.Meta,
             forms.ContentMixinForm.Meta,
             forms.StatusMixinForm.Meta,):
 
@@ -28,6 +30,7 @@ class StreamItemForm(
         fields = (forms.TitleMixinForm.Meta.fields +
                   forms.ContentMixinForm.Meta.fields +
                   forms.StatusMixinForm.Meta.fields +
+                  forms.ImportanceMixinForm.Meta.fields +
                   ('root',))
 
     def __init__(self, *args, **kwargs):
