@@ -1,3 +1,4 @@
+-r requirements.txt
 nose
 django-nose
 django-dynamic-fixture

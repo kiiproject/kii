@@ -57,6 +57,12 @@ class List(StreamContextMixin, permission_views.PermissionMixinList):
         if self.streamitem_class:
             queryset = queryset.instance_of(self.streamitem_class)
 
+        else:
+            # we are on stream index (no specific app/model specified)
+            # so we return only instances marked as normal/important
+
+            queryset = queryset.exclude(importance=1)
+
         return queryset.filter(root=self.current_stream)
 
     def get_filterset_kwargs(self):

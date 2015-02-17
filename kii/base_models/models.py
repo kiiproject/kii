@@ -214,6 +214,22 @@ class TitleMixin(BaseMixin):
         return u'{0}'.format(self.title)
 
 
+class ImportanceMixin(BaseMixin):
+    """Some things are important, other are'nt"""
+
+    STATUS_CHOICES = (
+        (1, _('base_models.importance.low')),
+        (2, _('base_models.importance.normal')),
+        (3, _('base_models.importance.high')),
+    )
+
+    #: a choice field that defaults to ``2`` (normal importance)
+    importance = models.IntegerField(choices=STATUS_CHOICES, default=2)
+    
+    class Meta:
+        abstract = True
+
+
 class ContentMixin(BaseMixin):
 
     """A mixin with a ``content`` field \

@@ -50,3 +50,6 @@ class SlugModel(base_models.models.TitleMixin):
 class TimestampModel(base_models.models.TimestampMixin):
 
     pass
+
+class ImportanceModel(base_models.models.ImportanceMixin):
+    pass

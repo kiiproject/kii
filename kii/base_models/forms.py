@@ -15,11 +15,17 @@ class BaseMixinForm(ModelForm):
 
 
 class TitleMixinForm(BaseMixinForm):
-    pass
-
+    
     class Meta:
         model = models.TitleMixin
         fields = ('title',)
+
+
+class ImportanceMixinForm(BaseMixinForm):
+    
+    class Meta:
+        model = models.ImportanceMixin
+        fields = ('importance',)
 
 
 class ContentMixinForm(BaseMixinForm):
@@ -33,7 +39,6 @@ class ContentMixinForm(BaseMixinForm):
 
 
 class StatusMixinForm(BaseMixinForm):
-    pass
 
     class Meta:
         model = models.StatusMixin
