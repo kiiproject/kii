@@ -15,6 +15,6 @@ class Home(AppMixin, TemplateView):
 
         kii_users = get_kii_users_group().user_set.order_by('username')
         context['kii_users'] = kii_users
-        context['last_items'] = StreamItem.objects.readable_by(self.request.user)
+        context['last_items'] = StreamItem.objects.readable_by(self.request.user).exclude(importance=1)
 
         return context
