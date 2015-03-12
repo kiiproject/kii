@@ -54,3 +54,24 @@ LOGGING= {
     },  
 }
 
+
+# let's speed up the tests
+
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
+
+class DisableMigrations(object):
+
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
+
+import logging
+
+logging.disable(logging.ERROR)
+DEBUG = False
+TEMPLATE_DEBUG = False
+MIGRATION_MODULES = DisableMigrations()
