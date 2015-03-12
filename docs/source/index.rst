@@ -46,6 +46,7 @@ Contents
    architecture
    apps/index
    kii_flavored_markdown
+   upgrade
    credits
 
 

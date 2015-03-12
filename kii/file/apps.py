@@ -13,6 +13,7 @@ class App(core.App):
         self.menu = menu.MenuNode(
             route="kii:file:index", 
             label=_("files"),
+            icon="fi-folder",
             children = [
                 menu.MenuNode(
                     route="kii:file:file:create",

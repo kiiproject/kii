@@ -18,10 +18,10 @@ def FileRaw(request, **kwargs):
     if not f.readable_by(request.user):
         raise Http404
 
-    extension = f.name.split('.')[-1]
     content = f.file_obj.read()
     response = HttpResponse(content, content_type=f.mimetype)
-    response['Content-Disposition'] = "attachment; filename=\"{0}.{1}\"".format(
-        f.root.title, f.title, extension
+    response['Content-Disposition'] = "attachment; filename=\"{0}\"".format(
+        f.original_name
         )
+    response['Content-Length'] = f.file_obj.size
     return response

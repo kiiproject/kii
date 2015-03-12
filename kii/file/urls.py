@@ -15,6 +15,6 @@ file_patterns = patterns('',
 )
 
 urlpatterns = patterns('',
-    url(r'^$', RedirectView.as_view(url=reverse_lazy("kii:file:file:list"), permanent=False), name="index"),    
-    url(r'^file/', include(file_patterns, namespace='file', app_name='file')),
+    url(r'^$', RedirectView.as_view(url=reverse_lazy("kii:file:file:list"), permanent=False), name="index"),
+    url(r'^files/', include(file_patterns, namespace='file', app_name='file')),
 )
