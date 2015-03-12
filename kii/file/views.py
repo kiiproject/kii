@@ -22,13 +22,11 @@ def FileRaw(request, **kwargs):
     if not f.readable_by(request.user):
         raise Http404
 
-    extension = f.name.split('.')[-1]
+    path = f.file_obj.path
+    filename = os.path.basename(path)
     chunk_size = 8192
-    response = StreamingHttpResponse(FileWrapper(f.file_obj.open(), chunk_size),
-                           content_type=f.mimetype)
-    response['Content-Disposition'] = "attachment; filename=\"{0}.{1}\"".format(
-        f.root.title, f.title, extension
-        )
-    response['Content-Length'] = f.file_obj.size    
+    response = StreamingHttpResponse(FileWrapper(open(path, 'rb'), chunk_size),
+                           content_type=mimetypes.guess_type(path)[0])
+    response['Content-Length'] = os.path.getsize(path)    
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
     return response
-
