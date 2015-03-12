@@ -1,7 +1,11 @@
-from django.http import Http404, HttpResponse
-from kii.stream import views
+import mimetypes
+import os
+from django.http import Http404, HttpResponse, StreamingHttpResponse
+from django.core.servers.basehttp import FileWrapper
 
+from kii.stream import views
 from . import models
+
 
 
 class FileList(views.List):
@@ -18,10 +22,13 @@ def FileRaw(request, **kwargs):
     if not f.readable_by(request.user):
         raise Http404
 
-    content = f.file_obj.read()
-    response = HttpResponse(content, content_type=f.mimetype)
-    response['Content-Disposition'] = "attachment; filename=\"{0}\"".format(
-        f.original_name
+    extension = f.name.split('.')[-1]
+    chunk_size = 8192
+    response = StreamingHttpResponse(FileWrapper(f.file_obj.open(), chunk_size),
+                           content_type=f.mimetype)
+    response['Content-Disposition'] = "attachment; filename=\"{0}.{1}\"".format(
+        f.root.title, f.title, extension
         )
-    response['Content-Length'] = f.file_obj.size
+    response['Content-Length'] = f.file_obj.size    
     return response
+
