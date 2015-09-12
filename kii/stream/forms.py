@@ -38,13 +38,15 @@ class StreamItemForm(
         """
 
         super(StreamItemForm, self).__init__(*args, **kwargs)
-
         queryset = models.Stream.objects.filter(owner=self.user.pk)
         if len(queryset) < 1:
-            raise Exception('User must have at lest one stream')
+            raise Exception('User must have at least one stream')
 
         self.fields['root'].queryset = queryset
         self.fields['root'].empty_label = None
+        if not self.fields['root'].initial:
+             self.fields['root'].initial = models.Stream.objects.get(title=self.user.username)
+
 
 
 class ItemCommentForm(CommentForm):

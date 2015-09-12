@@ -41,17 +41,17 @@ class StreamContextMixin(views.AppMixin):
         if context['current_stream'].owned_by(self.request.user):
             self.request.session['selected_stream'] = context['current_stream'].pk
         return context
-        
+
 
 class StreamItemContextMixin(StreamContextMixin):
     def get_current_stream(self, **kwargs):
         return self.object.root
 
 class List(StreamContextMixin, permission_views.PermissionMixinList):
-    
+
     model = models.StreamItem
     streamitem_class = None
-    
+
     def get_queryset(self, **kwargs):
         queryset = super(List, self).get_queryset(**kwargs)
         if self.streamitem_class:
@@ -80,7 +80,6 @@ class List(StreamContextMixin, permission_views.PermissionMixinList):
 class Create(views.OwnerMixinCreate):
     def get_success_url(self):
         return self.object.reverse_detail()
-
 
 class Update(StreamItemContextMixin, permission_views.PermissionMixinUpdate):
     def get_success_url(self):
@@ -133,7 +132,7 @@ class StreamFeedAtom(StreamContextMixin, Feed):
     def __call__(self, request, *args, **kwargs):
         self.setup(request, *args, **kwargs)
         self.pre_dispatch(request, *args, **kwargs)
-        
+
         try:
             self.stream = self._get_current_stream()
         except models.Stream.DoesNotExist:

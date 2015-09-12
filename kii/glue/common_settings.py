@@ -30,8 +30,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #'kii.glue.middleware.SpacelessMiddleware',
 )
-
-INSTALLED_APPS = (
+BASE_APPS = (
     'django.contrib.auth',
     'django.contrib.staticfiles',
     'django.contrib.sites',
@@ -43,14 +42,15 @@ INSTALLED_APPS = (
     'polymorphic',
     'django_filters',
     'mptt',
-    'rest_framework',  
-    'autocomplete_light',  
-) + kii.APPS_CONFIGS + ('actstream',)
-
+    'rest_framework',
+    'autocomplete_light',
+    'actstream',
+)
 
 # kii settings
 
 KII_APPS = kii.APPS
+INSTALLED_APPS = BASE_APPS + kii.APPS_CONFIGS
 
 # group where all users will be registered. Used for permissions
 ALL_USERS_GROUP = "all_users"
@@ -104,7 +104,7 @@ MARKDOWN_EXTENSIONS = (
 )
 
 md_filter = curry(markdown.markdown, extensions=MARKDOWN_EXTENSIONS)
-      
+
 MARKDOWN_FUNCTION = md_filter
 
 #markupfield

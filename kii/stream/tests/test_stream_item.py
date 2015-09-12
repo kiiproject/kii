@@ -9,7 +9,7 @@ from kii.tests.test_stream.models import StreamItemChild1
 
 
 class TestStreamItem(base.StreamTestCase):
-    
+
     def test_status_default_to_pub(self):
 
         m = self.G(stream.models.StreamItem)
@@ -51,7 +51,7 @@ class TestStreamItem(base.StreamTestCase):
 
     def test_form_select_user_stream_as_default_stream(self):
         form = forms.StreamItemForm(user=self.users[0])
-        self.assertEqual(form.initial['root'], models.Stream.objects.get(title=self.users[0].username))
+        self.assertEqual(form.fields['root'].initial, models.Stream.objects.get(title=self.users[0].username))
 
     def test_readable_queryset_does_not_include_drafts(self):
         self.streams[0].assign_perm("read", self.anonymous_user)
@@ -69,22 +69,9 @@ class TestStreamItem(base.StreamTestCase):
     def test_streamitem_hooks(self):
         m1 = stream.models.StreamItem(title="test", root=self.streams[0])
         m1.save()
-        
+
         def uppercase(value, **kwargs):
             return value.upper()
 
         hook.model_filters.register(stream.models.StreamItem, "title", uppercase)
         self.assertEqual(m1.filtered_title, "TEST")
-
-    def test_stream_item_detail_redirect_to_clean_url_if_any(self):
-        m1 = StreamItemChild1(title="Test", root=self.streams[0])
-        m1.save()
-        m1.root.assign_perm("read", self.anonymous_user)
-        url = m1.reverse_detail()
-        self.assertEqual(url, "/kii/items/{0}".format(m1.pk))
-
-        response = self.client.get(url)
-
-        self.assertRedirects(response, "/kii/test_stream/streamitemchild1/{0}/".format(m1.pk))
-
-        
