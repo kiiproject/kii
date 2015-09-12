@@ -13,7 +13,7 @@ class App(core.App):
     user_access = True
 
     def ready(self):
-        
+
         registry.register(self.get_model("Stream"))
         registry.register(self.get_model("ItemComment"))
         registry.register(self.get_model("StreamItem"))

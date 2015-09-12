@@ -83,7 +83,7 @@ class StreamItem(PolymorphicModel,
                  permission_models.InheritPermissionMixin,):
     """A base class for streamable models"""
 
-    root = models.ForeignKey(Stream, 
+    root = models.ForeignKey(Stream,
                              verbose_name=_('stream'),
                              related_name="children",)
 
@@ -119,11 +119,11 @@ class ItemComment(discussion_models.CommentMixin):
 
     def reverse_detail(self, **kwargs):
         return self.subject.get_absolute_url() + "#comment-{0}".format(self.pk)
-        
+
 
 def create_user_stream(sender, instance, created, **kwargs):
     """Create a stream for new users and make the user follow his stream"""
-    if created:
+    if created and instance.pk > 0:
         # create a new stream, set title after the owner
         stream = Stream(title=instance.username, slug=instance.username, owner=instance)
         stream.save()
@@ -142,4 +142,3 @@ def send_new_comment_notification(sender, instance, created, **kwargs):
 
 
 post_save.connect(send_new_comment_notification, sender=ItemComment)
-
